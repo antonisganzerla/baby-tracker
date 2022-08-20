@@ -2,13 +2,15 @@ package com.sgztech.domain.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_profile")
 public class UserProfile
 {
 
+    public static String ADMIN = "Admin";
+    public static String USER = "User";
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -19,7 +21,14 @@ public class UserProfile
     private String name;
 
     @Column(name = "registrationDate")
-    private LocalDate registrationDate;
+    private LocalDateTime registrationDate;
+
+    public UserProfile() {}
+
+    public UserProfile(String name) {
+        this.name = name;
+        this.registrationDate = LocalDateTime.now();
+    }
 
     public Integer getId() {
         return id;
@@ -37,11 +46,11 @@ public class UserProfile
         this.name = name;
     }
 
-    public LocalDate getRegistrationDate() {
+    public LocalDateTime getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(LocalDate registrationDate) {
+    public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
     }
 }

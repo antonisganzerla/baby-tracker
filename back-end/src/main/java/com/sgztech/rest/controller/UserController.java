@@ -1,9 +1,9 @@
 package com.sgztech.rest.controller;
 
-import com.sgztech.domain.entity.User;
 import com.sgztech.rest.dto.CreateUserDTO;
-import com.sgztech.rest.dto.UserDTO;
 import com.sgztech.rest.dto.CredentialsDTO;
+import com.sgztech.rest.dto.UserDTO;
+import com.sgztech.rest.dto.UserTokenDTO;
 import com.sgztech.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping("/auth")
-    public void auth(@RequestBody @Valid CredentialsDTO dto) {
-        service.auth(dto);
+    public UserTokenDTO auth(@RequestBody @Valid CredentialsDTO dto) {
+        return service.auth(dto);
     }
 }

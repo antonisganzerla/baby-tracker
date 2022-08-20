@@ -1,6 +1,8 @@
 package com.sgztech.service;
 
 import com.sgztech.domain.entity.User;
+import com.sgztech.domain.entity.UserProfile;
+import com.sgztech.domain.repository.UserProfileRepository;
 import com.sgztech.domain.repository.UserRepository;
 import com.sgztech.exception.AuthException;
 import com.sgztech.exception.BusinessRuleException;
@@ -8,9 +10,14 @@ import com.sgztech.exception.EntityNotFoundException;
 import com.sgztech.rest.dto.CreateUserDTO;
 import com.sgztech.rest.dto.CredentialsDTO;
 import com.sgztech.rest.dto.UserDTO;
+import com.sgztech.rest.dto.UserTokenDTO;
+import com.sgztech.security.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +28,15 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private UserProfileRepository userProfileRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Override
     public UserDTO save(CreateUserDTO dto) {
@@ -33,8 +49,12 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRegistrationDate(LocalDateTime.now());
+
+        UserProfile userProfile = userProfileRepository.findByName(UserProfile.USER)
+                .orElseThrow(() -> new BusinessRuleException("{user.profile.not.found}"));
+        user.setUserProfile(userProfile);
         return mapToUserDTO(save(user));
     }
 
@@ -93,17 +113,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void auth(CredentialsDTO dto) {
+    public UserTokenDTO auth(CredentialsDTO dto) {
         User user = repository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new AuthException("{user.or.password.invalid}"));
 
         if (!isPasswordMatch(dto, user)) {
             throw new AuthException("{user.or.password.invalid}");
         }
+
+        UserTokenDTO userToken = new UserTokenDTO();
+        userToken.setToken(jwtService.generateToken(user));
+        userToken.setEmail(user.getEmail());
+        return userToken;
     }
 
     private boolean isPasswordMatch(CredentialsDTO dto, User user) {
-        String encryptedPassword = dto.getPassword();
-        return user.getPassword().equals(encryptedPassword);
+        return passwordEncoder.matches(dto.getPassword(), user.getPassword());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("{user.not.found}"));
+
+        String[] roles = user.getUserProfile().getName().equals(UserProfile.ADMIN) ?
+                new String[]{"ADMIN", "USER"} : new String[]{"USER"};
+
+        return org.springframework.security.core.userdetails.User
+                .builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .roles(roles)
+                .build();
     }
 }
