@@ -46,6 +46,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.8'
 
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
     testImplementation 'junit:junit:4.13.2'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

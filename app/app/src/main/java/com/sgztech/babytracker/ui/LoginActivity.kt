@@ -1,4 +1,4 @@
-package com.sgztech.babytracker
+package com.sgztech.babytracker.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,14 +13,15 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.GoogleAuthProvider
+import com.sgztech.babytracker.R
+import com.sgztech.babytracker.firebaseInstance
+import com.sgztech.babytracker.googleSignInClient
 
 class LoginActivity : AppCompatActivity() {
 
     private val googleSignInActivityResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        log(result.resultCode.toString())
-        log(result.data.toString())
         if (result.resultCode == RESULT_OK) {
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             handleSignInResult(task)
@@ -31,6 +32,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         setupBtnSignInGoogle()
+        setupBtnForgotPassword()
+        setupBtnCreateAccount()
     }
 
     private fun setupBtnSignInGoogle() {
@@ -71,6 +74,22 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun setupBtnForgotPassword(){
+        val tvForgotPassword = findViewById<TextView>(R.id.tv_forgot_password)
+        tvForgotPassword.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun setupBtnCreateAccount(){
+        val tvCreateAccount = findViewById<TextView>(R.id.tv_create_account)
+        tvCreateAccount.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun log(message: String) {
