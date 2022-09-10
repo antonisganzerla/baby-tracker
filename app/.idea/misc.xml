@@ -9,7 +9,9 @@
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.31567028985507245" />
         <entry key="app/src/main/res/layout/activity_reset_password.xml" value="0.1640625" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.31567028985507245" />
+        <entry key="app/src/main/res/layout/nav_header.xml" value="0.31567028985507245" />
         <entry key="app/src/main/res/layout/toolbar.xml" value="0.31567028985507245" />
+        <entry key="app/src/main/res/menu/menu_main.xml" value="0.3494791666666667" />
       </map>
     </option>
   </component>
