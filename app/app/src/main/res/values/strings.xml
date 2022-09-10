@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Diário do bebê</string>
+
+    <!-- Login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Senha</string>
+    <string name="action_sign_in">Login</string>
+    <string name="msg_enter_email">Informe um email</string>
+    <string name="msg_enter_valid_email">Informe um email válido</string>
+    <string name="msg_enter_password">Informe uma senha</string>
+    <string name="msg_enter_valid_password">Senha deve ter minimo 6 caracteres</string>
+    <string name="hint_sign_in_google_login_button">Login com Google</string>
+    <string name="tv_create_account">Sem conta? Crie agora</string>
+    <string name="tv_forgot_password">Esqueceu a Senha?</string>
+    <string name="cb_remember_me">Lembrar-me</string>
+    <string name="msg_login_fail">Falha ao realizar login</string>
+    <string name="msg_success_register">Cadastro realizado com sucesso!</string>
+    <string name="msg_fail_register">Falha ao cadastrar</string>
+    <!-- Google Sign In -->
+    <string name="msg_signin_success">signInResult:success -> %1$s.</string>
+    <string name="msg_signin_firebase_fail">signInWithCredential Firebase:failure -> %1$s.</string>
+    <string name="msg_signin_firebase_success">signInWithCredential Firebase:success</string>
+    <string name="msg_signin_fail">signInResult:failed code= %1$s.</string>
+    <string name="msg_signin_fail_snack_bar">Não foi possível efetuar login.</string>
+    <string name="msg_signout_success">Logout with success</string>
+
+    <string name="sair">Sair</string>
+
+</resources>

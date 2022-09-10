@@ -1,0 +1,46 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.2.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
+        classpath("com.google.gms:google-services:4.3.13")
+    }
+}
+
+allprojects{
+    repositories {
+        google()
+        mavenCentral()
+
+        def githubProperties = new Properties()
+        def githubFile = rootProject.file("github_credentials.properties")
+        if (githubFile.exists()) {
+            githubProperties.load(new FileInputStream(githubFile))
+        }
+
+        maven {
+            name = "natds-android"
+            url = uri("https://maven.pkg.github.com/natura-cosmeticos/natds-android")
+            credentials {
+                username = githubProperties['github.username']
+                password = githubProperties['github.password']
+            }
+        }
+        maven {
+            name = "natds-commons"
+            url = uri("https://maven.pkg.github.com/natura-cosmeticos/natds-commons")
+            credentials {
+                username = githubProperties['github.username']
+                password = githubProperties['github.password']
+            }
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
