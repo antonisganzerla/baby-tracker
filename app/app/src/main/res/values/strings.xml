@@ -2,16 +2,16 @@
     <string name="app_name">Diário do bebê</string>
 
     <!-- Login -->
-    <string name="prompt_email">Email</string>
+    <string name="prompt_email">E-mail</string>
     <string name="prompt_password">Senha</string>
-    <string name="action_sign_in">Login</string>
+    <string name="action_sign_in">Entrar</string>
     <string name="msg_enter_email">Informe um email</string>
     <string name="msg_enter_valid_email">Informe um email válido</string>
     <string name="msg_enter_password">Informe uma senha</string>
     <string name="msg_enter_valid_password">Senha deve ter minimo 6 caracteres</string>
-    <string name="hint_sign_in_google_login_button">Login com Google</string>
-    <string name="tv_create_account">Sem conta? Crie agora</string>
-    <string name="tv_forgot_password">Esqueceu a Senha?</string>
+    <string name="hint_sign_in_google_login_button">Iniciar sessão com Google</string>
+    <string name="tv_create_account">Criar conta</string>
+    <string name="tv_forgot_password">Esqueci a senha</string>
     <string name="cb_remember_me">Lembrar-me</string>
     <string name="msg_login_fail">Falha ao realizar login</string>
     <string name="msg_success_register">Cadastro realizado com sucesso!</string>
@@ -24,11 +24,9 @@
     <string name="msg_signin_fail_snack_bar">Não foi possível efetuar login.</string>
     <string name="msg_signout_success">Logout with success</string>
 
-    <string name="sair">Sair</string>
-
     <!-- Register -->
     <string name="tv_full_name">Nome completo</string>
-    <string name="prompt_confirm_password">Confirme a senha</string>
+    <string name="prompt_confirm_password">Repita a senha</string>
     <string name="action_register">Cadastrar</string>
     <string name="tv_to_go_login">Já possui conta? Faça login</string>
     <string name="toolbar_title_register">Criar conta</string>
@@ -36,9 +34,9 @@
     <string name="msg_password_not_match">Senhas não conferem</string>
 
     <!-- Forgot Password-->
-    <string name="toolbar_title_forgot_password">Recuperar senha</string>
-    <string name="btn_reset_password">Resetar</string>
-    <string name="tv_reset_password_instructions">Informe o email cadastrado para resetar sua senha</string>
+    <string name="toolbar_title_forgot_password">Esqueci a senha</string>
+    <string name="btn_reset_password">Enviar</string>
+    <string name="tv_reset_password_instructions">Informe o email cadastrado para que possamos enviar o código de recuperação</string>
     <string name="tv_insert_code_instructions">Um código de recuperação foi enviado para seu email</string>
     <string name="et_recovery_code">Informe o código</string>
     <string name="btn_send_recovery_code">Verificar código</string>
@@ -50,8 +48,9 @@
 
     <!-- Reset Password-->
     <string name="toolbar_title_register_new_password">Redefinir senha</string>
-    <string name="btn_alter_password">Redefinir</string>
+    <string name="btn_alter_password">Salvar</string>
     <string name="tv_reset_password">Informe sua nova senha</string>
+    <string name="prompt_new_password">Nova senha</string>
     <string name="msg_fail_to_reset_password">Falha ao redefinir senha</string>
     <string name="msg_password_reseted">Senha redefinida com sucesso</string>
 
@@ -60,10 +59,19 @@
     <string name="close_drawer">Fechar</string>
 
     <!-- Menu item drawer -->
-    <string name="menu_item_excursions">Excursões</string>
-    <string name="menu_item_title">Ajuda</string>
-    <string name="menu_item_tools">Configurações</string>
+    <string name="menu_item_registers">Registros</string>
     <string name="menu_item_logout">Sair</string>
+    <string name="menu_item_title">Ajuda</string>
     <string name="menu_item_about">Sobre o app</string>
 
+    <!-- Menu item bottom -->
+    <string name="menu_item_breast_feeding">Amamentação</string>
+    <string name="menu_item_diaper">Fralda</string>
+    <string name="menu_item_bathe">Banho</string>
+    <string name="menu_item_baby_bottle">Mamadeira</string>
+    <string name="menu_item_weight">Peso</string>
+    <string name="menu_item_height">Altura</string>
+
+    <!-- Menu item toolbar -->
+    <string name="menu_item_baby">Bebê</string>
 </resources>

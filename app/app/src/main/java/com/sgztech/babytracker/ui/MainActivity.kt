@@ -2,6 +2,7 @@ package com.sgztech.babytracker.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -23,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         setupToolbar()
         setupDrawer()
     }
@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
         val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-
         setupDrawerItemClickListener()
         setupHeaderDrawer()
     }
@@ -83,5 +82,18 @@ class MainActivity : AppCompatActivity() {
                 Picasso.get().load(user.photoUrl).into(navHeaderImageView)
             }
         }
+    }
+
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 }

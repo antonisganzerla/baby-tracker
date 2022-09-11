@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_feeding"
+            android:icon="@android:drawable/ic_input_get"
+            android:title="@string/menu_item_breast_feeding" />
+        <item
+            android:id="@+id/nav_diaper"
+            android:icon="@drawable/ic_lock_24"
+            android:title="@string/menu_item_diaper" />
+        <item
+            android:id="@+id/nav_bathe"
+            android:icon="@drawable/ic_bathtub_24"
+            android:title="@string/menu_item_bathe" />
+        <item
+            android:id="@+id/nav_weight"
+            android:icon="@drawable/ic_bathtub_24"
+            android:title="@string/menu_item_weight" />
+        <item
+            android:id="@+id/nav_height"
+            android:icon="@drawable/ic_bathtub_24"
+            android:title="@string/menu_item_height" />
+    </group>
+</menu>
