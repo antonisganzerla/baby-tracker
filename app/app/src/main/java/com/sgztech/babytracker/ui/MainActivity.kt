@@ -1,5 +1,6 @@
 package com.sgztech.babytracker.ui
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -14,12 +15,16 @@ import com.google.android.material.navigation.NavigationView
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.firebaseInstance
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private val drawerLayout: DrawerLayout by lazy { findViewById(R.id.drawerLayout) }
     private val toolbar: Toolbar by lazy { findViewById(R.id.toolbar) }
     private val navView: NavigationView by lazy { findViewById(R.id.navView) }
+    private val tvDate: TextView by lazy { findViewById(R.id.tvDate) }
+    private val calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
         setupDrawerItemClickListener()
         setupHeaderDrawer()
+        setupDatePicker()
     }
 
     private fun setupDrawerItemClickListener() {
@@ -82,6 +88,29 @@ class MainActivity : AppCompatActivity() {
                 Picasso.get().load(user.photoUrl).into(navHeaderImageView)
             }
         }
+    }
+
+    private fun setupDatePicker() {
+        val onDateSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
+            calendar.set(Calendar.YEAR, year)
+            calendar.set(Calendar.MONTH, month)
+            calendar.set(Calendar.DAY_OF_MONTH, day)
+            updateDate()
+        }
+
+        tvDate.setOnClickListener {
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            DatePickerDialog(this, onDateSetListener, year, month, day).show()
+        }
+
+        updateDate()
+    }
+
+    private fun updateDate() {
+        val sdf = SimpleDateFormat("EEE, d MMM yyyy", Locale("pt", "BR"))
+        tvDate.text = sdf.format(calendar.time)
     }
 
     override fun onBackPressed() {
