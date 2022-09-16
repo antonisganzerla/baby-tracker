@@ -6,11 +6,11 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_feeding"
-            android:icon="@android:drawable/ic_input_get"
+            android:icon="@drawable/ic_food_bank_24"
             android:title="@string/menu_item_breast_feeding" />
         <item
             android:id="@+id/nav_diaper"
-            android:icon="@drawable/ic_lock_24"
+            android:icon="@drawable/ic_baby_changing_station_24"
             android:title="@string/menu_item_diaper" />
         <item
             android:id="@+id/nav_bathe"
@@ -18,11 +18,11 @@
             android:title="@string/menu_item_bathe" />
         <item
             android:id="@+id/nav_weight"
-            android:icon="@drawable/ic_bathtub_24"
+            android:icon="@drawable/ic_balance_24"
             android:title="@string/menu_item_weight" />
         <item
             android:id="@+id/nav_height"
-            android:icon="@drawable/ic_bathtub_24"
+            android:icon="@drawable/ic_height_24"
             android:title="@string/menu_item_height" />
     </group>
 </menu>

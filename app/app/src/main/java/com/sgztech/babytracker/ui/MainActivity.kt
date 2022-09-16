@@ -11,11 +11,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
+import com.natura.android.button.TextButton
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.firebaseInstance
+import com.sgztech.babytracker.model.Register
 import com.squareup.picasso.Picasso
-import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -24,13 +30,18 @@ class MainActivity : AppCompatActivity() {
     private val toolbar: Toolbar by lazy { findViewById(R.id.toolbar) }
     private val navView: NavigationView by lazy { findViewById(R.id.navView) }
     private val tvDate: TextView by lazy { findViewById(R.id.tvDate) }
-    private val calendar = Calendar.getInstance()
+    private val buttonLeft: TextButton by lazy { findViewById(R.id.buttonLeft) }
+    private val buttonRight: TextButton by lazy { findViewById(R.id.buttonRight) }
+    private val recyclerViewRegisters: RecyclerView by lazy { findViewById(R.id.recyclerViewRegisters) }
+    private var datetime: LocalDate = LocalDate.now()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupToolbar()
         setupDrawer()
+        setupArrowButtons()
+        setupRecyclerView()
     }
 
     private fun setupToolbar() {
@@ -39,7 +50,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupDrawer() {
-        val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer)
+        val toggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.open_drawer,
+            R.string.close_drawer
+        )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         setupDrawerItemClickListener()
@@ -83,7 +100,7 @@ class MainActivity : AppCompatActivity() {
             val tvHeaderEmail = it.findViewById<TextView>(R.id.nav_header_email)
             val navHeaderImageView = it.findViewById<ImageView>(R.id.nav_header_imageView)
             firebaseInstance().currentUser?.let { user ->
-                tvHeaderName.text =  user.displayName
+                tvHeaderName.text = user.displayName
                 tvHeaderEmail.text = user.email
                 Picasso.get().load(user.photoUrl).into(navHeaderImageView)
             }
@@ -92,16 +109,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupDatePicker() {
         val onDateSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-            calendar.set(Calendar.YEAR, year)
-            calendar.set(Calendar.MONTH, month)
-            calendar.set(Calendar.DAY_OF_MONTH, day)
+            datetime = datetime.withYear(year).withMonth(month + 1).withDayOfMonth(day)
             updateDate()
         }
 
         tvDate.setOnClickListener {
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            val year = datetime.year
+            val month = datetime.month.value - 1
+            val day = datetime.dayOfMonth
             DatePickerDialog(this, onDateSetListener, year, month, day).show()
         }
 
@@ -109,8 +124,48 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateDate() {
-        val sdf = SimpleDateFormat("EEE, d MMM yyyy", Locale("pt", "BR"))
-        tvDate.text = sdf.format(calendar.time)
+        val formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy", Locale("pt", "BR"))
+        tvDate.text = datetime.format(formatter)
+    }
+
+    private fun setupArrowButtons() {
+        buttonLeft.setOnClickListener {
+            datetime = datetime.minusDays(1)
+            updateDate()
+        }
+        buttonRight.setOnClickListener {
+            datetime = datetime.plusDays(1)
+            updateDate()
+        }
+    }
+
+    private fun setupRecyclerView(){
+        recyclerViewRegisters.apply {
+            adapter = RegisterAdapter(
+                registers = listOf(
+                    Register(
+                        icon = R.drawable.ic_baby_changing_station_24,
+                        name = "Fralda",
+                        description = "Cocô e chici",
+                        time = LocalDateTime.now(),
+                    ),
+                    Register(
+                        icon = R.drawable.ic_bathtub_24,
+                        name = "Banho",
+                        description = "",
+                        time = LocalDateTime.now().plusHours(1),
+                    ),
+                    Register(
+                        icon = R.drawable.ic_food_bank_24,
+                        name = "Amamentação",
+                        description = "Esquerda 15:10",
+                        time = LocalDateTime.now().plusHours(2),
+                    ),
+                )
+            )
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            setHasFixedSize(true)
+        }
     }
 
     override fun onBackPressed() {
