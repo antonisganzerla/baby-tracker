@@ -36,7 +36,7 @@ class RegisterAdapter(
         private val formatter = DateTimeFormatter.ofPattern("HH:mm", Locale("pt", "BR"))
 
         fun bind(register: Register) {
-            ivAction.setImageDrawable(itemView.context.getDrawable(register.icon))
+            ivAction.setImageResource(register.icon)
             tvTitle.text = register.name
             tvSubtitle.text = register.description
             tvTime.text = register.time.format(formatter)

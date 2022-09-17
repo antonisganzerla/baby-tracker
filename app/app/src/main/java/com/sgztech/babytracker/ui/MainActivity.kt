@@ -13,11 +13,13 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.natura.android.button.TextButton
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.firebaseInstance
 import com.sgztech.babytracker.model.Register
+import com.sgztech.babytracker.ui.custom.DiaperModalBottomSheet
 import com.squareup.picasso.Picasso
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -33,7 +35,9 @@ class MainActivity : AppCompatActivity() {
     private val buttonLeft: TextButton by lazy { findViewById(R.id.buttonLeft) }
     private val buttonRight: TextButton by lazy { findViewById(R.id.buttonRight) }
     private val recyclerViewRegisters: RecyclerView by lazy { findViewById(R.id.recyclerViewRegisters) }
+    private val bottomNavigationView: BottomNavigationView by lazy { findViewById(R.id.bottomNavigationView) }
     private var datetime: LocalDate = LocalDate.now()
+    private val registers: MutableList<Register> = fakeData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +45,8 @@ class MainActivity : AppCompatActivity() {
         setupToolbar()
         setupDrawer()
         setupArrowButtons()
-        setupRecyclerView()
+        setupRecyclerView(registers)
+        setupBottomNavigationView()
     }
 
     private fun setupToolbar() {
@@ -139,32 +144,38 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView(registers : List<Register>) {
         recyclerViewRegisters.apply {
             adapter = RegisterAdapter(
-                registers = listOf(
-                    Register(
-                        icon = R.drawable.ic_baby_changing_station_24,
-                        name = "Fralda",
-                        description = "Cocô e chici",
-                        time = LocalDateTime.now(),
-                    ),
-                    Register(
-                        icon = R.drawable.ic_bathtub_24,
-                        name = "Banho",
-                        description = "",
-                        time = LocalDateTime.now().plusHours(1),
-                    ),
-                    Register(
-                        icon = R.drawable.ic_food_bank_24,
-                        name = "Amamentação",
-                        description = "Esquerda 15:10",
-                        time = LocalDateTime.now().plusHours(2),
-                    ),
-                )
+                registers = registers,
             )
             layoutManager = LinearLayoutManager(this@MainActivity)
             setHasFixedSize(true)
+        }
+    }
+
+    private fun setupBottomNavigationView() {
+        bottomNavigationView.menu.setGroupCheckable(0, false, true)
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_feeding -> {
+                    true
+                }
+                R.id.nav_diaper -> {
+                    val modalBottomSheet = DiaperModalBottomSheet(
+                        actionButtonClick = { register ->
+                            registers.add(register)
+                            setupRecyclerView(registers)
+                        }
+                    )
+                    modalBottomSheet.show(supportFragmentManager, DiaperModalBottomSheet.TAG)
+                    true
+                }
+                R.id.nav_bathe -> {
+                    true
+                }
+                else -> false
+            }
         }
     }
 
@@ -180,4 +191,19 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
         return super.onCreateOptionsMenu(menu)
     }
+
+    private fun fakeData() = mutableListOf(
+        Register(
+            icon = R.drawable.ic_bathtub_24,
+            name = "Banho",
+            description = "",
+            time = LocalDateTime.now().plusHours(1),
+        ),
+        Register(
+            icon = R.drawable.ic_food_bank_24,
+            name = "Amamentação",
+            description = "Esquerda 15:10",
+            time = LocalDateTime.now().plusHours(2),
+        ),
+    )
 }

@@ -12,6 +12,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.GoogleAuthProvider
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.firebaseInstance
@@ -23,21 +24,29 @@ class LoginActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            handleSignInResult(task)
+            handleSignInResult(GoogleSignIn.getSignedInAccountFromIntent(result.data))
         }
     }
+
+    private val signInButton: SignInButton by lazy { findViewById(R.id.sign_in_button) }
+    private val loginButton: MaterialButton by lazy { findViewById(R.id.btn_login) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        setupLoginButton()
         setupBtnSignInGoogle()
         setupBtnForgotPassword()
         setupBtnCreateAccount()
     }
 
+    private fun setupLoginButton() {
+        loginButton.setOnClickListener {
+            openMainActivity()
+        }
+    }
+
     private fun setupBtnSignInGoogle() {
-        val signInButton = findViewById<SignInButton>(R.id.sign_in_button)
         val tv = signInButton.getChildAt(0) as TextView
         tv.text = getString(R.string.hint_sign_in_google_login_button).uppercase()
         signInButton.setOnClickListener {
@@ -76,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun setupBtnForgotPassword(){
+    private fun setupBtnForgotPassword() {
         val tvForgotPassword = findViewById<TextView>(R.id.tv_forgot_password)
         tvForgotPassword.setOnClickListener {
             val intent = Intent(this, ForgotPasswordActivity::class.java)
@@ -84,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupBtnCreateAccount(){
+    private fun setupBtnCreateAccount() {
         val tvCreateAccount = findViewById<TextView>(R.id.tv_create_account)
         tvCreateAccount.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)

@@ -74,4 +74,10 @@
 
     <!-- Menu item toolbar -->
     <string name="menu_item_baby">Bebê</string>
+
+    <string-array name="diaper_options">
+        <item>Chichi</item>
+        <item>Cocô</item>
+        <item>Chichi e cocô</item>
+    </string-array>
 </resources>
