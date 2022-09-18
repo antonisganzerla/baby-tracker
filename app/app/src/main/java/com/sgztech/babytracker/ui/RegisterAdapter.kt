@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.model.Register
+import com.sgztech.babytracker.util.brazilianLocale
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 class RegisterAdapter(
     private val registers: List<Register>,
@@ -33,13 +33,19 @@ class RegisterAdapter(
         private val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         private val tvSubtitle: TextView = itemView.findViewById(R.id.tvSubtitle)
         private val tvTime: TextView = itemView.findViewById(R.id.tvTime)
-        private val formatter = DateTimeFormatter.ofPattern("HH:mm", Locale("pt", "BR"))
+        private val tvNotes: TextView = itemView.findViewById(R.id.tvNotes)
+        private val formatter = DateTimeFormatter.ofPattern("HH:mm", brazilianLocale())
 
         fun bind(register: Register) {
             ivAction.setImageResource(register.icon)
             tvTitle.text = register.name
             tvSubtitle.text = register.description
             tvTime.text = register.time.format(formatter)
+            if (register.note.isEmpty()) {
+                tvNotes.visibility = View.GONE
+            } else {
+                tvNotes.text = register.note
+            }
         }
     }
 }

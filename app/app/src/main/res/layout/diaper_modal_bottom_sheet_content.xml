@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/ivRegister"
@@ -17,87 +17,68 @@
 
     <TextView
         android:id="@+id/tvRegister"
+        style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/menu_item_diaper"
-        style="@style/TextAppearance.AppCompat.Headline"
         app:layout_constraintEnd_toEndOf="@+id/ivRegister"
         app:layout_constraintStart_toStartOf="@+id/ivRegister"
         app:layout_constraintTop_toBottomOf="@+id/ivRegister" />
 
-    <TextView
-        android:id="@+id/tvTimeSelector"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/timeSelector"
+        layout="@layout/time_register_item"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:text="Horário"
-        style="@style/TextAppearance.AppCompat.Subhead"
-        app:layout_constraintBottom_toBottomOf="@+id/textInputTimeSelector"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textInputTimeSelector" />
-
-    <TextView
-        android:id="@+id/tvTypeSelector"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tipo"
-        style="@style/TextAppearance.AppCompat.Subhead"
-        app:layout_constraintBottom_toBottomOf="@+id/textInputTypeSelector"
-        app:layout_constraintStart_toStartOf="@+id/tvTimeSelector"
-        app:layout_constraintTop_toTopOf="@+id/textInputTypeSelector" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputTimeSelector"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Horário"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRegister">
-
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTimeSelector"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            tools:text="Option"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRegister" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputTypeSelector"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Tipo"
         android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/textInputTimeSelector"
-        app:layout_constraintTop_toBottomOf="@+id/textInputTimeSelector">
+        android:hint="Tipo"
+        app:layout_constraintEnd_toEndOf="@+id/timeSelector"
+        app:layout_constraintStart_toStartOf="@+id/timeSelector"
+        app:layout_constraintTop_toBottomOf="@+id/timeSelector">
 
-        <AutoCompleteTextView
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/autoCompleteTypeSelector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
-            tools:text="Option"/>
+            tools:text="Option" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <include
+        android:id="@+id/textNote"
+        layout="@layout/note_register_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="@+id/textInputTypeSelector"
+        app:layout_constraintStart_toStartOf="@+id/textInputTypeSelector"
+        app:layout_constraintTop_toBottomOf="@+id/textInputTypeSelector"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSave"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
         android:text="Salvar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputTypeSelector" />
+        app:layout_constraintEnd_toEndOf="@+id/textNote"
+        app:layout_constraintStart_toStartOf="@+id/textNote"
+        app:layout_constraintTop_toBottomOf="@+id/textNote" />
 
     <Space
         android:layout_width="match_parent"

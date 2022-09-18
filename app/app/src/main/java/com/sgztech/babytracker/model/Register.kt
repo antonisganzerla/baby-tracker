@@ -9,6 +9,7 @@ data class Register(
     val name: String,
     val description: String,
     val time: LocalDateTime,
+    val note: String = "",
 )
 
 

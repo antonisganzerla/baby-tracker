@@ -18,7 +18,6 @@
             android:id="@+id/ivAction"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_baby_changing_station_24" />
@@ -42,6 +41,17 @@
             app:layout_constraintBottom_toBottomOf="@+id/ivAction"
             app:layout_constraintStart_toEndOf="@+id/ivAction"
             tools:text="Cocô e chichi" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvNotes"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvSubtitle"
+            app:layout_constraintTop_toBottomOf="@+id/tvSubtitle"
+            tools:text="Notas ...." />
 
         <TextView
             android:id="@+id/tvTime"

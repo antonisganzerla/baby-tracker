@@ -1,0 +1,15 @@
+<com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Horário">
+
+    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+        android:id="@+id/autoCompleteTimeSelector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="none"
+        tools:text="Option" />
+
+</com.google.android.material.textfield.TextInputLayout>
