@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -20,11 +21,11 @@ import com.sgztech.babytracker.R
 import com.sgztech.babytracker.firebaseInstance
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.ui.custom.DiaperModalBottomSheet
+import com.sgztech.babytracker.util.brazilianLocale
 import com.squareup.picasso.Picasso
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,8 +37,7 @@ class MainActivity : AppCompatActivity() {
     private val buttonRight: TextButton by lazy { findViewById(R.id.buttonRight) }
     private val recyclerViewRegisters: RecyclerView by lazy { findViewById(R.id.recyclerViewRegisters) }
     private val bottomNavigationView: BottomNavigationView by lazy { findViewById(R.id.bottomNavigationView) }
-    private var datetime: LocalDate = LocalDate.now()
-    private val registers: MutableList<Register> = fakeData()
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +45,10 @@ class MainActivity : AppCompatActivity() {
         setupToolbar()
         setupDrawer()
         setupArrowButtons()
-        setupRecyclerView(registers)
+        setupRecyclerView(emptyList())
         setupBottomNavigationView()
+        inscribeObservers()
+        viewModel.loadRegisters()
     }
 
     private fun setupToolbar() {
@@ -113,34 +115,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupDatePicker() {
-        val onDateSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-            datetime = datetime.withYear(year).withMonth(month + 1).withDayOfMonth(day)
-            updateDate()
+        val onDateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+            viewModel.updateDate(LocalDate.of(year, month + 1, day).atStartOfDay())
         }
 
         tvDate.setOnClickListener {
-            val year = datetime.year
-            val month = datetime.month.value - 1
-            val day = datetime.dayOfMonth
+            val date = viewModel.date.value!!
+            val year = date.year
+            val month = date.month.value - 1
+            val day = date.dayOfMonth
             DatePickerDialog(this, onDateSetListener, year, month, day).show()
         }
-
-        updateDate()
     }
 
-    private fun updateDate() {
-        val formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy", Locale("pt", "BR"))
-        tvDate.text = datetime.format(formatter)
+    private fun updateDate(date: LocalDateTime) {
+        val formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy", brazilianLocale())
+        tvDate.text = date.format(formatter)
     }
 
     private fun setupArrowButtons() {
         buttonLeft.setOnClickListener {
-            datetime = datetime.minusDays(1)
-            updateDate()
+            viewModel.updateDate(viewModel.date.value?.minusDays(1))
         }
         buttonRight.setOnClickListener {
-            datetime = datetime.plusDays(1)
-            updateDate()
+            viewModel.updateDate(viewModel.date.value?.plusDays(1))
         }
     }
 
@@ -163,9 +161,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_diaper -> {
                     val modalBottomSheet = DiaperModalBottomSheet(
+                        date = viewModel.date.value!!,
                         actionButtonClick = { register ->
-                            registers.add(register)
-                            setupRecyclerView(registers)
+                            viewModel.addRegister(register)
                         }
                     )
                     modalBottomSheet.show(supportFragmentManager, DiaperModalBottomSheet.TAG)
@@ -176,6 +174,16 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+    }
+
+    private fun inscribeObservers() {
+        viewModel.registers.observe(this) { registers ->
+            setupRecyclerView(registers)
+        }
+        viewModel.date.observe(this) { date ->
+            updateDate(date)
+            viewModel.loadRegisters()
         }
     }
 
@@ -191,19 +199,4 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
         return super.onCreateOptionsMenu(menu)
     }
-
-    private fun fakeData() = mutableListOf(
-        Register(
-            icon = R.drawable.ic_bathtub_24,
-            name = "Banho",
-            description = "",
-            time = LocalDateTime.now().plusHours(1),
-        ),
-        Register(
-            icon = R.drawable.ic_food_bank_24,
-            name = "Amamentação",
-            description = "Esquerda 15:10",
-            time = LocalDateTime.now().plusHours(2),
-        ),
-    )
 }

@@ -12,6 +12,7 @@ import com.sgztech.babytracker.model.Register
 import java.time.LocalDateTime
 
 class DiaperModalBottomSheet(
+    private val date: LocalDateTime,
     private val actionButtonClick: (register: Register) -> Unit,
 ) : BaseRegisterModalBottomSheet(R.id.timeSelector, R.id.textNote) {
 
@@ -31,15 +32,15 @@ class DiaperModalBottomSheet(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val options = buildArrayAdapter(view.resources.getStringArray(R.array.diaper_options))
-        autoCompleteTypeSelector.setAdapter(options)
-        autoCompleteTypeSelector.setText(options.getItem(0))
+        val items = view.resources.getStringArray(R.array.diaper_options)
+        autoCompleteTypeSelector.setAdapter(buildArrayAdapter(items))
+        autoCompleteTypeSelector.setText(items.first(), false)
         btnSave.setOnClickListener {
             actionButtonClick(Register(
                 icon = R.drawable.ic_baby_changing_station_24,
                 name = getString(R.string.menu_item_diaper),
                 description = autoCompleteTypeSelector.text.toString(),
-                time = LocalDateTime.now().withHour(getHour()).withMinute(getMinute()),
+                time = date.withHour(getHour()).withMinute(getMinute()),
                 note = getNote(),
             ))
             dismiss()
