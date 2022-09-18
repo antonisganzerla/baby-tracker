@@ -39,13 +39,16 @@ class RegisterAdapter(
         fun bind(register: Register) {
             ivAction.setImageResource(register.icon)
             tvTitle.text = register.name
-            tvSubtitle.text = register.description
+            tvSubtitle.setTextOrGone(register.description)
             tvTime.text = register.time.format(formatter)
-            if (register.note.isEmpty()) {
-                tvNotes.visibility = View.GONE
-            } else {
-                tvNotes.text = register.note
-            }
+            tvNotes.setTextOrGone(register.note)
+        }
+
+        private fun TextView.setTextOrGone(value: String) {
+            if (value.isEmpty())
+                visibility = View.GONE
+            else
+                text = value
         }
     }
 }

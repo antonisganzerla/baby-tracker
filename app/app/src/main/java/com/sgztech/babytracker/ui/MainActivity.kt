@@ -20,6 +20,7 @@ import com.natura.android.button.TextButton
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.firebaseInstance
 import com.sgztech.babytracker.model.Register
+import com.sgztech.babytracker.ui.custom.BatheModalBottomSheet
 import com.sgztech.babytracker.ui.custom.DiaperModalBottomSheet
 import com.sgztech.babytracker.util.brazilianLocale
 import com.squareup.picasso.Picasso
@@ -160,16 +161,21 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_diaper -> {
-                    val modalBottomSheet = DiaperModalBottomSheet(
+                    DiaperModalBottomSheet(
                         date = viewModel.date.value!!,
                         actionButtonClick = { register ->
                             viewModel.addRegister(register)
                         }
-                    )
-                    modalBottomSheet.show(supportFragmentManager, DiaperModalBottomSheet.TAG)
+                    ).show(supportFragmentManager, DiaperModalBottomSheet.TAG)
                     true
                 }
                 R.id.nav_bathe -> {
+                    BatheModalBottomSheet(
+                        date = viewModel.date.value!!,
+                        actionButtonClick = { register ->
+                            viewModel.addRegister(register)
+                        }
+                    ).show(supportFragmentManager, BatheModalBottomSheet.TAG)
                     true
                 }
                 else -> false
