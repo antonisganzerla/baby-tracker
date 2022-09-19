@@ -9,10 +9,10 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.model.Register
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 class DiaperModalBottomSheet(
-    private val date: LocalDateTime,
+    private val date: LocalDate,
     private val actionButtonClick: (register: Register) -> Unit,
 ) : BaseRegisterModalBottomSheet(R.id.timeSelector, R.id.textNote) {
 
@@ -40,7 +40,7 @@ class DiaperModalBottomSheet(
                 icon = R.drawable.ic_baby_changing_station_24,
                 name = getString(R.string.menu_item_diaper),
                 description = autoCompleteTypeSelector.text.toString(),
-                time = date.withHour(getHour()).withMinute(getMinute()),
+                time = date.atTime(getHour(),getMinute()),
                 note = getNote(),
             ))
             dismiss()

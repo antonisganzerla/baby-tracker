@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import com.google.android.material.button.MaterialButton
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.model.Register
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 class BatheModalBottomSheet (
-    private val date: LocalDateTime,
+    private val date: LocalDate,
     private val actionButtonClick: (register: Register) -> Unit,
 ) : BaseRegisterModalBottomSheet(R.id.timeSelector, R.id.textNote) {
 
@@ -31,7 +31,7 @@ class BatheModalBottomSheet (
                 icon = R.drawable.ic_bathtub_24,
                 name = getString(R.string.menu_item_bathe),
                 description = "",
-                time = date.withHour(getHour()).withMinute(getMinute()),
+                time = date.atTime(getHour(),getMinute()),
                 note = getNote(),
             ))
             dismiss()

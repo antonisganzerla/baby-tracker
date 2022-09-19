@@ -22,11 +22,8 @@ import com.sgztech.babytracker.firebaseInstance
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.ui.custom.BatheModalBottomSheet
 import com.sgztech.babytracker.ui.custom.DiaperModalBottomSheet
-import com.sgztech.babytracker.util.brazilianLocale
 import com.squareup.picasso.Picasso
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
 
@@ -117,11 +114,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupDatePicker() {
         val onDateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
-            viewModel.updateDate(LocalDate.of(year, month + 1, day).atStartOfDay())
+            viewModel.updateDate(LocalDate.of(year, month + 1, day))
         }
 
         tvDate.setOnClickListener {
-            val date = viewModel.date.value!!
+            val date = viewModel.currentDate()
             val year = date.year
             val month = date.month.value - 1
             val day = date.dayOfMonth
@@ -129,25 +126,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateDate(date: LocalDateTime) {
-        val formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy", brazilianLocale())
-        tvDate.text = date.format(formatter)
+    private fun updateTvDate(date: LocalDate) {
+        tvDate.text = viewModel.formatDate()
     }
 
     private fun setupArrowButtons() {
-        buttonLeft.setOnClickListener {
-            viewModel.updateDate(viewModel.date.value?.minusDays(1))
-        }
-        buttonRight.setOnClickListener {
-            viewModel.updateDate(viewModel.date.value?.plusDays(1))
-        }
+        buttonLeft.setOnClickListener { viewModel.minusDay() }
+        buttonRight.setOnClickListener { viewModel.plusDay() }
     }
 
-    private fun setupRecyclerView(registers : List<Register>) {
+    private fun setupRecyclerView(registers: List<Register>) {
         recyclerViewRegisters.apply {
-            adapter = RegisterAdapter(
-                registers = registers,
-            )
+            adapter = RegisterAdapter(registers = registers)
             layoutManager = LinearLayoutManager(this@MainActivity)
             setHasFixedSize(true)
         }
@@ -162,19 +152,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_diaper -> {
                     DiaperModalBottomSheet(
-                        date = viewModel.date.value!!,
-                        actionButtonClick = { register ->
-                            viewModel.addRegister(register)
-                        }
+                        date = viewModel.currentDate(),
+                        actionButtonClick = { register -> viewModel.addRegister(register) }
                     ).show(supportFragmentManager, DiaperModalBottomSheet.TAG)
                     true
                 }
                 R.id.nav_bathe -> {
                     BatheModalBottomSheet(
-                        date = viewModel.date.value!!,
-                        actionButtonClick = { register ->
-                            viewModel.addRegister(register)
-                        }
+                        date = viewModel.currentDate(),
+                        actionButtonClick = { register -> viewModel.addRegister(register) }
                     ).show(supportFragmentManager, BatheModalBottomSheet.TAG)
                     true
                 }
@@ -188,7 +174,7 @@ class MainActivity : AppCompatActivity() {
             setupRecyclerView(registers)
         }
         viewModel.date.observe(this) { date ->
-            updateDate(date)
+            updateTvDate(date)
             viewModel.loadRegisters()
         }
     }

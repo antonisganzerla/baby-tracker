@@ -3,52 +3,48 @@ package com.sgztech.babytracker.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sgztech.babytracker.R
+import com.sgztech.babytracker.data.RegisterRepository
 import com.sgztech.babytracker.model.Register
 import java.time.LocalDate
-import java.time.LocalDateTime
 
-class MainViewModel : ViewModel() {
-
-    private val datasource: MutableList<Register> = mutableListOf()
+class MainViewModel(
+    private val dateFormatter: DateTimeFormatter = DateTimeFormatter(),
+    private val repository: RegisterRepository = RegisterRepository(),
+) : ViewModel() {
 
     private val _registers: MutableLiveData<List<Register>> = MutableLiveData()
     val registers: LiveData<List<Register>> = _registers
 
-    private var _date: MutableLiveData<LocalDateTime> = MutableLiveData()
-    val date: LiveData<LocalDateTime> = _date
+    private var _date: MutableLiveData<LocalDate> = MutableLiveData()
+    val date: LiveData<LocalDate> = _date
 
     init {
-        _date.postValue(LocalDateTime.now())
-        datasource.addAll(fakeData())
+        _date.postValue(LocalDate.now())
     }
 
     fun loadRegisters() {
-        val registers = datasource.filter { it.time.toLocalDate().isEqual(date.value?.toLocalDate() ?: LocalDate.now()) }
-        _registers.postValue(registers)
+        _registers.postValue(repository.load(currentDate()))
     }
 
-    private fun fakeData(): List<Register> = listOf(
-        Register(
-            icon = R.drawable.ic_bathtub_24,
-            name = "Banho",
-            description = "",
-            time = LocalDateTime.now().plusHours(1),
-        ),
-        Register(
-            icon = R.drawable.ic_food_bank_24,
-            name = "Amamentação",
-            description = "Esquerda 15:10",
-            time = LocalDateTime.now().plusHours(2),
-        ),
-    )
+    fun currentDate(): LocalDate = date.value ?: LocalDate.now()
 
     fun addRegister(register: Register) {
-        datasource.add(register)
+        repository.add(register)
         loadRegisters()
     }
 
-    fun updateDate(date: LocalDateTime?) {
+    fun updateDate(date: LocalDate?) {
         _date.postValue(date)
     }
+
+    fun plusDay() {
+        updateDate(date.value?.plusDays(1))
+    }
+
+    fun minusDay() {
+        updateDate(date.value?.minusDays(1))
+    }
+
+    fun formatDate(): String =
+        dateFormatter.format(currentDate())
 }

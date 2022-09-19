@@ -10,7 +10,7 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.util.brazilianLocale
+import com.sgztech.babytracker.ui.DateTimeFormatter
 import java.time.LocalTime
 
 abstract class BaseRegisterModalBottomSheet(
@@ -18,6 +18,7 @@ abstract class BaseRegisterModalBottomSheet(
     private val timeSelectorId: Int,
     @IdRes
     private val noteInputId: Int,
+    private val dateFormatter: DateTimeFormatter = DateTimeFormatter(),
 ) : BottomSheetDialogFragment() {
 
     private var hour: Int = LocalTime.now().hour
@@ -66,9 +67,9 @@ abstract class BaseRegisterModalBottomSheet(
         TimePickerDialog(requireContext(), onTimeSetListener, hour, minute, true).show()
     }
 
-    private fun formatTime() = String.format(brazilianLocale(), "%02d:%02d", hour, minute)
+    private fun formatTime() = dateFormatter.formatHours(hour, minute)
 
     fun getHour(): Int = hour
     fun getMinute(): Int = minute
-    fun getNote(): String = etNote.text.toString()
+    fun getNote(): String = etNote.text.toString().trim()
 }
