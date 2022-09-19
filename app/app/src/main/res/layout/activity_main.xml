@@ -62,10 +62,13 @@
             app:layout_constraintTop_toBottomOf="@+id/buttonLeft"
             tools:listitem="@layout/register_card_view" />
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
+        <com.dargoz.extendedbottomnavigationview.BottomNavigationBar
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:menuBackgroundColor="?attr/colorSurface"
+            app:subMenuBackground="?attr/colorSurface"
+            app:subMenuTextColor="@color/mtrl_navigation_bar_item_tint"
             app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

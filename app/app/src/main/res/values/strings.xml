@@ -60,6 +60,7 @@
 
     <!-- Menu item drawer -->
     <string name="menu_item_registers">Registros</string>
+    <string name="menu_item_chart">Análises</string>
     <string name="menu_item_logout">Sair</string>
     <string name="menu_item_title">Ajuda</string>
     <string name="menu_item_about">Sobre o app</string>
@@ -69,8 +70,10 @@
     <string name="menu_item_diaper">Fralda</string>
     <string name="menu_item_bathe">Banho</string>
     <string name="menu_item_baby_bottle">Mamadeira</string>
+    <string name="menu_item_more">Outros</string>
     <string name="menu_item_weight">Peso</string>
     <string name="menu_item_height">Altura</string>
+    <string name="menu_item_nap">Soneca</string>
 
     <!-- Menu item toolbar -->
     <string name="menu_item_baby">Bebê</string>

@@ -14,7 +14,9 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.dargoz.extendedbottomnavigationview.BottomNavigationBar
+import com.dargoz.extendedbottomnavigationview.BottomNavigationBar.SELECTED_NONE
+import com.dargoz.extendedbottomnavigationview.menu.SubMenuOrientation
 import com.google.android.material.navigation.NavigationView
 import com.natura.android.button.TextButton
 import com.sgztech.babytracker.R
@@ -34,8 +36,9 @@ class MainActivity : AppCompatActivity() {
     private val buttonLeft: TextButton by lazy { findViewById(R.id.buttonLeft) }
     private val buttonRight: TextButton by lazy { findViewById(R.id.buttonRight) }
     private val recyclerViewRegisters: RecyclerView by lazy { findViewById(R.id.recyclerViewRegisters) }
-    private val bottomNavigationView: BottomNavigationView by lazy { findViewById(R.id.bottomNavigationView) }
+    private val bottomNavigationBar: BottomNavigationBar by lazy { findViewById(R.id.bottomNavigationView) }
     private val viewModel: MainViewModel by viewModels()
+    private var visibility = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +76,9 @@ class MainActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_item_tools -> {
+                    // TODO
+                }
+                R.id.nav_item_chart -> {
                     // TODO
                 }
                 R.id.nav_item_logout -> {
@@ -144,27 +150,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigationView() {
-        bottomNavigationView.menu.setGroupCheckable(0, false, true)
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_feeding -> {
-                    true
-                }
-                R.id.nav_diaper -> {
+        bottomNavigationBar.addSubMenu(R.menu.sub_menu_bottom_list, 4, SubMenuOrientation.VERTICAL)
+        bottomNavigationBar.showSubMenu(4, visibility)
+        bottomNavigationBar.setMenuOnClickListener { _, position: Int ->
+            when (position) {
+                0 -> {}
+                1 -> {
                     DiaperModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register -> viewModel.addRegister(register) }
                     ).show(supportFragmentManager, DiaperModalBottomSheet.TAG)
-                    true
                 }
-                R.id.nav_bathe -> {
+                2 -> {
                     BatheModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register -> viewModel.addRegister(register) }
                     ).show(supportFragmentManager, BatheModalBottomSheet.TAG)
-                    true
                 }
-                else -> false
+                3 -> {}
+                4 -> {
+                    visibility = !visibility
+                    bottomNavigationBar.showSubMenu(position, visibility)
+                }
+            }
+        }
+        bottomNavigationBar.setSubMenuOnClickListener { _, position ->
+            when (position) {
+                0 -> {
+                    println("oi")
+                }
+                1 -> {}
             }
         }
     }

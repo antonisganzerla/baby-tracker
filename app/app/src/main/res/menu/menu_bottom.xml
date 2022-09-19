@@ -17,12 +17,12 @@
             android:icon="@drawable/ic_bathtub_24"
             android:title="@string/menu_item_bathe" />
         <item
-            android:id="@+id/nav_weight"
-            android:icon="@drawable/ic_balance_24"
-            android:title="@string/menu_item_weight" />
+            android:id="@+id/nav_sleep"
+            android:icon="@drawable/ic_bedroom_baby_24"
+            android:title="@string/menu_item_nap" />
         <item
-            android:id="@+id/nav_height"
-            android:icon="@drawable/ic_height_24"
-            android:title="@string/menu_item_height" />
+            android:id="@+id/nav_more"
+            android:icon="@drawable/filled_navigation_more"
+            android:title="@string/menu_item_more" />
     </group>
 </menu>
