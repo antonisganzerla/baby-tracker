@@ -52,19 +52,54 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewRegisters"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="16dp"
             android:scrollbars="vertical"
             android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonLeft"
             tools:listitem="@layout/register_card_view" />
 
+        <LinearLayout
+            android:id="@+id/panelEmptyMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView">
+
+            <ImageView
+                android:id="@+id/iv_baby"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="24dp"
+                android:src="@drawable/ic_child_care_24" />
+
+            <TextView
+                android:id="@+id/tv_empty"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="24dp"
+                android:text="@string/empty_message"
+                android:textAlignment="center" />
+
+            <ImageView
+                android:id="@+id/iv_arrow"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="48dp"
+                android:src="@drawable/filled_navigation_arrowbottom" />
+        </LinearLayout>
+
         <com.dargoz.extendedbottomnavigationview.BottomNavigationBar
             android:id="@+id/bottomNavigationView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:menuBackgroundColor="?attr/colorSurface"
             app:subMenuBackground="?attr/colorSurface"
@@ -80,6 +115,7 @@
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navView"
         android:layout_width="match_parent"
+        tools:visibility="gone"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"

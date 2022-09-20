@@ -4,7 +4,9 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -15,15 +17,13 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dargoz.extendedbottomnavigationview.BottomNavigationBar
-import com.dargoz.extendedbottomnavigationview.BottomNavigationBar.SELECTED_NONE
 import com.dargoz.extendedbottomnavigationview.menu.SubMenuOrientation
 import com.google.android.material.navigation.NavigationView
 import com.natura.android.button.TextButton
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.firebaseInstance
 import com.sgztech.babytracker.model.Register
-import com.sgztech.babytracker.ui.custom.BatheModalBottomSheet
-import com.sgztech.babytracker.ui.custom.DiaperModalBottomSheet
+import com.sgztech.babytracker.ui.custom.*
 import com.squareup.picasso.Picasso
 import java.time.LocalDate
 
@@ -36,9 +36,10 @@ class MainActivity : AppCompatActivity() {
     private val buttonLeft: TextButton by lazy { findViewById(R.id.buttonLeft) }
     private val buttonRight: TextButton by lazy { findViewById(R.id.buttonRight) }
     private val recyclerViewRegisters: RecyclerView by lazy { findViewById(R.id.recyclerViewRegisters) }
+    private val panelEmptyMessage: LinearLayout by lazy { findViewById(R.id.panelEmptyMessage) }
     private val bottomNavigationBar: BottomNavigationBar by lazy { findViewById(R.id.bottomNavigationView) }
     private val viewModel: MainViewModel by viewModels()
-    private var visibility = false
+    private var subMenuVisibility = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,16 +143,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView(registers: List<Register>) {
-        recyclerViewRegisters.apply {
-            adapter = RegisterAdapter(registers = registers)
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            setHasFixedSize(true)
+        if (registers.isEmpty()) {
+            recyclerViewRegisters.visibility = View.GONE
+            panelEmptyMessage.visibility = View.VISIBLE
+        } else {
+            recyclerViewRegisters.visibility = View.VISIBLE
+            panelEmptyMessage.visibility = View.GONE
+            recyclerViewRegisters.apply {
+                adapter = RegisterAdapter(registers = registers)
+                layoutManager = LinearLayoutManager(this@MainActivity)
+                setHasFixedSize(true)
+            }
         }
     }
 
     private fun setupBottomNavigationView() {
         bottomNavigationBar.addSubMenu(R.menu.sub_menu_bottom_list, 4, SubMenuOrientation.VERTICAL)
-        bottomNavigationBar.showSubMenu(4, visibility)
+        bottomNavigationBar.showSubMenu(4, subMenuVisibility)
         bottomNavigationBar.setMenuOnClickListener { _, position: Int ->
             when (position) {
                 0 -> {}
@@ -162,24 +170,45 @@ class MainActivity : AppCompatActivity() {
                     ).show(supportFragmentManager, DiaperModalBottomSheet.TAG)
                 }
                 2 -> {
+                }
+                3 -> {
                     BatheModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register -> viewModel.addRegister(register) }
                     ).show(supportFragmentManager, BatheModalBottomSheet.TAG)
                 }
-                3 -> {}
                 4 -> {
-                    visibility = !visibility
-                    bottomNavigationBar.showSubMenu(position, visibility)
+                    subMenuVisibility = !subMenuVisibility
+                    bottomNavigationBar.showSubMenu(position, subMenuVisibility)
                 }
             }
         }
         bottomNavigationBar.setSubMenuOnClickListener { _, position ->
             when (position) {
                 0 -> {
-                    println("oi")
+                    ColicModalBottomSheet(
+                        date = viewModel.currentDate(),
+                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                    ).show(supportFragmentManager, ColicModalBottomSheet.TAG)
                 }
-                1 -> {}
+                1 -> {
+                    WeightModalBottomSheet(
+                        date = viewModel.currentDate(),
+                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                    ).show(supportFragmentManager, WeightModalBottomSheet.TAG)
+                }
+                2 -> {
+                    HeightModalBottomSheet(
+                        date = viewModel.currentDate(),
+                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                    ).show(supportFragmentManager, HeightModalBottomSheet.TAG)
+                }
+                3 -> {
+                    MedicalAppointmentModalBottomSheet(
+                        date = viewModel.currentDate(),
+                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                    ).show(supportFragmentManager, MedicalAppointmentModalBottomSheet.TAG)
+                }
             }
         }
     }

@@ -13,13 +13,13 @@
             android:icon="@drawable/ic_baby_changing_station_24"
             android:title="@string/menu_item_diaper" />
         <item
-            android:id="@+id/nav_bathe"
-            android:icon="@drawable/ic_bathtub_24"
-            android:title="@string/menu_item_bathe" />
-        <item
             android:id="@+id/nav_sleep"
             android:icon="@drawable/ic_bedroom_baby_24"
             android:title="@string/menu_item_nap" />
+        <item
+            android:id="@+id/nav_bathe"
+            android:icon="@drawable/ic_bathtub_24"
+            android:title="@string/menu_item_bathe" />
         <item
             android:id="@+id/nav_more"
             android:icon="@drawable/filled_navigation_more"

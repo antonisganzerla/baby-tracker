@@ -57,6 +57,7 @@
     <!-- Main -->
     <string name="open_drawer">Abrir</string>
     <string name="close_drawer">Fechar</string>
+    <string name="empty_message">Adicione os registros de hoje</string>
 
     <!-- Menu item drawer -->
     <string name="menu_item_registers">Registros</string>
@@ -71,9 +72,14 @@
     <string name="menu_item_bathe">Banho</string>
     <string name="menu_item_baby_bottle">Mamadeira</string>
     <string name="menu_item_more">Outros</string>
+    <string name="menu_item_colic">Cólica</string>
     <string name="menu_item_weight">Peso</string>
     <string name="menu_item_height">Altura</string>
+    <string name="medical_appointment">Consulta</string>
     <string name="menu_item_nap">Soneca</string>
+
+    <string name="weight_with_measure">Peso (kg)</string>
+    <string name="height_with_measure">Altura (cm)</string>
 
     <!-- Menu item toolbar -->
     <string name="menu_item_baby">Bebê</string>

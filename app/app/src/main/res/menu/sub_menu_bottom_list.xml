@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/nav_colic"
+        android:icon="@drawable/ic_crisis_alert_24"
+        android:title="@string/menu_item_colic" />
+    <item
         android:id="@+id/nav_weight"
         android:icon="@drawable/ic_balance_24"
         android:title="@string/menu_item_weight" />
@@ -8,4 +12,8 @@
         android:id="@+id/nav_height"
         android:icon="@drawable/ic_height_24"
         android:title="@string/menu_item_height" />
+    <item
+        android:id="@+id/nav_medical_appointment"
+        android:icon="@drawable/ic_local_hospital_24"
+        android:title="@string/medical_appointment" />
 </menu>

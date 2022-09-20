@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,7 +9,7 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:layout_marginTop="32dp"
-        android:src="@drawable/ic_baby_changing_station_24"
+        android:src="@drawable/ic_crisis_alert_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/menu_item_diaper"
+        android:text="@string/menu_item_colic"
         app:layout_constraintEnd_toEndOf="@+id/ivRegister"
         app:layout_constraintStart_toStartOf="@+id/ivRegister"
         app:layout_constraintTop_toBottomOf="@+id/ivRegister" />
@@ -38,26 +37,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvRegister" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputTypeSelector"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Tipo"
-        app:layout_constraintEnd_toEndOf="@+id/timeSelector"
-        app:layout_constraintStart_toStartOf="@+id/timeSelector"
-        app:layout_constraintTop_toBottomOf="@+id/timeSelector">
-
-        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-            android:id="@+id/autoCompleteTypeSelector"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            tools:text="Option" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
     <include
         android:id="@+id/textNote"
         layout="@layout/note_register_item"
@@ -65,9 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="@+id/textInputTypeSelector"
-        app:layout_constraintStart_toStartOf="@+id/textInputTypeSelector"
-        app:layout_constraintTop_toBottomOf="@+id/textInputTypeSelector"/>
+        app:layout_constraintEnd_toEndOf="@+id/timeSelector"
+        app:layout_constraintStart_toStartOf="@+id/timeSelector"
+        app:layout_constraintTop_toBottomOf="@+id/timeSelector"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSave"

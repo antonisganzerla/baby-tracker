@@ -48,7 +48,7 @@
         app:layout_constraintStart_toStartOf="@+id/timeSelector"
         app:layout_constraintTop_toBottomOf="@+id/timeSelector"/>
 
-    <com.google.android.material.button.MaterialButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSave"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
