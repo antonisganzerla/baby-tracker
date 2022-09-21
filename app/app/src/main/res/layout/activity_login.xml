@@ -8,17 +8,28 @@
     tools:context=".ui.LoginActivity">
 
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/materialTextView"
+        style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:fontFamily="@string/font_family_black"
         android:text="@string/app_name"
         android:textSize="30sp"
-        style="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toTopOf="@+id/ivIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginBottom="32dp"
+        android:src="@drawable/ic_child_care_24"
         app:layout_constraintBottom_toTopOf="@+id/textInputLayoutEmail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -32,15 +43,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.35000002">
+        app:layout_constraintVertical_bias="0.45">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/prompt_email"
-            android:drawablePadding="5dp"
             android:drawableStart="@drawable/ic_email_24"
+            android:drawablePadding="5dp"
+            android:hint="@string/prompt_email"
             android:inputType="textEmailAddress" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -49,48 +60,44 @@
         android:id="@+id/textInputLayoutPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
         android:layout_marginTop="12dp"
-        app:passwordToggleEnabled="true"
         android:imeOptions="actionDone"
         android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail">
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutEmail"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayoutEmail"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail"
+        app:passwordToggleEnabled="true">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawablePadding="5dp"
             android:drawableStart="@drawable/ic_lock_24"
-            android:inputType="textPassword"
-            android:hint="@string/prompt_password" />
+            android:drawablePadding="5dp"
+            android:hint="@string/prompt_password"
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <CheckBox
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/cb_remember_me"
         style="@style/TextAppearance.AppCompat.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
         android:text="@string/cb_remember_me"
         app:layout_constraintBottom_toTopOf="@+id/btn_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayoutPassword"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPassword" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_forgot_password"
         style="@style/TextAppearance.AppCompat.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="48dp"
         android:text="@string/tv_forgot_password"
         app:layout_constraintBottom_toTopOf="@+id/btn_login"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutPassword"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPassword" />
@@ -98,15 +105,13 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_login"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
         android:layout_marginBottom="10dp"
         android:text="@string/action_sign_in"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutPassword"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayoutPassword"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPassword"
         app:layout_constraintVertical_bias="0.19999999" />
 
@@ -128,19 +133,17 @@
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_login"
+        app:layout_constraintStart_toStartOf="@+id/btn_login"
         app:layout_constraintTop_toBottomOf="@+id/btn_login"
         app:layout_constraintVertical_bias="0.050000012" />
 
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_create_account"
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"

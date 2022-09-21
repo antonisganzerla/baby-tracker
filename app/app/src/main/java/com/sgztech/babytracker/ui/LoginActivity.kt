@@ -42,7 +42,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupLoginButton() {
         loginButton.setOnClickListener {
-            openMainActivity()
+            openBabyActivity()
         }
     }
 
@@ -71,7 +71,7 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     log(getString(R.string.msg_signin_firebase_success))
-                    openMainActivity()
+                    openBabyActivity()
                 } else {
                     log(getString(R.string.msg_signin_firebase_fail))
                     log(task.exception.toString())
@@ -79,8 +79,8 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-    private fun openMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
+    private fun openBabyActivity() {
+        val intent = Intent(this, BabyActivity::class.java)
         startActivity(intent)
         finish()
     }

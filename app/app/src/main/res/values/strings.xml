@@ -48,11 +48,21 @@
 
     <!-- Reset Password-->
     <string name="toolbar_title_register_new_password">Redefinir senha</string>
-    <string name="btn_alter_password">Salvar</string>
+    <string name="btn_alter_password">@string/btn_save</string>
     <string name="tv_reset_password">Informe sua nova senha</string>
     <string name="prompt_new_password">Nova senha</string>
     <string name="msg_fail_to_reset_password">Falha ao redefinir senha</string>
     <string name="msg_password_reseted">Senha redefinida com sucesso</string>
+
+    <string name="btn_save">Salvar</string>
+
+    <!-- Baby -->
+    <string name="tv_name">Nome</string>
+    <string name="tv_birthday">Data de nascimento</string>
+    <string name="tv_sex">Sexo</string>
+    <string name="toolbar_title_baby">Adicionar bebê</string>
+    <string name="tv_baby_photo">Adicionar foto do bebê</string>
+    <string name="edit_baby_photo">Editar foto do bebê</string>
 
     <!-- Main -->
     <string name="open_drawer">Abrir</string>
@@ -88,5 +98,11 @@
         <item>Chichi</item>
         <item>Cocô</item>
         <item>Chichi e cocô</item>
+    </string-array>
+
+    <string-array name="sex_options">
+        <item>Masculino</item>
+        <item>Feminino</item>
+        <item>Outro</item>
     </string-array>
 </resources>

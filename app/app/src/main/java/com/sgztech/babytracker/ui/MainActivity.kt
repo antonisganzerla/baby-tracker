@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateTvDate(date: LocalDate) {
-        tvDate.text = viewModel.formatDate()
+        tvDate.text = viewModel.formatDate(date)
     }
 
     private fun setupArrowButtons() {

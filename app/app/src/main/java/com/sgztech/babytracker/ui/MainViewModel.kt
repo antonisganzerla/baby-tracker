@@ -45,6 +45,6 @@ class MainViewModel(
         updateDate(date.value?.minusDays(1))
     }
 
-    fun formatDate(): String =
-        dateFormatter.format(currentDate())
+    fun formatDate(date: LocalDate): String =
+        dateFormatter.format(date)
 }
