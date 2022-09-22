@@ -3,7 +3,6 @@ package com.sgztech.babytracker.ui
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -18,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dargoz.extendedbottomnavigationview.BottomNavigationBar
 import com.dargoz.extendedbottomnavigationview.menu.SubMenuOrientation
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.navigation.NavigationView
 import com.natura.android.button.TextButton
 import com.sgztech.babytracker.R
@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     private val drawerLayout: DrawerLayout by lazy { findViewById(R.id.drawerLayout) }
     private val toolbar: Toolbar by lazy { findViewById(R.id.toolbar) }
+    private val ivToolbar: ImageView by lazy { findViewById(R.id.ivToolbar) }
+    private val cardIvBaby: MaterialCardView by lazy { findViewById(R.id.cardIvBaby) }
     private val navView: NavigationView by lazy { findViewById(R.id.navView) }
     private val tvDate: TextView by lazy { findViewById(R.id.tvDate) }
     private val buttonLeft: TextButton by lazy { findViewById(R.id.buttonLeft) }
@@ -56,6 +58,10 @@ class MainActivity : AppCompatActivity() {
     private fun setupToolbar() {
         val baby = viewModel.getBaby(this)
         toolbar.title = baby.name
+        if (baby.photoUri.isNotEmpty()){
+            cardIvBaby.visibility = View.VISIBLE
+            Picasso.get().load(baby.photoUri).into(ivToolbar)
+        }
         setSupportActionBar(toolbar)
     }
 
@@ -231,10 +237,5 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_toolbar, menu)
-        return super.onCreateOptionsMenu(menu)
     }
 }
