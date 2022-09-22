@@ -61,8 +61,17 @@ class MainActivity : AppCompatActivity() {
         if (baby.photoUri.isNotEmpty()){
             cardIvBaby.visibility = View.VISIBLE
             Picasso.get().load(baby.photoUri).into(ivToolbar)
+            ivToolbar.setOnClickListener {
+                openBabyActivity()
+            }
         }
         setSupportActionBar(toolbar)
+    }
+
+    private fun openBabyActivity() {
+        val intent = Intent(this, BabyActivity::class.java)
+        intent.putExtra(EDIT_KEY, true)
+        startActivity(intent)
     }
 
     private fun setupDrawer() {

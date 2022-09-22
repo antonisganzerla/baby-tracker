@@ -72,7 +72,8 @@
     <string name="tv_name">Nome</string>
     <string name="tv_birthday">Data de nascimento</string>
     <string name="tv_sex">Sexo</string>
-    <string name="toolbar_title_baby">Adicionar bebê</string>
+    <string name="toolbar_title_add_baby">Adicionar bebê</string>
+    <string name="toolbar_title_edit_baby">Editar bebê</string>
     <string name="tv_baby_photo">Adicionar foto do bebê</string>
     <string name="edit_baby_photo">Editar foto do bebê</string>
 

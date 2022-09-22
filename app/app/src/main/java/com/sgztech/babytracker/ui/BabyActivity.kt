@@ -2,6 +2,7 @@ package com.sgztech.babytracker.ui
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ImageView
@@ -9,15 +10,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.net.toUri
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.getBaby
 import com.sgztech.babytracker.model.Baby
 import com.squareup.picasso.Picasso
 import java.time.LocalDate
+
+const val EDIT_KEY = "edit"
 
 class BabyActivity : AppCompatActivity() {
 
@@ -30,21 +35,23 @@ class BabyActivity : AppCompatActivity() {
     private val tvBabyPhoto: MaterialTextView by lazy { findViewById(R.id.tvBabyPhoto) }
     private val viewModel: BabyViewModel by viewModels()
     private var photoUri: String = ""
+    private var isEditingMode: Boolean = false
 
     private val galleryActivityResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         val imageUri = result.data?.data
         imageUri?.let {
-            Picasso.get().load(it).into(ivBaby)
-            tvBabyPhoto.text = getString(R.string.edit_baby_photo)
-            photoUri = it.toString()
+            loadBabyImage(it)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_baby)
+
+        isEditingMode = intent.getBooleanExtra(EDIT_KEY, false)
+
         setupToolbar()
         setupBtnSave()
         setupDatePicker()
@@ -55,9 +62,29 @@ class BabyActivity : AppCompatActivity() {
 
     private fun setupToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.title = getString(R.string.toolbar_title_baby)
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        if (isEditingMode) {
+            supportActionBar?.title = getString(R.string.toolbar_title_edit_baby)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            loadBabyInfo()
+        } else {
+            supportActionBar?.title = getString(R.string.toolbar_title_add_baby)
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        }
+    }
+    private fun loadBabyInfo() {
+        val baby = getBaby()
+        etName.setText(baby.name)
+        autoCompleteBirthday.setText(viewModel.formatDate(baby.birthday))
+        autoCompleteSex.setText(baby.sex)
+        loadBabyImage(baby.photoUri.toUri())
+        viewModel.updateDate(baby.birthday)
+    }
+
+    private fun loadBabyImage(imageUri: Uri) {
+        Picasso.get().load(imageUri).into(ivBaby)
+        tvBabyPhoto.text = getString(R.string.edit_baby_photo)
+        photoUri = imageUri.toString()
     }
 
     private fun setupBtnSave() {
@@ -126,5 +153,11 @@ class BabyActivity : AppCompatActivity() {
         viewModel.date.observe(this) { date ->
             autoCompleteBirthday.setText(viewModel.formatDate(date))
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        finish()
+        return true
     }
 }
