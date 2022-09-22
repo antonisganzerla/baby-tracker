@@ -54,7 +54,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        toolbar.title = getString(R.string.app_name)
+        val baby = viewModel.getBaby(this)
+        toolbar.title = baby.name
         setSupportActionBar(toolbar)
     }
 
@@ -220,6 +221,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.date.observe(this) { date ->
             updateTvDate(date)
             viewModel.loadRegisters()
+            toolbar.subtitle = viewModel.getBetweenMessage(this)
         }
     }
 

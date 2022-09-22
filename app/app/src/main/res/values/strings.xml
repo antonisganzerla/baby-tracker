@@ -1,6 +1,18 @@
 <resources>
     <string name="app_name">Diário do bebê</string>
 
+    <!-- Shared Preferences-->
+    <string name="logged_user_key">logged_user_key</string>
+    <string name="remember_email">remember_email</string>
+    <string name="remember_password">remember_password</string>
+    <string name="remember_cb_login">remember_cb_login</string>
+    <string name="session_user_id_key">session_user_id_key</string>
+    <string name="session_user_name_key">session_user_name_key</string>
+    <string name="session_user_email_key">session_user_email_key</string>
+    <string name="session_user_token_key">session_user_token_key</string>
+    <string name="session_user_security_token_key">session_user_security_token_key</string>
+    <string name="session_baby_key">session_baby_key</string>
+
     <!-- Login -->
     <string name="prompt_email">E-mail</string>
     <string name="prompt_password">Senha</string>
@@ -68,6 +80,7 @@
     <string name="open_drawer">Abrir</string>
     <string name="close_drawer">Fechar</string>
     <string name="empty_message">Adicione os registros de hoje</string>
+    <string name="date_between">%1$s Meses e %2$s Dias</string>
 
     <!-- Menu item drawer -->
     <string name="menu_item_registers">Registros</string>
