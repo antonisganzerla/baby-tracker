@@ -34,7 +34,7 @@ class HeightModalBottomSheet (
                     icon = R.drawable.ic_height_24,
                     name = getString(R.string.menu_item_weight),
                     description = etHeight.text.toString().plus(" ".plus("cm")),
-                    time = date.atTime(getHour(), getMinute()),
+                    startTime = date.atTime(getHour(), getMinute()),
                     note = getNote(),
                 )
             )

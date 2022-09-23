@@ -30,7 +30,7 @@ class ColicModalBottomSheet (
                     icon = R.drawable.ic_crisis_alert_24,
                     name = getString(R.string.menu_item_colic),
                     description = "",
-                    time = date.atTime(getHour(), getMinute()),
+                    startTime = date.atTime(getHour(), getMinute()),
                     note = getNote(),
                 )
             )

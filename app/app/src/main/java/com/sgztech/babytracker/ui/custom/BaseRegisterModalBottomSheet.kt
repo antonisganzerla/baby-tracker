@@ -69,6 +69,11 @@ abstract class BaseRegisterModalBottomSheet(
 
     private fun formatTime() = dateFormatter.formatHours(hour, minute)
 
+    fun disableTimeSelector() {
+        timeSelector.isEnabled = false
+        autoCompleteTimeSelector.isEnabled = false
+    }
+
     fun getHour(): Int = hour
     fun getMinute(): Int = minute
     fun getNote(): String = etNote.text.toString().trim()

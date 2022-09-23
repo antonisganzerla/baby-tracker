@@ -30,7 +30,7 @@ class MedicalAppointmentModalBottomSheet(
                     icon = R.drawable.ic_local_hospital_24,
                     name = getString(R.string.medical_appointment),
                     description = "",
-                    time = date.atTime(getHour(), getMinute()),
+                    startTime = date.atTime(getHour(), getMinute()),
                     note = getNote(),
                 )
             )

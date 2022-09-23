@@ -8,7 +8,8 @@ data class Register(
     val icon: Int,
     val name: String,
     val description: String,
-    val time: LocalDateTime,
+    val startTime: LocalDateTime,
+    val endTime: LocalDateTime? = null,
     val note: String = "",
 )
 

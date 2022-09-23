@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupToolbar() {
         val baby = viewModel.getBaby(this)
         toolbar.title = baby.name
-        if (baby.photoUri.isNotEmpty()){
+        if (baby.photoUri.isNotEmpty()) {
             cardIvBaby.visibility = View.VISIBLE
             Picasso.get().load(baby.photoUri).into(ivToolbar)
             ivToolbar.setOnClickListener {
@@ -186,6 +186,10 @@ class MainActivity : AppCompatActivity() {
                     ).show(supportFragmentManager, DiaperModalBottomSheet.TAG)
                 }
                 2 -> {
+                    SleepModalBottomSheet(
+                        date = viewModel.currentDate(),
+                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                    ).show(supportFragmentManager, SleepModalBottomSheet.TAG)
                 }
                 3 -> {
                     BatheModalBottomSheet(
