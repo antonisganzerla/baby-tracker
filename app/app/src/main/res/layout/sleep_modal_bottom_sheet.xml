@@ -27,7 +27,7 @@
 
     <Chronometer
         android:id="@+id/chronometer"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
@@ -40,8 +40,8 @@
 
     <ToggleButton
         android:id="@+id/toggleButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:background="@drawable/start_pause_btn_bg"
         android:layout_marginTop="16dp"
         android:selectAllOnFocus="true"
