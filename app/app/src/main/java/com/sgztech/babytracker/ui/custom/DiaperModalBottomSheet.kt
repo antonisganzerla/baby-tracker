@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.appcompat.widget.AppCompatButton
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.sgztech.babytracker.R
@@ -48,9 +47,6 @@ class DiaperModalBottomSheet(
             dismiss()
         }
     }
-
-    private fun buildArrayAdapter(items: Array<String>): ArrayAdapter<String> =
-        ArrayAdapter(requireView().context, R.layout.dropdown_item, items)
 
     companion object {
         const val TAG = "DiaperModalBottomSheet"

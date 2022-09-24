@@ -3,8 +3,11 @@ package com.sgztech.babytracker.ui.custom
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.TimePicker
 import androidx.annotation.IdRes
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
@@ -77,4 +80,15 @@ abstract class BaseRegisterModalBottomSheet(
     fun getHour(): Int = hour
     fun getMinute(): Int = minute
     fun getNote(): String = etNote.text.toString().trim()
+
+    protected fun buildArrayAdapter(items: Array<String>): ArrayAdapter<String> =
+        ArrayAdapter(requireView().context, R.layout.dropdown_item, items)
+
+    protected fun updateLayoutParamsTimeSelector(
+        block: ConstraintLayout.LayoutParams.() -> Unit,
+    ) {
+        timeSelector.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            block()
+        }
+    }
 }

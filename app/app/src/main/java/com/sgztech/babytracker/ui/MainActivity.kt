@@ -178,7 +178,12 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationBar.showSubMenu(4, subMenuVisibility)
         bottomNavigationBar.setMenuOnClickListener { _, position: Int ->
             when (position) {
-                0 -> {}
+                0 -> {
+                    FeedingModalBottomSheet(
+                        date = viewModel.currentDate(),
+                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                    ).show(supportFragmentManager, FeedingModalBottomSheet.TAG)
+                }
                 1 -> {
                     DiaperModalBottomSheet(
                         date = viewModel.currentDate(),

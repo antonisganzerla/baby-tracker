@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/ivRegister"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/ic_food_bank_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvRegister"
+        style="@style/TextAppearance.AppCompat.Headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/menu_item_feeding"
+        app:layout_constraintEnd_toEndOf="@+id/ivRegister"
+        app:layout_constraintStart_toStartOf="@+id/ivRegister"
+        app:layout_constraintTop_toBottomOf="@+id/ivRegister" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputTypeSelector"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Tipo"
+        android:layout_marginHorizontal="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRegister">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/autoCompleteTypeSelector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            tools:text="Option" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/panelBreastFeeding"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/textInputTypeSelector"
+        app:layout_constraintStart_toStartOf="@+id/textInputTypeSelector"
+        app:layout_constraintTop_toBottomOf="@+id/textInputTypeSelector">
+
+        <Chronometer
+            android:id="@+id/chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:textSize="@dimen/ds_size_h4"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvRegister" />
+
+        <ImageView
+            android:id="@+id/ivToggle"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_play_circle_24"
+            android:layout_marginTop="16dp"
+            android:selectAllOnFocus="true"
+            app:layout_constraintEnd_toEndOf="@+id/chronometer"
+            app:layout_constraintStart_toStartOf="@+id/chronometer"
+            app:layout_constraintTop_toBottomOf="@+id/chronometer"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/panelBabyBottle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/textInputTypeSelector"
+        app:layout_constraintStart_toStartOf="@+id/textInputTypeSelector"
+        app:layout_constraintTop_toBottomOf="@+id/textInputTypeSelector">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:selectAllOnFocus="true"
+            app:layout_constraintEnd_toEndOf="@+id/timeSelector"
+            app:layout_constraintStart_toStartOf="@+id/timeSelector"
+            app:layout_constraintTop_toBottomOf="@+id/timeSelector">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/quantity_with_measure"
+                android:inputType="numberDecimal"
+                android:maxLength="4"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/timeSelector"
+        layout="@layout/time_register_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/panelBreastFeeding"
+        app:layout_constraintStart_toStartOf="@+id/panelBreastFeeding"
+        app:layout_constraintTop_toBottomOf="@+id/panelBreastFeeding" />
+
+    <include
+        android:id="@+id/textNote"
+        layout="@layout/note_register_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="@+id/timeSelector"
+        app:layout_constraintStart_toStartOf="@+id/timeSelector"
+        app:layout_constraintTop_toBottomOf="@+id/timeSelector"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnSave"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Salvar"
+        app:layout_constraintEnd_toEndOf="@+id/textNote"
+        app:layout_constraintStart_toStartOf="@+id/textNote"
+        app:layout_constraintTop_toBottomOf="@+id/textNote" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/btnSave" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

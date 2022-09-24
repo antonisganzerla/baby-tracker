@@ -92,6 +92,7 @@
     <string name="menu_item_about">Sobre o app</string>
 
     <!-- Menu item bottom -->
+    <string name="menu_item_feeding">Alimentação</string>
     <string name="menu_item_breast_feeding">Amamentação</string>
     <string name="menu_item_diaper">Fralda</string>
     <string name="menu_item_bathe">Banho</string>
@@ -105,6 +106,7 @@
 
     <string name="weight_with_measure">Peso (kg)</string>
     <string name="height_with_measure">Altura (cm)</string>
+    <string name="quantity_with_measure">Quantidade (ml)</string>
 
     <!-- Menu item toolbar -->
     <string name="menu_item_baby">Bebê</string>
@@ -113,6 +115,11 @@
         <item>Chichi</item>
         <item>Cocô</item>
         <item>Chichi e cocô</item>
+    </string-array>
+
+    <string-array name="feeding_options">
+        <item>Amamentação</item>
+        <item>Mamadeira</item>
     </string-array>
 
     <string-array name="sex_options">
