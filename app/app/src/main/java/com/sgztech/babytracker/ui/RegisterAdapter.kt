@@ -38,7 +38,7 @@ class RegisterAdapter(
             ivAction.setImageResource(register.icon)
             tvTitle.text = register.name
             tvSubtitle.setTextOrGone(register.description)
-            tvTime.text = dateFormatter.formatHours(register.startTime)
+            tvTime.text = dateFormatter.formatHours(register.localDateTime)
             tvNotes.setTextOrGone(register.note)
         }
 

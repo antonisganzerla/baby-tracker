@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Chronometer
-import android.widget.ToggleButton
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatButton
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.model.Register
@@ -22,10 +22,11 @@ class SleepModalBottomSheet(
 ) : BaseRegisterModalBottomSheet(R.id.timeSelector, R.id.textNote) {
 
     private val chronometer: Chronometer by lazy { requireView().findViewById(R.id.chronometer) }
-    private val toggleButton: ToggleButton by lazy { requireView().findViewById(R.id.toggleButton) }
+    private val ivToggle: ImageView by lazy { requireView().findViewById(R.id.ivToggle) }
     private val btnSave: AppCompatButton by lazy { requireView().findViewById(R.id.btnSave) }
     private var timeOffset: Long = 0
     private var chronometerIsRunning: Boolean = false
+    private var toogleChecked: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,8 +45,8 @@ class SleepModalBottomSheet(
                     icon = R.drawable.ic_bedroom_baby_24,
                     name = getString(R.string.menu_item_nap),
                     description = getFormattedTime(),
-                    startTime = date.atTime(getHour(), getMinute()),
-                    endTime = LocalDateTime.now(),
+                    localDateTime = date.atTime(getHour(), getMinute()),
+                    duration = timeOffset,
                     note = getNote(),
                 )
             )
@@ -55,19 +56,19 @@ class SleepModalBottomSheet(
     }
 
     private fun setupToggleButton() {
-        toggleButton.apply {
-            text = null
-            textOn = null
-            textOff = null
-            setOnCheckedChangeListener { _, checked ->
-                if (checked) {
+        ivToggle.apply {
+            setOnClickListener {
+                toogleChecked = !toogleChecked
+                if (toogleChecked) {
                     if (timeOffset == 0L) {
                         timeOffset = calculateTimeDifference()
                         disableTimeSelector()
                     }
                     startChronometer()
+                    setImageResource(R.drawable.ic_pause_circle_24)
                 } else {
                     stopChronometer()
+                    setImageResource(R.drawable.ic_play_circle_24)
                 }
             }
         }

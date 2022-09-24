@@ -34,7 +34,7 @@ class WeightModalBottomSheet(
                     icon = R.drawable.ic_balance_24,
                     name = getString(R.string.menu_item_weight),
                     description = etWeight.text.toString().plus(" ".plus("kg")),
-                    startTime = date.atTime(getHour(), getMinute()),
+                    localDateTime = date.atTime(getHour(), getMinute()),
                     note = getNote(),
                 )
             )

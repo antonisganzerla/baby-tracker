@@ -8,7 +8,7 @@ class RegisterRepository {
     private val datasource: MutableList<Register> = fakeData()
 
     fun load(date: LocalDate): List<Register> =
-        datasource.filter { it.startTime.toLocalDate().isEqual(date) }.sortedBy { it.startTime }
+        datasource.filter { it.localDateTime.toLocalDate().isEqual(date) }.sortedBy { it.localDateTime }
 
     fun add(register: Register) {
         datasource.add(register)

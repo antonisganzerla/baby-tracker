@@ -30,7 +30,7 @@ class BatheModalBottomSheet(
                     icon = R.drawable.ic_bathtub_24,
                     name = getString(R.string.menu_item_bathe),
                     description = "",
-                    startTime = date.atTime(getHour(), getMinute()),
+                    localDateTime = date.atTime(getHour(), getMinute()),
                     note = getNote(),
                 )
             )

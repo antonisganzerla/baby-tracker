@@ -41,7 +41,7 @@ class DiaperModalBottomSheet(
                     icon = R.drawable.ic_baby_changing_station_24,
                     name = getString(R.string.menu_item_diaper),
                     description = autoCompleteTypeSelector.text.toString(),
-                    startTime = date.atTime(getHour(), getMinute()),
+                    localDateTime = date.atTime(getHour(), getMinute()),
                     note = getNote(),
                 )
             )
