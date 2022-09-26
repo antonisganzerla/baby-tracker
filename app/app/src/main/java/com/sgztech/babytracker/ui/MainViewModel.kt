@@ -1,20 +1,21 @@
 package com.sgztech.babytracker.ui
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sgztech.babytracker.R
+import androidx.lifecycle.viewModelScope
+import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.data.RegisterRepository
-import com.sgztech.babytracker.getBaby
 import com.sgztech.babytracker.model.Baby
 import com.sgztech.babytracker.model.Register
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.Period
 
 class MainViewModel(
-    private val dateFormatter: DateTimeFormatter = DateTimeFormatter(),
-    private val repository: RegisterRepository = RegisterRepository(),
+    private val dateFormatter: DateTimeFormatter,
+    private val preferenceService: PreferenceService,
+    private val repository: RegisterRepository,
 ) : ViewModel() {
 
     private val _registers: MutableLiveData<List<Register>> = MutableLiveData()
@@ -28,14 +29,29 @@ class MainViewModel(
     }
 
     fun loadRegisters() {
-        _registers.postValue(repository.load(currentDate()))
+        viewModelScope.launch {
+            _registers.postValue(repository.load(
+                userId = preferenceService.getUserId().toInt(),
+                date = currentDate(),
+            )
+            )
+        }
     }
 
     fun currentDate(): LocalDate = date.value ?: LocalDate.now()
 
     fun addRegister(register: Register) {
-        repository.add(register)
-        loadRegisters()
+        viewModelScope.launch {
+            repository.add(register.copy(userId = preferenceService.getUserId().toInt()))
+            loadRegisters()
+        }
+    }
+
+    fun deleteRegister(register: Register) {
+        viewModelScope.launch {
+            repository.delete(register)
+            loadRegisters()
+        }
     }
 
     fun updateDate(date: LocalDate) {
@@ -53,13 +69,9 @@ class MainViewModel(
     fun formatDate(date: LocalDate): String =
         dateFormatter.format(date)
 
-    fun getBaby(context: Context): Baby =
-        context.getBaby()
+    fun getBaby(): Baby =
+        preferenceService.getBaby()
 
-    fun getBetweenMessage(context: Context): String {
-        val period = Period.between(getBaby(context).birthday, currentDate())
-        if (period.isNegative)
-            return context.getString(R.string.before_born)
-        return context.getString(R.string.date_between, period.months, period.days)
-    }
+    fun getPeriodBetween(): Period =
+        Period.between(getBaby().birthday, currentDate())
 }

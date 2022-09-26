@@ -12,6 +12,7 @@ import com.sgztech.babytracker.model.Register
 class RegisterAdapter(
     private val registers: List<Register>,
     private val dateFormatter: DateTimeFormatter = DateTimeFormatter(),
+    private val onItemClick: (register: Register) -> Unit
 ) : RecyclerView.Adapter<RegisterAdapter.RegisterViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RegisterViewHolder {
@@ -40,6 +41,7 @@ class RegisterAdapter(
             tvSubtitle.setTextOrGone(register.description)
             tvTime.text = dateFormatter.formatHours(register.localDateTime)
             tvNotes.setTextOrGone(register.note)
+            itemView.setOnClickListener { onItemClick(register) }
         }
 
         private fun TextView.setTextOrGone(value: String) {

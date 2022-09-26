@@ -17,6 +17,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.firebaseInstance
 import com.sgztech.babytracker.googleSignInClient
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
 
@@ -30,6 +31,7 @@ class LoginActivity : AppCompatActivity() {
 
     private val signInButton: SignInButton by lazy { findViewById(R.id.sign_in_button) }
     private val loginButton: MaterialButton by lazy { findViewById(R.id.btn_login) }
+    private val viewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupLoginButton() {
         loginButton.setOnClickListener {
+            viewModel.saveUser()
             openBabyActivity()
         }
     }
@@ -71,6 +74,7 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     log(getString(R.string.msg_signin_firebase_success))
+                    viewModel.saveUser()
                     openBabyActivity()
                 } else {
                     log(getString(R.string.msg_signin_firebase_fail))

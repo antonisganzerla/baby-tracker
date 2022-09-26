@@ -1,15 +1,15 @@
 package com.sgztech.babytracker.ui
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.model.Baby
-import com.sgztech.babytracker.setBaby
 import java.time.LocalDate
 
 class BabyViewModel(
-    private val formatter: DateTimeFormatter = DateTimeFormatter(),
+    private val preferenceService: PreferenceService,
+    private val formatter: DateTimeFormatter,
 ) : ViewModel() {
 
     private var _date: MutableLiveData<LocalDate> = MutableLiveData()
@@ -24,7 +24,10 @@ class BabyViewModel(
     fun formatDate(date: LocalDate): String =
         formatter.format(date, "dd/MM/yyyy")
 
-    fun saveBaby(baby: Baby, context: Context) {
-        context.setBaby(baby)
+    fun saveBaby(baby: Baby) {
+        preferenceService.setBaby(baby)
     }
+
+    fun getBaby(): Baby =
+        preferenceService.getBaby()
 }

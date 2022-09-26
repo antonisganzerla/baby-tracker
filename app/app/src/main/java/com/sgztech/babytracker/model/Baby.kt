@@ -18,6 +18,7 @@ data class Baby(
     val birthday: LocalDate,
     val sex: String,
     val photoUri: String,
+    val userId: Int = 1,
 )
 
 object LocalDateIso8601Serializer: KSerializer<LocalDate> {

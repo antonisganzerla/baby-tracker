@@ -1,141 +1,110 @@
 package com.sgztech.babytracker
 
 import android.content.Context
-import androidx.preference.PreferenceManager
-import androidx.annotation.StringRes
+import android.content.SharedPreferences
 import com.sgztech.babytracker.model.Baby
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-fun Context.getBaby(): Baby {
-    val key = getKey(this, R.string.session_baby_key)
-    return Json.decodeFromString(getStringValue(key))
-}
+class PreferenceService(
+    private val sharedPreferences: SharedPreferences,
+) {
 
-fun Context.setBaby(baby: Baby) {
-    val value = Json.encodeToString(baby)
-    val key = getKey(this, R.string.session_baby_key)
-    setStringValue(key, value)
-}
+    fun getBaby(): Baby {
+        return Json.decodeFromString(getStringValue("session_baby_key"))
+    }
 
-fun Context.getUserLogged(): Boolean {
-    val key = getKey(this, R.string.logged_user_key)
-    return getBooleanValue(key)
-}
+    fun setBaby(baby: Baby) {
+        val value = Json.encodeToString(baby)
+        setStringValue("session_baby_key", value)
+    }
 
-fun Context.setUserLogged(value: Boolean) {
-    val key = getKey(this, R.string.logged_user_key)
-    setBooleanValue(key, value)
-}
+    fun getUserLogged(): Boolean {
+        return getBooleanValue("logged_user_key")
+    }
 
-fun Context.getUserId(): String {
-    val key = getKey(this, R.string.session_user_id_key)
-    return getStringValue(key)
-}
+    fun setUserLogged(value: Boolean) {
+        setBooleanValue("logged_user_key", value)
+    }
 
-fun Context.setUserId(value: String) {
-    val key = getKey(this, R.string.session_user_id_key)
-    setStringValue(key, value)
-}
+    fun getUserId(): String {
+        return getStringValue("session_user_id_key")
+    }
 
-fun Context.getUserName(): String {
-    val key = getKey(this, R.string.session_user_name_key)
-    return getStringValue(key)
-}
+    fun setUserId(value: String) {
+        setStringValue("session_user_id_key", value)
+    }
 
-fun Context.setUserName(value: String) {
-    val key = getKey(this, R.string.session_user_name_key)
-    setStringValue(key, value)
-}
+    fun getUserName(): String {
+        return getStringValue("session_user_name_key")
+    }
 
-fun Context.getUserEmail(): String {
-    val key = getKey(this, R.string.session_user_email_key)
-    return getStringValue(key)
-}
+    fun setUserName(value: String) {
+        setStringValue("session_user_name_key", value)
+    }
 
-fun Context.setUserEmail(value: String) {
-    val key = getKey(this, R.string.session_user_email_key)
-    setStringValue(key, value)
-}
+    fun getUserEmail(): String {
+        return getStringValue("session_user_email_key")
+    }
 
-fun Context.getUserToken(context: Context): String {
-    val key = getKey(this, R.string.session_user_token_key)
-    return getStringValue(key)
-}
+    fun setUserEmail(value: String) {
+        setStringValue("session_user_email_key", value)
+    }
 
-fun Context.setUserToken(value: String) {
-    val key = getKey(this, R.string.session_user_token_key)
-    setStringValue(key, value)
-}
+    fun getUserToken(context: Context): String {
+        return getStringValue("session_user_token_key")
+    }
 
-fun Context.getUserSecurityToken(): String {
-    val key = getKey(this, R.string.session_user_token_key)
-    return getStringValue(key)
-}
+    fun setUserToken(value: String) {
+        setStringValue("session_user_token_key", value)
+    }
 
-fun Context.setUserSecurityToken(value: String) {
-    val key = getKey(this, R.string.session_user_token_key)
-    setStringValue(key, value)
-}
+    fun getRememberEmail(): String {
+        return getStringValue("remember_email")
+    }
 
-fun Context.getRememberEmail(): String {
-    val key = getKey(this, R.string.remember_email)
-    return getStringValue(key)
-}
+    fun setRememberEmail(value: String) {
+        setStringValue("remember_email", value)
+    }
 
-fun Context.setRememberEmail(value: String) {
-    val key = getKey(this, R.string.remember_email)
-    setStringValue(key, value)
-}
+    fun getRememberPassword(): String {
+        return getStringValue("remember_password")
+    }
 
-fun Context.getRememberPassword(): String {
-    val key = getKey(this, R.string.remember_password)
-    return getStringValue(key)
-}
+    fun setRememberPassword(value: String) {
+        setStringValue("remember_password", value)
+    }
 
-fun Context.setRememberPassword(value: String) {
-    val key = getKey(this, R.string.remember_password)
-    setStringValue(key, value)
-}
+    fun getRememberCbLogin(): Boolean {
+        return getBooleanValue("remember_cb_login")
+    }
 
-fun Context.getRememberCbLogin(): Boolean {
-    val key = getKey(this, R.string.remember_cb_login)
-    return getBooleanValue(key)
-}
+    fun setRememberCbLogin(value: Boolean) {
+        setBooleanValue("remember_cb_login", value)
+    }
 
-fun Context.setRememberCbLogin(value: Boolean) {
-    val key = getKey(this, R.string.remember_cb_login)
-    setBooleanValue(key, value)
-}
+    private fun setBooleanValue(key: String, value: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean(key, value)
+        editor.apply()
+    }
 
-private fun Context.setBooleanValue(key: String, value: Boolean) {
-    val editor = sharedPreferences(this).edit()
-    editor.putBoolean(key, value)
-    editor.apply()
-}
+    private fun getBooleanValue(key: String): Boolean {
+        return sharedPreferences.getBoolean(key, DEFAULT_BOOLEAN_VALUE)
+    }
 
-private fun Context.getBooleanValue(key: String): Boolean {
-    return sharedPreferences(this).getBoolean(key, DEFAULT_BOOLEAN_VALUE)
-}
+    private fun setStringValue(key: String, value: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString(key, value)
+        editor.apply()
+    }
 
-private fun Context.setStringValue(key: String, value: String) {
-    val editor = sharedPreferences(this).edit()
-    editor.putString(key, value)
-    editor.apply()
+    private fun getStringValue(key: String): String {
+        val value = sharedPreferences.getString(key, DEFAULT_STRING_VALUE)
+        return value ?: DEFAULT_STRING_VALUE
+    }
 }
-
-private fun Context.getStringValue(key: String): String {
-    val value = sharedPreferences(this).getString(key, DEFAULT_STRING_VALUE)
-    return value ?: DEFAULT_STRING_VALUE
-}
-
-private fun getKey(context: Context, @StringRes code: Int): String {
-    return context.getString(code)
-}
-
-private fun sharedPreferences(context: Context) =
-    PreferenceManager.getDefaultSharedPreferences(context)
 
 private const val DEFAULT_STRING_VALUE = ""
 private const val DEFAULT_BOOLEAN_VALUE = false

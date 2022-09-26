@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -26,6 +25,7 @@ import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.ui.custom.*
 import com.squareup.picasso.Picasso
 import java.time.LocalDate
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     private val recyclerViewRegisters: RecyclerView by lazy { findViewById(R.id.recyclerViewRegisters) }
     private val panelEmptyMessage: LinearLayout by lazy { findViewById(R.id.panelEmptyMessage) }
     private val bottomNavigationBar: BottomNavigationBar by lazy { findViewById(R.id.bottomNavigationView) }
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModel()
     private var subMenuVisibility = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        val baby = viewModel.getBaby(this)
+        val baby = viewModel.getBaby()
         toolbar.title = baby.name
         if (baby.photoUri.isNotEmpty()) {
             cardIvBaby.visibility = View.VISIBLE
@@ -166,7 +166,9 @@ class MainActivity : AppCompatActivity() {
             recyclerViewRegisters.visibility = View.VISIBLE
             panelEmptyMessage.visibility = View.GONE
             recyclerViewRegisters.apply {
-                adapter = RegisterAdapter(registers = registers)
+                adapter = RegisterAdapter(registers = registers) { selectedRegister ->
+                    viewModel.deleteRegister(selectedRegister)
+                }
                 layoutManager = LinearLayoutManager(this@MainActivity)
                 setHasFixedSize(true)
             }
@@ -245,7 +247,11 @@ class MainActivity : AppCompatActivity() {
         viewModel.date.observe(this) { date ->
             updateTvDate(date)
             viewModel.loadRegisters()
-            toolbar.subtitle = viewModel.getBetweenMessage(this)
+            val period = viewModel.getPeriodBetween()
+            toolbar.subtitle = if (period.isNegative)
+                getString(R.string.before_born)
+            else
+                getString(R.string.date_between, period.months, period.days)
         }
     }
 

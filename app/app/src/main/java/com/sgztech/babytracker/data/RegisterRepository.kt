@@ -1,18 +1,21 @@
 package com.sgztech.babytracker.data
 
+import com.sgztech.babytracker.dao.RegisterDao
 import com.sgztech.babytracker.model.Register
 import java.time.LocalDate
 
-class RegisterRepository {
+class RegisterRepository(
+    private val dao: RegisterDao,
+) {
+    suspend fun load(userId: Int, date: LocalDate): List<Register> =
+        dao.loadAllByUserId(userId).filter { it.localDateTime.toLocalDate().isEqual(date) }
+            .sortedBy { it.localDateTime }
 
-    private val datasource: MutableList<Register> = fakeData()
-
-    fun load(date: LocalDate): List<Register> =
-        datasource.filter { it.localDateTime.toLocalDate().isEqual(date) }.sortedBy { it.localDateTime }
-
-    fun add(register: Register) {
-        datasource.add(register)
+    suspend fun add(register: Register) {
+        dao.insertAll(register)
     }
 
-    private fun fakeData(): MutableList<Register> = mutableListOf()
+    suspend fun delete(register: Register) {
+        dao.delete(register)
+    }
 }

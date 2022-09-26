@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
@@ -17,9 +16,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.getBaby
 import com.sgztech.babytracker.model.Baby
 import com.squareup.picasso.Picasso
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
 
 const val EDIT_KEY = "edit"
@@ -33,7 +32,7 @@ class BabyActivity : AppCompatActivity() {
     private val autoCompleteSex: MaterialAutoCompleteTextView by lazy { findViewById(R.id.autoCompleteSex) }
     private val ivBaby: ImageView by lazy { findViewById(R.id.ivBaby) }
     private val tvBabyPhoto: MaterialTextView by lazy { findViewById(R.id.tvBabyPhoto) }
-    private val viewModel: BabyViewModel by viewModels()
+    private val viewModel: BabyViewModel by viewModel()
     private var photoUri: String = ""
     private var isEditingMode: Boolean = false
 
@@ -73,7 +72,7 @@ class BabyActivity : AppCompatActivity() {
         }
     }
     private fun loadBabyInfo() {
-        val baby = getBaby()
+        val baby = viewModel.getBaby()
         etName.setText(baby.name)
         autoCompleteBirthday.setText(viewModel.formatDate(baby.birthday))
         autoCompleteSex.setText(baby.sex)
@@ -95,7 +94,7 @@ class BabyActivity : AppCompatActivity() {
                 sex = autoCompleteSex.text.toString(),
                 photoUri = photoUri,
             )
-            viewModel.saveBaby(baby, this)
+            viewModel.saveBaby(baby)
             openMainActivity()
         }
     }
