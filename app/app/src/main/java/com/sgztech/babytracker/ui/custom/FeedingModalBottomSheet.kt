@@ -15,6 +15,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.model.Register
+import com.sgztech.babytracker.model.RegisterType
 import com.sgztech.babytracker.ui.DateTimeFormatter
 import java.time.Duration
 import java.time.LocalDate
@@ -61,6 +62,7 @@ class FeedingModalBottomSheet(
                     description = getDescription(),
                     localDateTime = date.atTime(getHour(), getMinute()),
                     note = getNote(),
+                    type = getType(),
                 )
             )
             dismiss()
@@ -148,6 +150,12 @@ class FeedingModalBottomSheet(
             getFormattedTime()
         else
             etQuantity.text.toString().plus(" ".plus("ml"))
+
+    private fun getType(): RegisterType =
+        if (panelBreastFeeding.isVisible)
+            RegisterType.BREAST_FEEDING
+        else
+            RegisterType.BABY_BOTTLE
 
     companion object {
         const val TAG = "FeedingModalBottomSheet"

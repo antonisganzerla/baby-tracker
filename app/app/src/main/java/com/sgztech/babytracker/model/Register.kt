@@ -17,6 +17,7 @@ data class Register(
     val duration: Long = 0,
     val note: String = "",
     val userId: Int = 0,
+    val type: RegisterType,
 )
 
 

@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatButton
 import com.google.android.material.textfield.TextInputEditText
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.model.Register
+import com.sgztech.babytracker.model.RegisterType
 import java.time.LocalDate
 
 class HeightModalBottomSheet (
@@ -36,6 +37,7 @@ class HeightModalBottomSheet (
                     description = etHeight.text.toString().plus(" ".plus("cm")),
                     localDateTime = date.atTime(getHour(), getMinute()),
                     note = getNote(),
+                    type = RegisterType.HEIGHT,
                 )
             )
             dismiss()

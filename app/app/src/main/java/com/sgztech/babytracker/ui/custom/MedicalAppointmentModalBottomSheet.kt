@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.model.Register
+import com.sgztech.babytracker.model.RegisterType
 import java.time.LocalDate
 
 class MedicalAppointmentModalBottomSheet(
@@ -32,6 +33,7 @@ class MedicalAppointmentModalBottomSheet(
                     description = "",
                     localDateTime = date.atTime(getHour(), getMinute()),
                     note = getNote(),
+                    type = RegisterType.MEDICAL,
                 )
             )
             dismiss()

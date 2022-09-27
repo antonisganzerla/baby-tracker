@@ -10,6 +10,7 @@ import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatButton
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.model.Register
+import com.sgztech.babytracker.model.RegisterType
 import com.sgztech.babytracker.ui.DateTimeFormatter
 import java.time.Duration
 import java.time.LocalDate
@@ -48,6 +49,7 @@ class SleepModalBottomSheet(
                     localDateTime = date.atTime(getHour(), getMinute()),
                     duration = timeOffset,
                     note = getNote(),
+                    type = RegisterType.SLEEP,
                 )
             )
             dismiss()

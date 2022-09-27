@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatButton
 import com.google.android.material.textfield.TextInputEditText
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.model.Register
+import com.sgztech.babytracker.model.RegisterType
 import java.time.LocalDate
 
 class WeightModalBottomSheet(
@@ -36,6 +37,7 @@ class WeightModalBottomSheet(
                     description = etWeight.text.toString().plus(" ".plus("kg")),
                     localDateTime = date.atTime(getHour(), getMinute()),
                     note = getNote(),
+                    type = RegisterType.WEIGHT,
                 )
             )
             dismiss()
