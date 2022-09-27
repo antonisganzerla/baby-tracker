@@ -1,8 +1,9 @@
 package com.sgztech.babytracker
 
-import android.content.Context
 import android.content.SharedPreferences
 import com.sgztech.babytracker.model.Baby
+import com.sgztech.babytracker.model.RememberMe
+import com.sgztech.babytracker.model.User
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -10,6 +11,15 @@ import kotlinx.serialization.json.Json
 class PreferenceService(
     private val sharedPreferences: SharedPreferences,
 ) {
+
+    fun getUser(): User {
+        return Json.decodeFromString(getStringValue("session_user_key"))
+    }
+
+    fun setUser(user: User) {
+        val value = Json.encodeToString(user)
+        setStringValue("session_user_key", value)
+    }
 
     fun getBaby(): Baby {
         return Json.decodeFromString(getStringValue("session_baby_key"))
@@ -28,60 +38,13 @@ class PreferenceService(
         setBooleanValue("logged_user_key", value)
     }
 
-    fun getUserId(): String {
-        return getStringValue("session_user_id_key")
+    fun setRememberMe(rememberMe: RememberMe) {
+        val value = Json.encodeToString(rememberMe)
+        setStringValue("remember_me_key", value)
     }
 
-    fun setUserId(value: String) {
-        setStringValue("session_user_id_key", value)
-    }
-
-    fun getUserName(): String {
-        return getStringValue("session_user_name_key")
-    }
-
-    fun setUserName(value: String) {
-        setStringValue("session_user_name_key", value)
-    }
-
-    fun getUserEmail(): String {
-        return getStringValue("session_user_email_key")
-    }
-
-    fun setUserEmail(value: String) {
-        setStringValue("session_user_email_key", value)
-    }
-
-    fun getUserToken(context: Context): String {
-        return getStringValue("session_user_token_key")
-    }
-
-    fun setUserToken(value: String) {
-        setStringValue("session_user_token_key", value)
-    }
-
-    fun getRememberEmail(): String {
-        return getStringValue("remember_email")
-    }
-
-    fun setRememberEmail(value: String) {
-        setStringValue("remember_email", value)
-    }
-
-    fun getRememberPassword(): String {
-        return getStringValue("remember_password")
-    }
-
-    fun setRememberPassword(value: String) {
-        setStringValue("remember_password", value)
-    }
-
-    fun getRememberCbLogin(): Boolean {
-        return getBooleanValue("remember_cb_login")
-    }
-
-    fun setRememberCbLogin(value: Boolean) {
-        setBooleanValue("remember_cb_login", value)
+    fun getRememberMe(): RememberMe? {
+        return runCatching { Json.decodeFromString<RememberMe>(getStringValue("remember_me_key")) }.getOrNull()
     }
 
     private fun setBooleanValue(key: String, value: Boolean) {

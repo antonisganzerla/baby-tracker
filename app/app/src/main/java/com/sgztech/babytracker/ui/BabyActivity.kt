@@ -25,9 +25,11 @@ const val EDIT_KEY = "edit"
 
 class BabyActivity : AppCompatActivity() {
 
+    private val textInputLayoutName: TextInputLayout by lazy { findViewById(R.id.textInputLayoutName) }
     private val etName: TextInputEditText by lazy { findViewById(R.id.etName) }
     private val btnSaveBaby: MaterialButton by lazy { findViewById(R.id.btnSaveBaby) }
     private val textInputLayoutBirthday: TextInputLayout by lazy { findViewById(R.id.textInputLayoutBirthday) }
+    private val textInputLayoutSex: TextInputLayout by lazy { findViewById(R.id.textInputLayoutSex) }
     private val autoCompleteBirthday: MaterialAutoCompleteTextView by lazy { findViewById(R.id.autoCompleteBirthday) }
     private val autoCompleteSex: MaterialAutoCompleteTextView by lazy { findViewById(R.id.autoCompleteSex) }
     private val ivBaby: ImageView by lazy { findViewById(R.id.ivBaby) }
@@ -71,12 +73,14 @@ class BabyActivity : AppCompatActivity() {
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
         }
     }
+
     private fun loadBabyInfo() {
         val baby = viewModel.getBaby()
         etName.setText(baby.name)
         autoCompleteBirthday.setText(viewModel.formatDate(baby.birthday))
         autoCompleteSex.setText(baby.sex)
-        loadBabyImage(baby.photoUri.toUri())
+        if (baby.photoUri.isNotEmpty())
+            loadBabyImage(baby.photoUri.toUri())
         viewModel.updateDate(baby.birthday)
     }
 
@@ -88,14 +92,10 @@ class BabyActivity : AppCompatActivity() {
 
     private fun setupBtnSave() {
         btnSaveBaby.setOnClickListener {
-            val baby = Baby(
+            viewModel.validate(
                 name = etName.text.toString(),
-                birthday = viewModel.currentDate(),
                 sex = autoCompleteSex.text.toString(),
-                photoUri = photoUri,
             )
-            viewModel.saveBaby(baby)
-            openMainActivity()
         }
     }
 
@@ -151,6 +151,32 @@ class BabyActivity : AppCompatActivity() {
     private fun subscribeObservers() {
         viewModel.date.observe(this) { date ->
             autoCompleteBirthday.setText(viewModel.formatDate(date))
+        }
+        viewModel.formState.observe(this) { formState ->
+            when (formState) {
+                is BabyFormState.InvalidName -> {
+                    textInputLayoutName.isErrorEnabled = true
+                    textInputLayoutName.error = getString(formState.errorRes)
+                    textInputLayoutSex.isErrorEnabled = false
+                    textInputLayoutSex.error = ""
+                }
+                is BabyFormState.InvalidSex -> {
+                    textInputLayoutName.isErrorEnabled = false
+                    textInputLayoutName.error = ""
+                    textInputLayoutSex.isErrorEnabled = true
+                    textInputLayoutSex.error = getString(formState.errorRes)
+                }
+                BabyFormState.Valid -> {
+                    val baby = Baby(
+                        name = etName.text.toString(),
+                        birthday = viewModel.currentDate(),
+                        sex = autoCompleteSex.text.toString(),
+                        photoUri = photoUri,
+                    )
+                    viewModel.saveBaby(baby)
+                    openMainActivity()
+                }
+            }
         }
     }
 

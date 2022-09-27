@@ -73,8 +73,9 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLength="25"
             android:hint="@string/tv_name"
-            android:inputType="textEmailAddress" />
+            android:inputType="textPersonName" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

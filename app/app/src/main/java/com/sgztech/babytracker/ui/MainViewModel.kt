@@ -8,6 +8,7 @@ import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.data.RegisterRepository
 import com.sgztech.babytracker.model.Baby
 import com.sgztech.babytracker.model.Register
+import com.sgztech.babytracker.model.User
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.Period
@@ -24,16 +25,19 @@ class MainViewModel(
     private var _date: MutableLiveData<LocalDate> = MutableLiveData()
     val date: LiveData<LocalDate> = _date
 
+    private val user: User = preferenceService.getUser()
+
     init {
         _date.postValue(LocalDate.now())
     }
 
     fun loadRegisters() {
         viewModelScope.launch {
-            _registers.postValue(repository.load(
-                userId = preferenceService.getUserId().toInt(),
-                date = currentDate(),
-            )
+            _registers.postValue(
+                repository.load(
+                    userId = user.id,
+                    date = currentDate(),
+                )
             )
         }
     }
@@ -42,7 +46,7 @@ class MainViewModel(
 
     fun addRegister(register: Register) {
         viewModelScope.launch {
-            repository.add(register.copy(userId = preferenceService.getUserId().toInt()))
+            repository.add(register.copy(userId = user.id))
             loadRegisters()
         }
     }
@@ -74,4 +78,10 @@ class MainViewModel(
 
     fun getPeriodBetween(): Period =
         Period.between(getBaby().birthday, currentDate())
+
+    fun getUser(): User = user
+
+    fun logout() {
+        preferenceService.setUserLogged(false)
+    }
 }

@@ -64,6 +64,7 @@
     <string name="toolbar_title_edit_baby">Editar bebê</string>
     <string name="tv_baby_photo">Adicionar foto do bebê</string>
     <string name="edit_baby_photo">Editar foto do bebê</string>
+    <string name="msg_enter_sex">Informe o sexo</string>
 
     <!-- Main -->
     <string name="open_drawer">Abrir</string>

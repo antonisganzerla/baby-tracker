@@ -59,12 +59,12 @@ class MainActivity : AppCompatActivity() {
         val baby = viewModel.getBaby()
         toolbar.title = baby.name
         if (baby.photoUri.isNotEmpty()) {
-            cardIvBaby.visibility = View.VISIBLE
             Picasso.get().load(baby.photoUri).into(ivToolbar)
-            ivToolbar.setOnClickListener {
-                openBabyActivity()
-            }
         }
+        ivToolbar.setOnClickListener {
+            openBabyActivity()
+        }
+        cardIvBaby.visibility = View.VISIBLE
         setSupportActionBar(toolbar)
     }
 
@@ -99,6 +99,7 @@ class MainActivity : AppCompatActivity() {
                     // TODO
                 }
                 R.id.nav_item_logout -> {
+                    viewModel.logout()
                     signOutFirebase()
                     openLoginActivity()
                 }
@@ -127,11 +128,11 @@ class MainActivity : AppCompatActivity() {
             val tvHeaderName = it.findViewById<TextView>(R.id.nav_header_name)
             val tvHeaderEmail = it.findViewById<TextView>(R.id.nav_header_email)
             val navHeaderImageView = it.findViewById<ImageView>(R.id.nav_header_imageView)
-            firebaseInstance().currentUser?.let { user ->
-                tvHeaderName.text = user.displayName
-                tvHeaderEmail.text = user.email
-                Picasso.get().load(user.photoUrl).into(navHeaderImageView)
-            }
+            val user = viewModel.getUser()
+            tvHeaderName.text = user.name
+            tvHeaderEmail.text = user.email
+            if (user.photoUri.isNullOrEmpty().not())
+                Picasso.get().load(user.photoUri).into(navHeaderImageView)
         }
     }
 

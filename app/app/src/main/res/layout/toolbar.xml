@@ -38,7 +38,7 @@
                     android:layout_width="match_parent"
                     android:scaleType="centerCrop"
                     android:layout_height="match_parent"
-                    tools:src="@drawable/ic_child_care_24" />
+                    android:src="@drawable/ic_child_care_24" />
 
             </com.google.android.material.card.MaterialCardView>
 

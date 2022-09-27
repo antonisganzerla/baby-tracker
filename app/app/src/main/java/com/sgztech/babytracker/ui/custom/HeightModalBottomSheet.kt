@@ -33,7 +33,7 @@ class HeightModalBottomSheet (
             actionButtonClick(
                 Register(
                     icon = R.drawable.ic_height_24,
-                    name = getString(R.string.menu_item_weight),
+                    name = getString(R.string.menu_item_height),
                     description = etHeight.text.toString().plus(" ".plus("cm")),
                     localDateTime = date.atTime(getHour(), getMinute()),
                     note = getNote(),
