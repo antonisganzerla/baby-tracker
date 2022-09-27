@@ -13,6 +13,7 @@ val dbModule = module {
         AppDatabase.getInstance(context = get())
     }
     factory { get<AppDatabase>().registerDao() }
+    factory { get<AppDatabase>().babyDao() }
 }
 
 val repositoryModule = module {
@@ -24,8 +25,8 @@ val uiModule = module {
         PreferenceService(sharedPreferences = PreferenceManager.getDefaultSharedPreferences(get()))
     }
     factory { DateTimeFormatter() }
-    viewModel { SplashViewModel(get()) }
-    viewModel { LoginViewModel(get()) }
-    viewModel { BabyViewModel(get(), get()) }
-    viewModel { MainViewModel(get(), get(), get()) }
+    viewModel { SplashViewModel(get(), get()) }
+    viewModel { LoginViewModel(get(), get()) }
+    viewModel { BabyViewModel(get(), get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get()) }
 }

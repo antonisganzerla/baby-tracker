@@ -100,7 +100,7 @@ class LoginActivity : AppCompatActivity() {
                     )
                     val saveMe = cbRememberMe.isChecked
                     viewModel.saveUser(user, saveMe)
-                    viewModel.navigateToNextScreen()
+                    viewModel.navigateToNextScreen(user.id)
                 } else {
                     log(getString(R.string.msg_signin_firebase_fail))
                     log(task.exception.toString())
@@ -164,7 +164,7 @@ class LoginActivity : AppCompatActivity() {
                     )
                     val saveMe = cbRememberMe.isChecked
                     viewModel.saveUser(user, saveMe)
-                    viewModel.navigateToNextScreen()
+                    viewModel.navigateToNextScreen(user.id)
                 }
             }
         }

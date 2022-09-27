@@ -67,15 +67,13 @@ class BabyActivity : AppCompatActivity() {
         if (isEditingMode) {
             supportActionBar?.title = getString(R.string.toolbar_title_edit_baby)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            loadBabyInfo()
         } else {
             supportActionBar?.title = getString(R.string.toolbar_title_add_baby)
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
         }
     }
 
-    private fun loadBabyInfo() {
-        val baby = viewModel.getBaby()
+    private fun loadBabyInfo(baby: Baby) {
         etName.setText(baby.name)
         autoCompleteBirthday.setText(viewModel.formatDate(baby.birthday))
         autoCompleteSex.setText(baby.sex)
@@ -173,9 +171,18 @@ class BabyActivity : AppCompatActivity() {
                         sex = autoCompleteSex.text.toString(),
                         photoUri = photoUri,
                     )
-                    viewModel.saveBaby(baby)
+                    if (isEditingMode)
+                        viewModel.update(baby)
+                    else
+                        viewModel.saveBaby(baby)
+
                     openMainActivity()
                 }
+            }
+        }
+        viewModel.baby.observe(this) { baby ->
+            baby?.let {
+                loadBabyInfo(it)
             }
         }
     }

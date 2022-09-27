@@ -1,7 +1,6 @@
 package com.sgztech.babytracker
 
 import android.content.SharedPreferences
-import com.sgztech.babytracker.model.Baby
 import com.sgztech.babytracker.model.RememberMe
 import com.sgztech.babytracker.model.User
 import kotlinx.serialization.decodeFromString
@@ -19,15 +18,6 @@ class PreferenceService(
     fun setUser(user: User) {
         val value = Json.encodeToString(user)
         setStringValue("session_user_key", value)
-    }
-
-    fun getBaby(): Baby {
-        return Json.decodeFromString(getStringValue("session_baby_key"))
-    }
-
-    fun setBaby(baby: Baby) {
-        val value = Json.encodeToString(baby)
-        setStringValue("session_baby_key", value)
     }
 
     fun getUserLogged(): Boolean {

@@ -4,13 +4,17 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.dao.BabyDao
 import com.sgztech.babytracker.model.RememberMe
 import com.sgztech.babytracker.model.User
+import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val preferenceService: PreferenceService,
+    private val babyDao: BabyDao,
 ) : ViewModel() {
 
     private val _formState: MutableLiveData<LoginFormState> = MutableLiveData()
@@ -57,11 +61,13 @@ class LoginViewModel(
         _formState.postValue(LoginFormState.Valid)
     }
 
-    fun navigateToNextScreen() {
-        if (runCatching { preferenceService.getBaby() }.isSuccess)
-            _navigateState.postValue(NavigateState.MainScreen)
-        else
-            _navigateState.postValue(NavigateState.BabyFormScreen)
+    fun navigateToNextScreen(userId: Int) {
+        viewModelScope.launch {
+            if (babyDao.exists(userId))
+                _navigateState.postValue(NavigateState.MainScreen)
+            else
+                _navigateState.postValue(NavigateState.BabyFormScreen)
+        }
     }
 }
 

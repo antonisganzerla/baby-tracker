@@ -56,11 +56,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        val baby = viewModel.getBaby()
-        toolbar.title = baby.name
-        if (baby.photoUri.isNotEmpty()) {
-            Picasso.get().load(baby.photoUri).into(ivToolbar)
-        }
         ivToolbar.setOnClickListener {
             openBabyActivity()
         }
@@ -253,6 +248,12 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.before_born)
             else
                 getString(R.string.date_between, period.months, period.days)
+        }
+        viewModel.baby.observe(this) { baby ->
+            toolbar.title = baby.name
+            if (baby.photoUri.isNotEmpty()) {
+                Picasso.get().load(baby.photoUri).into(ivToolbar)
+            }
         }
     }
 

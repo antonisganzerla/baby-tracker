@@ -1,16 +1,16 @@
 package com.sgztech.babytracker.model
 
-import com.sgztech.babytracker.util.LocalDateIso8601Serializer
-import kotlinx.serialization.Serializable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.time.LocalDate
 
-@Serializable
+@Entity
 data class Baby(
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val name: String,
-    @Serializable(LocalDateIso8601Serializer::class)
     val birthday: LocalDate,
     val sex: String,
     val photoUri: String,
-    val userId: Int = 1,
+    val userId: Int = 0,
 )
