@@ -4,10 +4,7 @@ import androidx.preference.PreferenceManager
 import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.data.RegisterRepository
 import com.sgztech.babytracker.database.AppDatabase
-import com.sgztech.babytracker.ui.BabyViewModel
-import com.sgztech.babytracker.ui.DateTimeFormatter
-import com.sgztech.babytracker.ui.LoginViewModel
-import com.sgztech.babytracker.ui.MainViewModel
+import com.sgztech.babytracker.ui.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -27,6 +24,7 @@ val uiModule = module {
         PreferenceService(sharedPreferences = PreferenceManager.getDefaultSharedPreferences(get()))
     }
     factory { DateTimeFormatter() }
+    viewModel { SplashViewModel(get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { BabyViewModel(get(), get()) }
     viewModel { MainViewModel(get(), get(), get()) }
