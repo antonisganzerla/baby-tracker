@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.arch.Error
 import com.sgztech.babytracker.arch.Result
+import com.sgztech.babytracker.arch.toValidationFailure
+import com.sgztech.babytracker.arch.toUnknownFailure
 import com.sgztech.babytracker.data.RegisterUserRepository
 import kotlinx.coroutines.launch
 
@@ -18,8 +20,8 @@ class RegisterUserViewModel(
     private val _formState: MutableLiveData<RegisterFormState> = MutableLiveData()
     val formState: LiveData<RegisterFormState> = _formState
 
-    private val _registerAction: MutableLiveData<RegisterAction> = MutableLiveData()
-    val registerAction: LiveData<RegisterAction> = _registerAction
+    private val _registerAction: MutableLiveData<RequestAction> = MutableLiveData()
+    val registerAction: LiveData<RequestAction> = _registerAction
 
     fun validate(name: String, email: String, password: String, repeatPassword: String) {
 
@@ -57,20 +59,16 @@ class RegisterUserViewModel(
     }
 
     fun register(name: String, email: String, password: String) {
-        _registerAction.postValue(RegisterAction.Loading)
+        _registerAction.postValue(RequestAction.Loading)
         viewModelScope.launch {
             when (val response = repository.register(name, email, password)) {
                 is Result.Failure -> {
                     when (response.error) {
-                        Error.Unknown -> _registerAction.postValue(
-                            RegisterAction.UnknownFailure(R.string.msg_unknown_error)
-                        )
-                        is Error.Validation -> _registerAction.postValue(
-                            RegisterAction.ValidationFailure(response.error.errors ?: emptyList())
-                        )
+                        is Error.Unknown -> _registerAction.postValue(response.error.toUnknownFailure())
+                        is Error.Validation -> _registerAction.postValue(response.error.toValidationFailure())
                     }
                 }
-                is Result.Success -> _registerAction.postValue(RegisterAction.Success)
+                is Result.Success -> _registerAction.postValue(RequestAction.Success(response.value))
             }
         }
     }
@@ -82,11 +80,4 @@ sealed class RegisterFormState {
     class InvalidPassword(val errorRes: Int) : RegisterFormState()
     class InvalidRepeatPassword(val errorRes: Int) : RegisterFormState()
     object Valid : RegisterFormState()
-}
-
-sealed class RegisterAction {
-    class UnknownFailure(val errorRes: Int) : RegisterAction()
-    class ValidationFailure(val errors: List<String>) : RegisterAction()
-    object Success : RegisterAction()
-    object Loading : RegisterAction()
 }

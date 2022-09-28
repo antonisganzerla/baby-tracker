@@ -16,6 +16,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.extension.disableError
+import com.sgztech.babytracker.extension.enableError
+import com.sgztech.babytracker.extension.hideKeyBoard
 import com.sgztech.babytracker.model.Baby
 import com.squareup.picasso.Picasso
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -90,6 +93,7 @@ class BabyActivity : AppCompatActivity() {
 
     private fun setupBtnSave() {
         btnSaveBaby.setOnClickListener {
+            it.hideKeyBoard()
             viewModel.validate(
                 name = etName.text.toString(),
                 sex = autoCompleteSex.text.toString(),
@@ -153,16 +157,12 @@ class BabyActivity : AppCompatActivity() {
         viewModel.formState.observe(this) { formState ->
             when (formState) {
                 is BabyFormState.InvalidName -> {
-                    textInputLayoutName.isErrorEnabled = true
-                    textInputLayoutName.error = getString(formState.errorRes)
-                    textInputLayoutSex.isErrorEnabled = false
-                    textInputLayoutSex.error = ""
+                    textInputLayoutName.enableError(formState.errorRes)
+                    textInputLayoutSex.disableError()
                 }
                 is BabyFormState.InvalidSex -> {
-                    textInputLayoutName.isErrorEnabled = false
-                    textInputLayoutName.error = ""
-                    textInputLayoutSex.isErrorEnabled = true
-                    textInputLayoutSex.error = getString(formState.errorRes)
+                    textInputLayoutName.disableError()
+                    textInputLayoutSex.enableError(formState.errorRes)
                 }
                 BabyFormState.Valid -> {
                     val baby = Baby(

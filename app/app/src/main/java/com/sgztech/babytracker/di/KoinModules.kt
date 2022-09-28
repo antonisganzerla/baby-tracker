@@ -4,6 +4,7 @@ import androidx.preference.PreferenceManager
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.sgztech.babytracker.BuildConfig
 import com.sgztech.babytracker.PreferenceService
+import com.sgztech.babytracker.data.AuthRepository
 import com.sgztech.babytracker.data.BabyRepository
 import com.sgztech.babytracker.data.RegisterRepository
 import com.sgztech.babytracker.data.RegisterUserRepository
@@ -23,14 +24,20 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
+import java.util.concurrent.TimeUnit
 
 private val contentType = "application/json".toMediaType()
 private const val BASE_URL = "http://192.168.0.106:8080/api/"
+private const val READ_TIMEOUT = 30_000L
+private const val CONNECT_TIMEOUT = 30_000L
+
 
 @OptIn(ExperimentalSerializationApi::class)
 val serviceModule = module {
     single {
         OkHttpClient.Builder()
+            .readTimeout(READ_TIMEOUT, TimeUnit.MILLISECONDS)
+            .connectTimeout(CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
             .addInterceptor(loggingInterceptor())
             .build()
     }
@@ -80,6 +87,7 @@ val repositoryModule = module {
     factory { RegisterRepository(get()) }
     factory { BabyRepository(get()) }
     factory { RegisterUserRepository(get()) }
+    factory { AuthRepository(get()) }
 }
 
 val uiModule = module {
@@ -88,7 +96,7 @@ val uiModule = module {
     }
     factory { DateTimeFormatter() }
     viewModel { SplashViewModel(get(), get()) }
-    viewModel { LoginViewModel(get(), get()) }
+    viewModel { LoginViewModel(get(), get(), get(), get()) }
     viewModel { BabyViewModel(get(), get(), get()) }
     viewModel { MainViewModel(get(), get(), get(), get()) }
     viewModel { RegisterUserViewModel(get()) }

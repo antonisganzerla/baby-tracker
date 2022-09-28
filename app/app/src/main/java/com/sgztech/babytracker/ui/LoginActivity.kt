@@ -3,8 +3,8 @@ package com.sgztech.babytracker.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.GoogleAuthProvider
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.extension.*
 import com.sgztech.babytracker.firebaseInstance
 import com.sgztech.babytracker.googleSignInClient
 import com.sgztech.babytracker.model.User
@@ -33,6 +34,15 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private val registerUserActivityResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            loginButton.showSnackbar(R.string.msg_success_register)
+        }
+    }
+
+    private val pbLogin: ProgressBar by lazy { findViewById(R.id.pb_login) }
     private val textInputLayoutEmail: TextInputLayout by lazy { findViewById(R.id.textInputLayoutEmail) }
     private val textInputLayoutPassword: TextInputLayout by lazy { findViewById(R.id.textInputLayoutPassword) }
     private val etEmail: TextInputEditText by lazy { findViewById(R.id.etEmail) }
@@ -41,6 +51,7 @@ class LoginActivity : AppCompatActivity() {
     private val signInButton: SignInButton by lazy { findViewById(R.id.sign_in_button) }
     private val loginButton: MaterialButton by lazy { findViewById(R.id.btn_login) }
     private val viewModel: LoginViewModel by viewModel()
+    private var photoUri: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +70,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupLoginButton() {
         loginButton.setOnClickListener {
+            it.hideKeyBoard()
             viewModel.validate(
                 email = etEmail.text.toString(),
                 password = etPassword.text.toString(),
@@ -81,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
             firebaseAuthWithGoogle(account)
         } catch (e: ApiException) {
             log(getString(R.string.msg_signin_fail, e.statusCode.toString()))
-            Toast.makeText(this, R.string.msg_signin_fail_snack_bar, Toast.LENGTH_LONG).show()
+            signInButton.showSnackbar(R.string.msg_signin_fail_snack_bar)
         }
     }
 
@@ -91,16 +103,12 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     log(getString(R.string.msg_signin_firebase_success))
-                    val user = User(
-                        id = 1,
+                    photoUri = acct.photoUrl.toString()
+                    viewModel.authWithGoogle(
                         name = acct.displayName.toString(),
                         email = acct.email.toString(),
                         token = acct.idToken.toString(),
-                        photoUri = acct.photoUrl.toString(),
                     )
-                    val saveMe = cbRememberMe.isChecked
-                    viewModel.saveUser(user, saveMe)
-                    viewModel.navigateToNextScreen(user.id)
                 } else {
                     log(getString(R.string.msg_signin_firebase_fail))
                     log(task.exception.toString())
@@ -132,7 +140,7 @@ class LoginActivity : AppCompatActivity() {
         val tvCreateAccount = findViewById<TextView>(R.id.tv_create_account)
         tvCreateAccount.setOnClickListener {
             val intent = Intent(this, RegisterUserActivity::class.java)
-            startActivity(intent)
+            registerUserActivityResult.launch(intent)
         }
     }
 
@@ -140,37 +148,47 @@ class LoginActivity : AppCompatActivity() {
         viewModel.formState.observe(this) { formState ->
             when (formState) {
                 is LoginFormState.InvalidEmail -> {
-                    textInputLayoutEmail.isErrorEnabled = true
-                    textInputLayoutEmail.error = getString(formState.errorRes)
-                    textInputLayoutPassword.isErrorEnabled = false
-                    textInputLayoutPassword.error = ""
+                    textInputLayoutEmail.enableError(formState.errorRes)
+                    textInputLayoutPassword.disableError()
                 }
                 is LoginFormState.InvalidPassword -> {
-                    textInputLayoutPassword.isErrorEnabled = true
-                    textInputLayoutPassword.error = getString(formState.errorRes)
-                    textInputLayoutEmail.isErrorEnabled = false
-                    textInputLayoutEmail.error = ""
+                    textInputLayoutEmail.disableError()
+                    textInputLayoutPassword.enableError(formState.errorRes)
                 }
                 LoginFormState.Valid -> {
-                    textInputLayoutEmail.isErrorEnabled = false
-                    textInputLayoutEmail.error = ""
-                    textInputLayoutPassword.isErrorEnabled = false
-                    textInputLayoutPassword.error = ""
-                    val user = User(
-                        id = 1,
-                        name = "",
+                    textInputLayoutEmail.disableError()
+                    textInputLayoutPassword.disableError()
+                    viewModel.auth(
                         email = etEmail.text.toString(),
-                        token = "",
+                        password = etPassword.text.toString(),
                     )
+                }
+            }
+        }
+
+        viewModel.authAction.observe(this) { action ->
+            when (action) {
+                RequestAction.Loading -> pbLogin.visible()
+                is RequestAction.Success<*> -> {
+                    pbLogin.gone()
                     val saveMe = cbRememberMe.isChecked
+                    val user = (action.value as User).copy(photoUri = photoUri)
                     viewModel.saveUser(user, saveMe)
                     viewModel.navigateToNextScreen(user.id)
+                }
+                is RequestAction.UnknownFailure -> {
+                    pbLogin.gone()
+                    loginButton.showSnackbar(action.errorRes)
+                }
+                is RequestAction.ValidationFailure -> {
+                    pbLogin.gone()
+                    loginButton.showSnackbar(action.errors.joinToString())
                 }
             }
         }
 
         viewModel.navigateState.observe(this) { navigateState ->
-            when(navigateState){
+            when (navigateState) {
                 NavigateState.BabyFormScreen -> openBabyActivity()
                 NavigateState.MainScreen -> openMainActivity()
             }

@@ -7,7 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.arch.Error
+import com.sgztech.babytracker.arch.Result
+import com.sgztech.babytracker.arch.toUnknownFailure
+import com.sgztech.babytracker.arch.toValidationFailure
+import com.sgztech.babytracker.data.AuthRepository
 import com.sgztech.babytracker.data.BabyRepository
+import com.sgztech.babytracker.data.RegisterUserRepository
 import com.sgztech.babytracker.model.RememberMe
 import com.sgztech.babytracker.model.User
 import kotlinx.coroutines.launch
@@ -15,6 +21,8 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     private val preferenceService: PreferenceService,
     private val babyRepository: BabyRepository,
+    private val authRepository: AuthRepository,
+    private val registerUserRepository: RegisterUserRepository,
 ) : ViewModel() {
 
     private val _formState: MutableLiveData<LoginFormState> = MutableLiveData()
@@ -22,6 +30,9 @@ class LoginViewModel(
 
     private val _navigateState: MutableLiveData<NavigateState> = MutableLiveData()
     val navigateState: LiveData<NavigateState> = _navigateState
+
+    private val _authAction: MutableLiveData<RequestAction> = MutableLiveData()
+    val authAction: LiveData<RequestAction> = _authAction
 
     fun saveUser(user: User, isSaveMe: Boolean) {
         preferenceService.setUser(user)
@@ -69,7 +80,42 @@ class LoginViewModel(
                 _navigateState.postValue(NavigateState.BabyFormScreen)
         }
     }
+
+    fun auth(email: String, password: String) {
+        _authAction.postValue(RequestAction.Loading)
+        viewModelScope.launch {
+            when (val response = authRepository.auth(email, password)) {
+                is Result.Failure -> when (response.error) {
+                    is Error.Unknown -> _authAction.postValue(response.error.toUnknownFailure())
+                    is Error.Validation -> _authAction.postValue(response.error.toValidationFailure())
+                }
+                is Result.Success -> _authAction.postValue(
+                    RequestAction.Success(response.value)
+                )
+            }
+        }
+    }
+
+    fun authWithGoogle(name: String, email: String, token: String) {
+        _authAction.postValue(RequestAction.Loading)
+        viewModelScope.launch {
+            when (val response = registerUserRepository.register(name, email, token)) {
+                is Result.Failure -> when (response.error) {
+                    is Error.Unknown -> _authAction.postValue(response.error.toUnknownFailure())
+                    is Error.Validation -> {
+                        if (response.error.errors?.contains(EMAIL_ALREADY_IN_USE_ERROR) == true)
+                            auth(email, token)
+                        else
+                            _authAction.postValue(response.error.toValidationFailure())
+                    }
+                }
+                is Result.Success -> auth(email, token)
+            }
+        }
+    }
 }
+
+private const val EMAIL_ALREADY_IN_USE_ERROR = "{email.is.already.in.use}"
 
 sealed class LoginFormState {
     class InvalidEmail(val errorRes: Int) : LoginFormState()

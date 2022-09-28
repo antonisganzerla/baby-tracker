@@ -1,5 +1,6 @@
 package com.sgztech.babytracker.ui
 
+import android.app.Activity
 import android.os.Bundle
 import android.widget.ProgressBar
 import androidx.appcompat.widget.Toolbar
@@ -7,10 +8,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.extension.gone
-import com.sgztech.babytracker.extension.hideKeyBoard
-import com.sgztech.babytracker.extension.showSnackbar
-import com.sgztech.babytracker.extension.visible
+import com.sgztech.babytracker.extension.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterUserActivity : BaseActivity() {
@@ -56,46 +54,34 @@ class RegisterUserActivity : BaseActivity() {
         viewModel.formState.observe(this) { formState ->
             when (formState) {
                 is RegisterFormState.InvalidEmail -> {
-                    textInputLayoutEmail.isErrorEnabled = true
-                    textInputLayoutEmail.error = getString(formState.errorRes)
-                    textInputLayoutFullName.isErrorEnabled = false
-                    textInputLayoutFullName.error = ""
-                    textInputLayoutPassword.isErrorEnabled = false
-                    textInputLayoutPassword.error = ""
-                    textInputLayoutConfirmPassword.isErrorEnabled = false
-                    textInputLayoutConfirmPassword.error = ""
+                    textInputLayoutEmail.enableError(formState.errorRes)
+                    textInputLayoutFullName.disableError()
+                    textInputLayoutPassword.disableError()
+                    textInputLayoutConfirmPassword.disableError()
                 }
                 is RegisterFormState.InvalidName -> {
-                    textInputLayoutFullName.isErrorEnabled = true
-                    textInputLayoutFullName.error = getString(formState.errorRes)
-                    textInputLayoutEmail.isErrorEnabled = false
-                    textInputLayoutEmail.error = ""
-                    textInputLayoutPassword.isErrorEnabled = false
-                    textInputLayoutPassword.error = ""
-                    textInputLayoutConfirmPassword.isErrorEnabled = false
-                    textInputLayoutConfirmPassword.error = ""
+                    textInputLayoutEmail.disableError()
+                    textInputLayoutFullName.enableError(formState.errorRes)
+                    textInputLayoutPassword.disableError()
+                    textInputLayoutConfirmPassword.disableError()
                 }
                 is RegisterFormState.InvalidPassword -> {
-                    textInputLayoutPassword.isErrorEnabled = true
-                    textInputLayoutPassword.error = getString(formState.errorRes)
-                    textInputLayoutEmail.isErrorEnabled = false
-                    textInputLayoutEmail.error = ""
-                    textInputLayoutFullName.isErrorEnabled = false
-                    textInputLayoutFullName.error = ""
-                    textInputLayoutConfirmPassword.isErrorEnabled = false
-                    textInputLayoutConfirmPassword.error = ""
+                    textInputLayoutEmail.disableError()
+                    textInputLayoutFullName.disableError()
+                    textInputLayoutPassword.enableError(formState.errorRes)
+                    textInputLayoutConfirmPassword.disableError()
                 }
                 is RegisterFormState.InvalidRepeatPassword -> {
-                    textInputLayoutConfirmPassword.isErrorEnabled = true
-                    textInputLayoutConfirmPassword.error = getString(formState.errorRes)
-                    textInputLayoutEmail.isErrorEnabled = false
-                    textInputLayoutEmail.error = ""
-                    textInputLayoutFullName.isErrorEnabled = false
-                    textInputLayoutFullName.error = ""
-                    textInputLayoutPassword.isErrorEnabled = false
-                    textInputLayoutPassword.error = ""
+                    textInputLayoutEmail.disableError()
+                    textInputLayoutFullName.disableError()
+                    textInputLayoutPassword.disableError()
+                    textInputLayoutConfirmPassword.enableError(formState.errorRes)
                 }
                 RegisterFormState.Valid -> {
+                    textInputLayoutEmail.disableError()
+                    textInputLayoutFullName.disableError()
+                    textInputLayoutPassword.disableError()
+                    textInputLayoutConfirmPassword.disableError()
                     viewModel.register(
                         name = etFullName.text.toString(),
                         email = etEmail.text.toString(),
@@ -107,18 +93,17 @@ class RegisterUserActivity : BaseActivity() {
 
         viewModel.registerAction.observe(this) { action ->
             when (action) {
-                RegisterAction.Loading -> pbRegister.visible()
-                RegisterAction.Success -> {
-                    btnRegister.showSnackbar(R.string.msg_success_register)
-                    // TODO criar dialog
+                RequestAction.Loading -> pbRegister.visible()
+                is RequestAction.Success<*> -> {
                     pbRegister.gone()
+                    setResult(Activity.RESULT_OK)
                     finish()
                 }
-                is RegisterAction.UnknownFailure -> {
+                is RequestAction.UnknownFailure -> {
                     btnRegister.showSnackbar(action.errorRes)
                     pbRegister.gone()
                 }
-                is RegisterAction.ValidationFailure -> {
+                is RequestAction.ValidationFailure -> {
                     btnRegister.showSnackbar(action.errors.joinToString())
                     pbRegister.gone()
                 }

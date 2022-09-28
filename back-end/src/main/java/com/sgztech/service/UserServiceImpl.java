@@ -122,8 +122,10 @@ public class UserServiceImpl implements UserService {
         }
 
         UserTokenDTO userToken = new UserTokenDTO();
-        userToken.setToken(jwtService.generateToken(user));
+        userToken.setId(user.getId());
+        userToken.setName(user.getName());
         userToken.setEmail(user.getEmail());
+        userToken.setToken(jwtService.generateToken(user));
         return userToken;
     }
 
