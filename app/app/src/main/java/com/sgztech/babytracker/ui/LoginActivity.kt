@@ -176,7 +176,7 @@ class LoginActivity : AppCompatActivity() {
                     viewModel.saveUserSession(user, saveMe)
                     viewModel.navigateToNextScreen(user.id)
                 }
-                is RequestAction.UnknownFailure -> {
+                is RequestAction.GenericFailure -> {
                     pbLogin.gone()
                     loginButton.showSnackbar(action.errorRes)
                 }

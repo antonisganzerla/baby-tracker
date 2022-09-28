@@ -9,7 +9,7 @@ import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.arch.Error
 import com.sgztech.babytracker.arch.Result
-import com.sgztech.babytracker.arch.toUnknownFailure
+import com.sgztech.babytracker.arch.toGenericFailure
 import com.sgztech.babytracker.arch.toValidationFailure
 import com.sgztech.babytracker.data.AuthRepository
 import com.sgztech.babytracker.data.BabyRepository
@@ -86,8 +86,9 @@ class LoginViewModel(
         viewModelScope.launch {
             when (val response = authRepository.auth(email, password)) {
                 is Result.Failure -> when (response.error) {
-                    is Error.Unknown -> _authAction.postValue(response.error.toUnknownFailure())
+                    is Error.Unknown -> _authAction.postValue(response.error.toGenericFailure())
                     is Error.Validation -> _authAction.postValue(response.error.toValidationFailure())
+                    is Error.NetWork -> _authAction.postValue(response.error.toGenericFailure())
                 }
                 is Result.Success -> _authAction.postValue(RequestAction.Success(response.value))
             }
@@ -99,13 +100,14 @@ class LoginViewModel(
         viewModelScope.launch {
             when (val response = registerUserRepository.register(name, email, token)) {
                 is Result.Failure -> when (response.error) {
-                    is Error.Unknown -> _authAction.postValue(response.error.toUnknownFailure())
+                    is Error.Unknown -> _authAction.postValue(response.error.toGenericFailure())
                     is Error.Validation -> {
                         if (response.error.errors?.contains(EMAIL_ALREADY_IN_USE_ERROR) == true)
                             auth(email, token)
                         else
                             _authAction.postValue(response.error.toValidationFailure())
                     }
+                    is Error.NetWork -> _authAction.postValue(response.error.toGenericFailure())
                 }
                 is Result.Success -> auth(email, token)
             }

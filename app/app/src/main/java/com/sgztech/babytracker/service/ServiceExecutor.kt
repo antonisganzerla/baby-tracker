@@ -13,7 +13,7 @@ class ServiceExecutor {
         is ApiResult.Success -> Result.Success(result.value)
         is ApiResult.Failure.HttpFailure -> Result.Failure(Error.Validation(result.error?.errors))
         is ApiResult.Failure.ApiFailure -> Result.Failure(Error.Validation(result.error?.errors))
-        is ApiResult.Failure.NetworkFailure -> Result.Failure(Error.Unknown(result.error))
+        is ApiResult.Failure.NetworkFailure -> Result.Failure(Error.NetWork(result.error))
         is ApiResult.Failure.UnknownFailure -> Result.Failure(Error.Unknown(result.error))
     }
 }

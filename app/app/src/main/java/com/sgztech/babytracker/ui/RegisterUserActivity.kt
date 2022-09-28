@@ -99,7 +99,7 @@ class RegisterUserActivity : BaseActivity() {
                     setResult(Activity.RESULT_OK)
                     finish()
                 }
-                is RequestAction.UnknownFailure -> {
+                is RequestAction.GenericFailure -> {
                     btnRegister.showSnackbar(action.errorRes)
                     pbRegister.gone()
                 }

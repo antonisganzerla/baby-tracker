@@ -9,7 +9,7 @@ import com.sgztech.babytracker.R
 import com.sgztech.babytracker.arch.Error
 import com.sgztech.babytracker.arch.Result
 import com.sgztech.babytracker.arch.toValidationFailure
-import com.sgztech.babytracker.arch.toUnknownFailure
+import com.sgztech.babytracker.arch.toGenericFailure
 import com.sgztech.babytracker.data.RegisterUserRepository
 import kotlinx.coroutines.launch
 
@@ -64,8 +64,9 @@ class RegisterUserViewModel(
             when (val response = repository.register(name, email, password)) {
                 is Result.Failure -> {
                     when (response.error) {
-                        is Error.Unknown -> _registerAction.postValue(response.error.toUnknownFailure())
+                        is Error.Unknown -> _registerAction.postValue(response.error.toGenericFailure())
                         is Error.Validation -> _registerAction.postValue(response.error.toValidationFailure())
+                        is Error.NetWork -> _registerAction.postValue(response.error.toGenericFailure())
                     }
                 }
                 is Result.Success -> _registerAction.postValue(RequestAction.Success(response.value))
