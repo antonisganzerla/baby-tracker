@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         if (isPasswordsMatch(dto))
             throw new BusinessRuleException("{field.password.and.confirm.password.do.not.match}");
 
-        if (repository.findByEmail(dto.getEmail()).isPresent())
+        if (repository.findByEmail(dto.getEmail().toLowerCase()).isPresent())
             throw new BusinessRuleException("{email.is.already.in.use}");
 
         User user = new User();

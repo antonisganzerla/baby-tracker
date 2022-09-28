@@ -20,6 +20,8 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.navigation.NavigationView
 import com.natura.android.button.TextButton
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.extension.gone
+import com.sgztech.babytracker.extension.visible
 import com.sgztech.babytracker.firebaseInstance
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.ui.custom.*
@@ -156,11 +158,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView(registers: List<Register>) {
         if (registers.isEmpty()) {
-            recyclerViewRegisters.visibility = View.GONE
-            panelEmptyMessage.visibility = View.VISIBLE
+            recyclerViewRegisters.gone()
+            panelEmptyMessage.visible()
         } else {
-            recyclerViewRegisters.visibility = View.VISIBLE
-            panelEmptyMessage.visibility = View.GONE
+            recyclerViewRegisters.visible()
+            panelEmptyMessage.gone()
             recyclerViewRegisters.apply {
                 adapter = RegisterAdapter(registers = registers) { selectedRegister ->
                     viewModel.deleteRegister(selectedRegister)

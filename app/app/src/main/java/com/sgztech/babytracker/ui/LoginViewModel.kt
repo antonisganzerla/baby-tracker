@@ -53,7 +53,7 @@ class LoginViewModel(
             return
         }
 
-        if (password.length < 6) {
+        if (password.length < 8) {
             _formState.postValue(LoginFormState.InvalidPassword(R.string.msg_enter_valid_password))
             return
         }

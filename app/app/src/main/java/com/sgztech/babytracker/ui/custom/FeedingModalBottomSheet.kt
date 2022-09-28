@@ -14,6 +14,8 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.extension.gone
+import com.sgztech.babytracker.extension.visible
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.model.RegisterType
 import com.sgztech.babytracker.ui.DateTimeFormatter
@@ -76,12 +78,12 @@ class FeedingModalBottomSheet(
         autoCompleteTypeSelector.setText(items.first(), false)
         autoCompleteTypeSelector.setOnItemClickListener { _, _, position, _ ->
             if (position == 0) {
-                panelBabyBottle.visibility = View.GONE
-                panelBreastFeeding.visibility = View.VISIBLE
+                panelBabyBottle.gone()
+                panelBreastFeeding.visible()
                 updateLayoutParamsTimeSelector(panelBreastFeeding.id)
             } else {
-                panelBabyBottle.visibility = View.VISIBLE
-                panelBreastFeeding.visibility = View.GONE
+                panelBabyBottle.visible()
+                panelBreastFeeding.gone()
                 updateLayoutParamsTimeSelector(panelBabyBottle.id)
             }
         }

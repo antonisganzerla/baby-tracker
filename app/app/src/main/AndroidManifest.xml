@@ -3,9 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.sgztech.babytracker">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".core.CoreApplication"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -27,7 +30,7 @@
             android:name=".ui.BabyActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.RegisterActivity"
+            android:name=".ui.RegisterUserActivity"
             android:exported="false" />
         <activity
             android:name=".ui.ResetPasswordActivity"

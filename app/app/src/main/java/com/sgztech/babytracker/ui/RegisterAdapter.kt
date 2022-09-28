@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.extension.gone
 import com.sgztech.babytracker.model.Register
 
 class RegisterAdapter(
@@ -46,7 +47,7 @@ class RegisterAdapter(
 
         private fun TextView.setTextOrGone(value: String) {
             if (value.isEmpty())
-                visibility = View.GONE
+                gone()
             else
                 text = value
         }

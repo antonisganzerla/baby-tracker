@@ -131,7 +131,7 @@ class LoginActivity : AppCompatActivity() {
     private fun setupBtnCreateAccount() {
         val tvCreateAccount = findViewById<TextView>(R.id.tv_create_account)
         tvCreateAccount.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
+            val intent = Intent(this, RegisterUserActivity::class.java)
             startActivity(intent)
         }
     }
