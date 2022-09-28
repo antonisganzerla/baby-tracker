@@ -6,16 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.dao.BabyDao
+import com.sgztech.babytracker.data.BabyRepository
 import com.sgztech.babytracker.model.Baby
-import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.model.User
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class BabyViewModel(
-    private val preferenceService: PreferenceService,
-    private val babyDao: BabyDao,
+    preferenceService: PreferenceService,
+    private val babyRepository: BabyRepository,
     private val formatter: DateTimeFormatter,
 ) : ViewModel() {
 
@@ -45,19 +44,19 @@ class BabyViewModel(
 
     fun saveBaby(baby: Baby) {
         viewModelScope.launch {
-            babyDao.insertAll(baby.copy(userId = user.id))
+            babyRepository.insertAll(baby.copy(userId = user.id))
         }
     }
 
     fun update(baby: Baby) {
         viewModelScope.launch {
-            babyDao.update(baby.copy(id = _baby.value!!.id, userId = user.id))
+            babyRepository.update(baby.copy(id = _baby.value!!.id, userId = user.id))
         }
     }
 
     private fun getBaby() =
         viewModelScope.launch {
-            val baby = babyDao.loadByUserId(user.id)
+            val baby = babyRepository.loadByUserId(user.id)
             _baby.postValue(baby)
             _date.postValue(baby?.birthday ?: LocalDate.now())
         }

@@ -76,7 +76,7 @@ class BabyActivity : AppCompatActivity() {
     private fun loadBabyInfo(baby: Baby) {
         etName.setText(baby.name)
         autoCompleteBirthday.setText(viewModel.formatDate(baby.birthday))
-        autoCompleteSex.setText(baby.sex)
+        autoCompleteSex.setText(baby.sex, false)
         if (baby.photoUri.isNotEmpty())
             loadBabyImage(baby.photoUri.toUri())
         viewModel.updateDate(baby.birthday)

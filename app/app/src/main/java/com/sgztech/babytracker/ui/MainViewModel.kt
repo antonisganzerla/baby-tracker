@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.dao.BabyDao
+import com.sgztech.babytracker.data.BabyRepository
 import com.sgztech.babytracker.data.RegisterRepository
 import com.sgztech.babytracker.model.Baby
 import com.sgztech.babytracker.model.Register
@@ -18,7 +19,7 @@ class MainViewModel(
     private val dateFormatter: DateTimeFormatter,
     private val preferenceService: PreferenceService,
     private val repository: RegisterRepository,
-    private val babyDao: BabyDao,
+    private val babyRepository: BabyRepository,
 ) : ViewModel() {
 
     private val _registers: MutableLiveData<List<Register>> = MutableLiveData()
@@ -34,7 +35,7 @@ class MainViewModel(
 
     init {
         viewModelScope.launch {
-            val baby = babyDao.loadByUserId(user.id)
+            val baby = babyRepository.loadByUserId(user.id)
             _baby.postValue(baby)
             _date.postValue(LocalDate.now())
         }

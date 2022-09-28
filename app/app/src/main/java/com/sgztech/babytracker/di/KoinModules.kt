@@ -2,6 +2,7 @@ package com.sgztech.babytracker.di
 
 import androidx.preference.PreferenceManager
 import com.sgztech.babytracker.PreferenceService
+import com.sgztech.babytracker.data.BabyRepository
 import com.sgztech.babytracker.data.RegisterRepository
 import com.sgztech.babytracker.database.AppDatabase
 import com.sgztech.babytracker.ui.*
@@ -17,7 +18,8 @@ val dbModule = module {
 }
 
 val repositoryModule = module {
-    single { RegisterRepository(get()) }
+    factory { RegisterRepository(get()) }
+    factory { BabyRepository(get()) }
 }
 
 val uiModule = module {
