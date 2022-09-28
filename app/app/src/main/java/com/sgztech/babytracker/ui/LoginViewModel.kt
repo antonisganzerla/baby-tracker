@@ -34,7 +34,7 @@ class LoginViewModel(
     private val _authAction: MutableLiveData<RequestAction> = MutableLiveData()
     val authAction: LiveData<RequestAction> = _authAction
 
-    fun saveUser(user: User, isSaveMe: Boolean) {
+    fun saveUserSession(user: User, isSaveMe: Boolean) {
         preferenceService.setUser(user)
         preferenceService.setUserLogged(true)
         preferenceService.setRememberMe(
@@ -89,9 +89,7 @@ class LoginViewModel(
                     is Error.Unknown -> _authAction.postValue(response.error.toUnknownFailure())
                     is Error.Validation -> _authAction.postValue(response.error.toValidationFailure())
                 }
-                is Result.Success -> _authAction.postValue(
-                    RequestAction.Success(response.value)
-                )
+                is Result.Success -> _authAction.postValue(RequestAction.Success(response.value))
             }
         }
     }

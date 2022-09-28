@@ -173,7 +173,7 @@ class LoginActivity : AppCompatActivity() {
                     pbLogin.gone()
                     val saveMe = cbRememberMe.isChecked
                     val user = (action.value as User).copy(photoUri = photoUri)
-                    viewModel.saveUser(user, saveMe)
+                    viewModel.saveUserSession(user, saveMe)
                     viewModel.navigateToNextScreen(user.id)
                 }
                 is RequestAction.UnknownFailure -> {
