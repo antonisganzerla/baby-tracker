@@ -6,6 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.arch.Error
+import com.sgztech.babytracker.arch.Result
+import com.sgztech.babytracker.arch.toGenericFailure
+import com.sgztech.babytracker.arch.toValidationFailure
 import com.sgztech.babytracker.data.BabyRepository
 import com.sgztech.babytracker.model.Baby
 import com.sgztech.babytracker.model.User
@@ -29,6 +33,9 @@ class BabyViewModel(
     private val _baby: MutableLiveData<Baby?> = MutableLiveData()
     val baby: LiveData<Baby?> = _baby
 
+    private val _saveAction: MutableLiveData<RequestAction> = MutableLiveData()
+    val saveAction: LiveData<RequestAction> = _saveAction
+
     init {
         getBaby()
     }
@@ -44,13 +51,31 @@ class BabyViewModel(
 
     fun saveBaby(baby: Baby) {
         viewModelScope.launch {
-            babyRepository.insertAll(baby.copy(userId = user.id))
+            _saveAction.postValue(RequestAction.Loading)
+            val copyBaby = baby.copy(userId = user.id, webId = _baby.value?.webId)
+            when (val response = babyRepository.save(copyBaby)) {
+                is Result.Failure -> when (response.error) {
+                    is Error.Unknown -> _saveAction.postValue(response.error.toGenericFailure())
+                    is Error.Validation -> _saveAction.postValue(response.error.toValidationFailure())
+                    is Error.NetWork -> _saveAction.postValue(response.error.toGenericFailure())
+                }
+                is Result.Success -> _saveAction.postValue(RequestAction.Success(response.value))
+            }
         }
     }
 
     fun update(baby: Baby) {
         viewModelScope.launch {
-            babyRepository.update(baby.copy(id = _baby.value!!.id, userId = user.id))
+            _saveAction.postValue(RequestAction.Loading)
+            val copyBaby = baby.copy(id = _baby.value!!.id, userId = user.id, webId = _baby.value?.webId)
+            when (val response = babyRepository.update(copyBaby)) {
+                is Result.Failure -> when (response.error) {
+                    is Error.Unknown -> _saveAction.postValue(response.error.toGenericFailure())
+                    is Error.Validation -> _saveAction.postValue(response.error.toValidationFailure())
+                    is Error.NetWork -> _saveAction.postValue(response.error.toGenericFailure())
+                }
+                is Result.Success -> _saveAction.postValue(RequestAction.Success(response.value))
+            }
         }
     }
 

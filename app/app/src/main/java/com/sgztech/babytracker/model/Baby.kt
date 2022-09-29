@@ -12,5 +12,20 @@ data class Baby(
     val birthday: LocalDate,
     val sex: String,
     val photoUri: String,
-    val userId: Int = 0,
+    val userId: Int,
+    val webId: Int? = null,
 )
+
+fun Baby.getSexEnum(): BabySex =
+    when (sex) {
+        "Masculino" -> BabySex.MALE
+        "Feminino" -> BabySex.FEMALE
+        else -> BabySex.OTHER
+    }
+
+fun BabySex.toSex(): String =
+    when (this) {
+        BabySex.MALE -> "Masculino"
+        BabySex.FEMALE -> "Feminino"
+        BabySex.OTHER -> "Outros"
+    }

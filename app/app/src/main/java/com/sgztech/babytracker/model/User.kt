@@ -10,3 +10,6 @@ data class User(
     val token: String,
     val photoUri: String? = null,
 )
+
+fun User.buildApiToken(): String =
+    "Bearer $token"

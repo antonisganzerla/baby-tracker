@@ -9,7 +9,7 @@
     <include layout="@layout/toolbar" android:id="@+id/include_toolbar"/>
 
     <ProgressBar
-        android:id="@+id/pb_register"
+        android:id="@+id/pbBaby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

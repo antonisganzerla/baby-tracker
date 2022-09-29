@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -16,9 +17,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.extension.disableError
-import com.sgztech.babytracker.extension.enableError
-import com.sgztech.babytracker.extension.hideKeyBoard
+import com.sgztech.babytracker.extension.*
 import com.sgztech.babytracker.model.Baby
 import com.squareup.picasso.Picasso
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -37,6 +36,7 @@ class BabyActivity : AppCompatActivity() {
     private val autoCompleteSex: MaterialAutoCompleteTextView by lazy { findViewById(R.id.autoCompleteSex) }
     private val ivBaby: ImageView by lazy { findViewById(R.id.ivBaby) }
     private val tvBabyPhoto: MaterialTextView by lazy { findViewById(R.id.tvBabyPhoto) }
+    private val pbBaby: ProgressBar by lazy { findViewById(R.id.pbBaby) }
     private val viewModel: BabyViewModel by viewModel()
     private var photoUri: String = ""
     private var isEditingMode: Boolean = false
@@ -170,19 +170,32 @@ class BabyActivity : AppCompatActivity() {
                         birthday = viewModel.currentDate(),
                         sex = autoCompleteSex.text.toString(),
                         photoUri = photoUri,
+                        userId = 0,
                     )
                     if (isEditingMode)
                         viewModel.update(baby)
                     else
                         viewModel.saveBaby(baby)
-
-                    openMainActivity()
                 }
             }
         }
         viewModel.baby.observe(this) { baby ->
             baby?.let {
                 loadBabyInfo(it)
+            }
+        }
+        viewModel.saveAction.observe(this) { action ->
+            when (action) {
+                is RequestAction.GenericFailure -> {
+                    pbBaby.gone()
+                    btnSaveBaby.showSnackbar(action.errorRes)
+                }
+                RequestAction.Loading -> pbBaby.visible()
+                is RequestAction.Success<*> -> openMainActivity()
+                is RequestAction.ValidationFailure -> {
+                    pbBaby.gone()
+                    btnSaveBaby.showSnackbar(action.errors.joinToString())
+                }
             }
         }
     }

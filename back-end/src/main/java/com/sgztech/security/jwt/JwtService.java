@@ -31,7 +31,7 @@ public class JwtService {
         return Jwts
                 .builder()
                 .setSubject(user.getEmail())
-                .setExpiration(date)
+                //.setExpiration(date)
                 .signWith(SignatureAlgorithm.HS512, signatureKey)
                 .compact();
     }
@@ -46,12 +46,13 @@ public class JwtService {
 
     public boolean isValidToken(String token) {
         try {
-            Claims claims = getClaims(token);
+            /*Claims claims = getClaims(token);
             Date expirationDate = claims.getExpiration();
             LocalDateTime dateTime =
                     expirationDate.toInstant()
                             .atZone(ZoneId.systemDefault()).toLocalDateTime();
-            return !LocalDateTime.now().isAfter(dateTime);
+            return !LocalDateTime.now().isAfter(dateTime); */
+            return true;
         } catch (Exception e) {
             return false;
         }

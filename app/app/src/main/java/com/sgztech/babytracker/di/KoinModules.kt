@@ -9,9 +9,7 @@ import com.sgztech.babytracker.data.BabyRepository
 import com.sgztech.babytracker.data.RegisterRepository
 import com.sgztech.babytracker.data.RegisterUserRepository
 import com.sgztech.babytracker.database.AppDatabase
-import com.sgztech.babytracker.service.ServiceExecutor
-import com.sgztech.babytracker.service.UserApi
-import com.sgztech.babytracker.service.UserService
+import com.sgztech.babytracker.service.*
 import com.sgztech.babytracker.ui.*
 import com.slack.eithernet.ApiResultCallAdapterFactory
 import com.slack.eithernet.ApiResultConverterFactory
@@ -67,11 +65,20 @@ val serviceModule = module {
     }
 
     factory {
+        val retrofit: Retrofit = get()
+        retrofit.create(BabyApi::class.java)
+    }
+
+    factory {
         ServiceExecutor()
     }
 
     factory {
         UserService(get(), get())
+    }
+
+    factory {
+        BabyService(get(), get(), get())
     }
 }
 
@@ -85,7 +92,7 @@ val dbModule = module {
 
 val repositoryModule = module {
     factory { RegisterRepository(get()) }
-    factory { BabyRepository(get()) }
+    factory { BabyRepository(get(), get()) }
     factory { RegisterUserRepository(get()) }
     factory { AuthRepository(get()) }
 }
