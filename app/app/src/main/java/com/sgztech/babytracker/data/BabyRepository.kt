@@ -33,8 +33,15 @@ class BabyRepository(
             }
     }
 
-    suspend fun exists(userId: Int): Boolean =
-        dao.exists(userId)
+    suspend fun exists(userId: Int): Boolean {
+        if (dao.exists(userId).not()) {
+            return when (val response = service.find(userId)) {
+                is Result.Failure -> false
+                is Result.Success -> response.value.isNotEmpty()
+            }
+        }
+        return true
+    }
 
     suspend fun save(baby: Baby): Result<BabyDtoResponse, Error> {
         val response = service.save(
