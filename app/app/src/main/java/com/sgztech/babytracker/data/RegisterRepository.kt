@@ -13,11 +13,11 @@ class RegisterRepository(
     private val dao: RegisterDao,
     private val service: RegisterService,
 ) {
-    suspend fun load(userId: Int, date: LocalDate): List<Register> {
+    suspend fun load(userId: Int, date: LocalDate): Result<List<Register>, Error> {
         val hasRegisters = dao.exists(userId)
         if (hasRegisters.not()) {
             when (val response = service.find(userId)) {
-                is Result.Failure -> {}
+                is Result.Failure -> return response
                 is Result.Success -> {
                     val items = response.value.map {
                         Register(
@@ -38,8 +38,9 @@ class RegisterRepository(
             }
         }
 
-        return dao.loadAllByUserId(userId).filter { it.localDateTime.toLocalDate().isEqual(date) }
+        val registers =  dao.loadAllByUserId(userId).filter { it.localDateTime.toLocalDate().isEqual(date) }
             .sortedBy { it.localDateTime }
+        return Result.Success(registers)
     }
 
     suspend fun save(register: Register): Result<RegisterDtoResponse, Error> {

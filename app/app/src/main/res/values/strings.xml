@@ -57,6 +57,7 @@
     <string name="msg_password_reseted">Senha redefinida com sucesso</string>
 
     <string name="btn_save">Salvar</string>
+    <string name="btn_retry">Tentar novamente</string>
 
     <!-- Baby -->
     <string name="tv_name">Nome</string>
@@ -72,6 +73,7 @@
     <string name="open_drawer">Abrir</string>
     <string name="close_drawer">Fechar</string>
     <string name="empty_message">Adicione os registros de hoje</string>
+    <string name="retry_message">Não foi possível comunicar com o servidor</string>
     <string name="date_between">%1$s Meses e %2$s Dias</string>
     <string name="before_born">Antes do nascimento</string>
 

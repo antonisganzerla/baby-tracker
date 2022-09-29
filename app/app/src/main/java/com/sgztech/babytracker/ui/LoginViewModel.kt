@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.arch.Result
+import com.sgztech.babytracker.arch.Error
 import com.sgztech.babytracker.arch.toValidationFailure
 import com.sgztech.babytracker.data.AuthRepository
 import com.sgztech.babytracker.data.BabyRepository
@@ -70,10 +72,13 @@ class LoginViewModel(
 
     fun navigateToNextScreen(userId: Int) {
         viewModelScope.launch {
-            if (babyRepository.exists(userId))
-                _navigateState.postValue(NavigateState.MainScreen)
-            else
-                _navigateState.postValue(NavigateState.BabyFormScreen)
+            when (val response = babyRepository.exists(userId)) {
+                is Result.Failure -> _navigateState.postValue(NavigateState.Failure(response.mapToViewError()))
+                is Result.Success -> if (response.value)
+                    _navigateState.postValue(NavigateState.MainScreen)
+                else
+                    _navigateState.postValue(NavigateState.BabyFormScreen)
+            }
         }
     }
 
@@ -110,4 +115,5 @@ sealed class LoginFormState {
 sealed class NavigateState {
     object BabyFormScreen : NavigateState()
     object MainScreen : NavigateState()
+    class Failure(val error: RequestAction) : NavigateState()
 }

@@ -19,28 +19,32 @@ class BabyRepository(
         return dao.loadByUserId(userId)
             ?: return when (val response = service.find(userId)) {
                 is Result.Failure -> null
-                is Result.Success -> response.value.firstOrNull()?.run {
-                    Baby(
-                        id = 0,
-                        name = name,
-                        birthday = birthday,
-                        sex = sex.toSex(),
-                        photoUri = photoUri,
-                        userId = userId,
-                        webId = id,
-                    )
+                is Result.Success -> {
+                    val baby = response.value.firstOrNull()?.run {
+                        Baby(
+                            id = 0,
+                            name = name,
+                            birthday = birthday,
+                            sex = sex.toSex(),
+                            photoUri = photoUri,
+                            userId = userId,
+                            webId = id,
+                        )
+                    }
+                    baby?.let { dao.insertAll(it) }
+                    baby
                 }
             }
     }
 
-    suspend fun exists(userId: Int): Boolean {
+    suspend fun exists(userId: Int): Result<Boolean, Error> {
         if (dao.exists(userId).not()) {
             return when (val response = service.find(userId)) {
-                is Result.Failure -> false
-                is Result.Success -> response.value.isNotEmpty()
+                is Result.Failure -> response
+                is Result.Success -> Result.Success(response.value.isNotEmpty())
             }
         }
-        return true
+        return Result.Success(true)
     }
 
     suspend fun save(baby: Baby): Result<BabyDtoResponse, Error> {

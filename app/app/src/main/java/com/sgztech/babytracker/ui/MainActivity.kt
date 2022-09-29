@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -16,11 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dargoz.extendedbottomnavigationview.BottomNavigationBar
 import com.dargoz.extendedbottomnavigationview.menu.SubMenuOrientation
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.navigation.NavigationView
 import com.natura.android.button.TextButton
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.extension.gone
+import com.sgztech.babytracker.extension.showSnackbar
 import com.sgztech.babytracker.extension.visible
 import com.sgztech.babytracker.firebaseInstance
 import com.sgztech.babytracker.model.Register
@@ -39,9 +42,12 @@ class MainActivity : AppCompatActivity() {
     private val tvDate: TextView by lazy { findViewById(R.id.tvDate) }
     private val buttonLeft: TextButton by lazy { findViewById(R.id.buttonLeft) }
     private val buttonRight: TextButton by lazy { findViewById(R.id.buttonRight) }
+    private val btnRetry: MaterialButton by lazy { findViewById(R.id.btnRetry) }
     private val recyclerViewRegisters: RecyclerView by lazy { findViewById(R.id.recyclerViewRegisters) }
     private val panelEmptyMessage: LinearLayout by lazy { findViewById(R.id.panelEmptyMessage) }
+    private val panelRetryMessage: LinearLayout by lazy { findViewById(R.id.panelRetryMessage) }
     private val bottomNavigationBar: BottomNavigationBar by lazy { findViewById(R.id.bottomNavigationView) }
+    private val pbMain: ProgressBar by lazy { findViewById(R.id.pbMain) }
     private val viewModel: MainViewModel by viewModel()
     private var subMenuVisibility = false
 
@@ -53,8 +59,8 @@ class MainActivity : AppCompatActivity() {
         setupArrowButtons()
         setupRecyclerView(emptyList())
         setupBottomNavigationView()
+        setupRetryButton()
         inscribeObservers()
-        viewModel.loadRegisters()
     }
 
     private fun setupToolbar() {
@@ -159,9 +165,11 @@ class MainActivity : AppCompatActivity() {
     private fun setupRecyclerView(registers: List<Register>) {
         if (registers.isEmpty()) {
             recyclerViewRegisters.gone()
+            panelRetryMessage.gone()
             panelEmptyMessage.visible()
         } else {
             recyclerViewRegisters.visible()
+            panelRetryMessage.gone()
             panelEmptyMessage.gone()
             recyclerViewRegisters.apply {
                 adapter = RegisterAdapter(registers = registers) { selectedRegister ->
@@ -238,10 +246,40 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun inscribeObservers() {
-        viewModel.registers.observe(this) { registers ->
-            setupRecyclerView(registers)
+    private fun setupRetryButton() {
+        btnRetry.setOnClickListener {
+            viewModel.loadRegisters()
         }
+    }
+
+    private fun inscribeObservers() {
+        viewModel.loadAction.observe(this) { action ->
+            when (action) {
+                is RequestAction.GenericFailure -> {
+                    pbMain.gone()
+                    recyclerViewRegisters.gone()
+                    panelEmptyMessage.gone()
+                    panelRetryMessage.visible()
+                    bottomNavigationBar.showSnackbar(action.errorRes)
+                }
+                RequestAction.Loading -> {
+                    pbMain.visible()
+                    panelRetryMessage.gone()
+                }
+                is RequestAction.Success<*> -> {
+                    pbMain.gone()
+                    setupRecyclerView(action.value as List<Register>)
+                }
+                is RequestAction.ValidationFailure -> {
+                    pbMain.gone()
+                    recyclerViewRegisters.gone()
+                    panelEmptyMessage.gone()
+                    panelRetryMessage.visible()
+                    bottomNavigationBar.showSnackbar(action.errors.joinToString())
+                }
+            }
+        }
+
         viewModel.date.observe(this) { date ->
             updateTvDate(date)
             viewModel.loadRegisters()
@@ -251,6 +289,7 @@ class MainActivity : AppCompatActivity() {
             else
                 getString(R.string.date_between, period.months, period.days)
         }
+
         viewModel.baby.observe(this) { baby ->
             toolbar.title = baby.name
             if (baby.photoUri.isNotEmpty()) {

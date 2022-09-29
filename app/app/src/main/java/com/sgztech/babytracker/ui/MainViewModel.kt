@@ -20,8 +20,8 @@ class MainViewModel(
     private val babyRepository: BabyRepository,
 ) : BaseViewModel() {
 
-    private val _registers: MutableLiveData<List<Register>> = MutableLiveData()
-    val registers: LiveData<List<Register>> = _registers
+    private val _loadAction: MutableLiveData<RequestAction> = MutableLiveData()
+    val loadAction: LiveData<RequestAction> = _loadAction
 
     private var _date: MutableLiveData<LocalDate> = MutableLiveData()
     val date: LiveData<LocalDate> = _date
@@ -40,13 +40,13 @@ class MainViewModel(
     }
 
     fun loadRegisters() {
+        _loadAction.postValue(RequestAction.Loading)
         viewModelScope.launch {
-            _registers.postValue(
-                repository.load(
-                    userId = user.id,
-                    date = currentDate(),
-                )
+            val response = repository.load(
+                userId = user.id,
+                date = currentDate(),
             )
+            _loadAction.handleResponse(response)
         }
     }
 

@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.GoogleAuthProvider
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.arch.Error
 import com.sgztech.babytracker.extension.*
 import com.sgztech.babytracker.firebaseInstance
 import com.sgztech.babytracker.googleSignInClient
@@ -191,6 +192,14 @@ class LoginActivity : AppCompatActivity() {
             when (navigateState) {
                 NavigateState.BabyFormScreen -> openBabyActivity()
                 NavigateState.MainScreen -> openMainActivity()
+                is NavigateState.Failure -> {
+                    pbLogin.gone()
+                    when (navigateState.error) {
+                        is RequestAction.GenericFailure -> loginButton.showSnackbar(navigateState.error.errorRes)
+                        is RequestAction.ValidationFailure -> loginButton.showSnackbar(navigateState.error.errors.joinToString())
+                        else -> {}
+                    }
+                }
             }
         }
     }
