@@ -70,6 +70,11 @@ val serviceModule = module {
     }
 
     factory {
+        val retrofit: Retrofit = get()
+        retrofit.create(RegisterApi::class.java)
+    }
+
+    factory {
         ServiceExecutor()
     }
 
@@ -79,6 +84,10 @@ val serviceModule = module {
 
     factory {
         BabyService(get(), get(), get())
+    }
+
+    factory {
+        RegisterService(get(), get(), get())
     }
 }
 
@@ -91,7 +100,7 @@ val dbModule = module {
 }
 
 val repositoryModule = module {
-    factory { RegisterRepository(get()) }
+    factory { RegisterRepository(get(), get()) }
     factory { BabyRepository(get(), get()) }
     factory { RegisterUserRepository(get()) }
     factory { AuthRepository(get()) }

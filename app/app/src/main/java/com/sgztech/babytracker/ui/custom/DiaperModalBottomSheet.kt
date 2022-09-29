@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatButton
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.model.Register
+import com.sgztech.babytracker.model.RegisterSubType
 import com.sgztech.babytracker.model.RegisterType
 import java.time.LocalDate
 
@@ -26,7 +27,7 @@ class DiaperModalBottomSheet(
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? = inflater.inflate(R.layout.diaper_modal_bottom_sheet, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,11 +45,20 @@ class DiaperModalBottomSheet(
                     localDateTime = date.atTime(getHour(), getMinute()),
                     note = getNote(),
                     type = RegisterType.DIAPER,
+                    subType = getSubType(),
                 )
             )
             dismiss()
         }
     }
+
+    private fun getSubType(): RegisterSubType? =
+        when (autoCompleteTypeSelector.text.toString()) {
+            "Xixi" -> RegisterSubType.PEE
+            "Cocô" -> RegisterSubType.POO
+            "Xixi e cocô" -> RegisterSubType.POO_AND_PEE
+            else -> null
+        }
 
     companion object {
         const val TAG = "DiaperModalBottomSheet"

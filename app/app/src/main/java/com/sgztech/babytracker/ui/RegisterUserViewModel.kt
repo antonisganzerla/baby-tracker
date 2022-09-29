@@ -3,19 +3,14 @@ package com.sgztech.babytracker.ui
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.arch.Error
-import com.sgztech.babytracker.arch.Result
-import com.sgztech.babytracker.arch.toValidationFailure
-import com.sgztech.babytracker.arch.toGenericFailure
 import com.sgztech.babytracker.data.RegisterUserRepository
 import kotlinx.coroutines.launch
 
 class RegisterUserViewModel(
     private val repository: RegisterUserRepository,
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _formState: MutableLiveData<RegisterFormState> = MutableLiveData()
     val formState: LiveData<RegisterFormState> = _formState
@@ -61,16 +56,8 @@ class RegisterUserViewModel(
     fun register(name: String, email: String, password: String) {
         _registerAction.postValue(RequestAction.Loading)
         viewModelScope.launch {
-            when (val response = repository.register(name, email, password)) {
-                is Result.Failure -> {
-                    when (response.error) {
-                        is Error.Unknown -> _registerAction.postValue(response.error.toGenericFailure())
-                        is Error.Validation -> _registerAction.postValue(response.error.toValidationFailure())
-                        is Error.NetWork -> _registerAction.postValue(response.error.toGenericFailure())
-                    }
-                }
-                is Result.Success -> _registerAction.postValue(RequestAction.Success(response.value))
-            }
+            val response = repository.register(name, email, password)
+            _registerAction.handleResponse(response)
         }
     }
 }

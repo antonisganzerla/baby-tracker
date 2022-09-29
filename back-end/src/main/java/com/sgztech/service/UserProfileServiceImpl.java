@@ -53,7 +53,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Override
     public List<UserProfile> find(UserProfile filter) {
         ExampleMatcher matcher = ExampleMatcher
-                .matching()
+                .matchingAny()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 

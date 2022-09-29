@@ -11,13 +11,13 @@ import com.sgztech.babytracker.model.toSex
 import com.sgztech.babytracker.service.BabyService
 
 class BabyRepository(
-    private val babyDao: BabyDao,
-    private val babyService: BabyService,
+    private val dao: BabyDao,
+    private val service: BabyService,
 ) {
 
     suspend fun loadByUserId(userId: Int): Baby? {
-        return babyDao.loadByUserId(userId)
-            ?: return when (val response = babyService.find(userId)) {
+        return dao.loadByUserId(userId)
+            ?: return when (val response = service.find(userId)) {
                 is Result.Failure -> null
                 is Result.Success -> response.value.firstOrNull()?.run {
                     Baby(
@@ -34,10 +34,10 @@ class BabyRepository(
     }
 
     suspend fun exists(userId: Int): Boolean =
-        babyDao.exists(userId)
+        dao.exists(userId)
 
     suspend fun save(baby: Baby): Result<BabyDtoResponse, Error> {
-        val response = babyService.save(
+        val response = service.save(
             BabyDtoRequest(
                 id = baby.webId ?: 0,
                 name = baby.name,
@@ -50,16 +50,16 @@ class BabyRepository(
         return when (response) {
             is Result.Failure -> response
             is Result.Success -> {
-                babyDao.insertAll(baby.copy(webId = response.value.id))
+                dao.insertAll(baby.copy(webId = response.value.id))
                 response
             }
         }
     }
 
     suspend fun sync(userId: Int) {
-        val baby = babyDao.loadByUserIdWithoutSync(userId)
+        val baby = dao.loadByUserIdWithoutSync(userId)
         baby?.let {
-            val response = babyService.save(
+            val response = service.save(
                 BabyDtoRequest(
                     id = 0,
                     name = baby.name,
@@ -77,7 +77,7 @@ class BabyRepository(
     }
 
     suspend fun update(baby: Baby): Result<BabyDtoResponse, Error> {
-        val response = babyService.update(
+        val response = service.update(
             BabyDtoRequest(
                 id = baby.webId ?: 0,
                 name = baby.name,
@@ -90,13 +90,13 @@ class BabyRepository(
         return when (response) {
             is Result.Failure -> response
             is Result.Success -> {
-                babyDao.update(baby)
+                dao.update(baby)
                 response
             }
         }
     }
 
     suspend fun delete(baby: Baby) {
-        babyDao.delete(baby)
+        dao.delete(baby)
     }
 }

@@ -1,6 +1,6 @@
-package com.sgztech.babytracker.model
+package com.sgztech.domain.enums;
 
-enum class RegisterType {
+public enum RegisterType {
     BATHE,
     COLIC,
     DIAPER,

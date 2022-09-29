@@ -2,10 +2,8 @@ package com.sgztech.babytracker.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
-import com.sgztech.babytracker.dao.BabyDao
 import com.sgztech.babytracker.data.BabyRepository
 import com.sgztech.babytracker.data.RegisterRepository
 import com.sgztech.babytracker.model.Baby
@@ -20,7 +18,7 @@ class MainViewModel(
     private val preferenceService: PreferenceService,
     private val repository: RegisterRepository,
     private val babyRepository: BabyRepository,
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _registers: MutableLiveData<List<Register>> = MutableLiveData()
     val registers: LiveData<List<Register>> = _registers
@@ -56,7 +54,7 @@ class MainViewModel(
 
     fun addRegister(register: Register) {
         viewModelScope.launch {
-            repository.add(register.copy(userId = user.id))
+            repository.save(register.copy(userId = user.id))
             loadRegisters()
         }
     }

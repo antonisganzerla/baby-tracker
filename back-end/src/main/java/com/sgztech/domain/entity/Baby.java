@@ -33,6 +33,9 @@ public class Baby {
     @Column(name = "photoUri")
     private String photoUri;
 
+    @Column(name = "registrationDate")
+    private LocalDateTime registrationDate;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore
@@ -76,6 +79,14 @@ public class Baby {
 
     public void setPhotoUri(String photoUri) {
         this.photoUri = photoUri;
+    }
+
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public User getUser() {

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +63,7 @@ public class BabyServiceImpl implements BabyService {
     @Override
     public List<BabyDTO> find(BabyDTO babyFilter) {
         ExampleMatcher matcher = ExampleMatcher
-                .matching()
+                .matchingAny()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 
@@ -80,6 +81,7 @@ public class BabyServiceImpl implements BabyService {
         baby.setBirthday(dto.getBirthday());
         baby.setSex(dto.getSex());
         baby.setPhotoUri(dto.getPhotoUri());
+        baby.setRegistrationDate(LocalDateTime.now());
         User user = new User();
         user.setId(dto.getUserId());
         baby.setUser(user);

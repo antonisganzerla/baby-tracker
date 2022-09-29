@@ -2,14 +2,9 @@ package com.sgztech.babytracker.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.arch.Error
-import com.sgztech.babytracker.arch.Result
-import com.sgztech.babytracker.arch.toGenericFailure
-import com.sgztech.babytracker.arch.toValidationFailure
 import com.sgztech.babytracker.data.BabyRepository
 import com.sgztech.babytracker.model.Baby
 import com.sgztech.babytracker.model.User
@@ -20,7 +15,7 @@ class BabyViewModel(
     preferenceService: PreferenceService,
     private val babyRepository: BabyRepository,
     private val formatter: DateTimeFormatter,
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _formState: MutableLiveData<BabyFormState> = MutableLiveData()
     val formState: LiveData<BabyFormState> = _formState
@@ -53,29 +48,18 @@ class BabyViewModel(
         viewModelScope.launch {
             _saveAction.postValue(RequestAction.Loading)
             val copyBaby = baby.copy(userId = user.id, webId = _baby.value?.webId)
-            when (val response = babyRepository.save(copyBaby)) {
-                is Result.Failure -> when (response.error) {
-                    is Error.Unknown -> _saveAction.postValue(response.error.toGenericFailure())
-                    is Error.Validation -> _saveAction.postValue(response.error.toValidationFailure())
-                    is Error.NetWork -> _saveAction.postValue(response.error.toGenericFailure())
-                }
-                is Result.Success -> _saveAction.postValue(RequestAction.Success(response.value))
-            }
+            val response = babyRepository.save(copyBaby)
+            _saveAction.handleResponse(response)
         }
     }
 
     fun update(baby: Baby) {
         viewModelScope.launch {
             _saveAction.postValue(RequestAction.Loading)
-            val copyBaby = baby.copy(id = _baby.value!!.id, userId = user.id, webId = _baby.value?.webId)
-            when (val response = babyRepository.update(copyBaby)) {
-                is Result.Failure -> when (response.error) {
-                    is Error.Unknown -> _saveAction.postValue(response.error.toGenericFailure())
-                    is Error.Validation -> _saveAction.postValue(response.error.toValidationFailure())
-                    is Error.NetWork -> _saveAction.postValue(response.error.toGenericFailure())
-                }
-                is Result.Success -> _saveAction.postValue(RequestAction.Success(response.value))
-            }
+            val copyBaby =
+                baby.copy(id = _baby.value!!.id, userId = user.id, webId = _baby.value?.webId)
+            val response = babyRepository.update(copyBaby)
+            _saveAction.handleResponse(response)
         }
     }
 

@@ -3,13 +3,9 @@ package com.sgztech.babytracker.ui
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.arch.Error
-import com.sgztech.babytracker.arch.Result
-import com.sgztech.babytracker.arch.toGenericFailure
 import com.sgztech.babytracker.arch.toValidationFailure
 import com.sgztech.babytracker.data.AuthRepository
 import com.sgztech.babytracker.data.BabyRepository
@@ -23,7 +19,7 @@ class LoginViewModel(
     private val babyRepository: BabyRepository,
     private val authRepository: AuthRepository,
     private val registerUserRepository: RegisterUserRepository,
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _formState: MutableLiveData<LoginFormState> = MutableLiveData()
     val formState: LiveData<LoginFormState> = _formState
@@ -84,32 +80,20 @@ class LoginViewModel(
     fun auth(email: String, password: String) {
         _authAction.postValue(RequestAction.Loading)
         viewModelScope.launch {
-            when (val response = authRepository.auth(email, password)) {
-                is Result.Failure -> when (response.error) {
-                    is Error.Unknown -> _authAction.postValue(response.error.toGenericFailure())
-                    is Error.Validation -> _authAction.postValue(response.error.toValidationFailure())
-                    is Error.NetWork -> _authAction.postValue(response.error.toGenericFailure())
-                }
-                is Result.Success -> _authAction.postValue(RequestAction.Success(response.value))
-            }
+            val response = authRepository.auth(email, password)
+            _authAction.handleResponse(response)
         }
     }
 
     fun authWithGoogle(name: String, email: String, token: String) {
         _authAction.postValue(RequestAction.Loading)
         viewModelScope.launch {
-            when (val response = registerUserRepository.register(name, email, token)) {
-                is Result.Failure -> when (response.error) {
-                    is Error.Unknown -> _authAction.postValue(response.error.toGenericFailure())
-                    is Error.Validation -> {
-                        if (response.error.errors?.contains(EMAIL_ALREADY_IN_USE_ERROR) == true)
-                            auth(email, token)
-                        else
-                            _authAction.postValue(response.error.toValidationFailure())
-                    }
-                    is Error.NetWork -> _authAction.postValue(response.error.toGenericFailure())
-                }
-                is Result.Success -> auth(email, token)
+            val response = registerUserRepository.register(name, email, token)
+            _authAction.handleResponse(response) { error ->
+                if (error.errors?.contains(EMAIL_ALREADY_IN_USE_ERROR) == true)
+                    auth(email, token)
+                else
+                    _authAction.postValue(error.toValidationFailure())
             }
         }
     }

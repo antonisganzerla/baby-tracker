@@ -18,6 +18,8 @@ data class Register(
     val note: String = "",
     val userId: Int = 0,
     val type: RegisterType,
+    val subType: RegisterSubType? = null,
+    val webId: Int? = null,
 )
 
 
