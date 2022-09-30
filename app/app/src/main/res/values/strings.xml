@@ -57,6 +57,7 @@
     <string name="msg_password_reseted">Senha redefinida com sucesso</string>
 
     <string name="btn_save">Salvar</string>
+    <string name="msg_save_successful">Salvo com sucesso</string>
     <string name="btn_retry">Tentar novamente</string>
 
     <!-- Baby -->

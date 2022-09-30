@@ -10,6 +10,8 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.extension.disableUserInteraction
+import com.sgztech.babytracker.extension.enableUserInteraction
 import com.sgztech.babytracker.extension.gone
 import com.sgztech.babytracker.extension.visible
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,7 +36,7 @@ class SplashActivity : AppCompatActivity() {
                 SplashNavigateState.LoginScreen -> openLoginActivity()
                 SplashNavigateState.MainScreen -> openMainActivity()
                 SplashNavigateState.Error -> {
-                    pbMain.gone()
+                    pbMain.hide()
                     ivIcon.gone()
                     panelRetryMessage.visible()
                 }
@@ -42,7 +44,7 @@ class SplashActivity : AppCompatActivity() {
         }
 
         btnRetry.setOnClickListener {
-            pbMain.visible()
+            pbMain.show()
             ivIcon.visible()
             panelRetryMessage.gone()
             viewModel.navigateToNextScreen()
@@ -51,6 +53,16 @@ class SplashActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             viewModel.navigateToNextScreen()
         }, 2000)
+    }
+
+    private fun ProgressBar.show() {
+        visible()
+        disableUserInteraction()
+    }
+
+    private fun ProgressBar.hide() {
+        gone()
+        enableUserInteraction()
     }
 
     private fun openBabyActivity() {

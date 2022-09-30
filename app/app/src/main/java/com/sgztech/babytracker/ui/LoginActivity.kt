@@ -18,7 +18,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.GoogleAuthProvider
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.arch.Error
 import com.sgztech.babytracker.extension.*
 import com.sgztech.babytracker.firebaseInstance
 import com.sgztech.babytracker.googleSignInClient
@@ -169,20 +168,20 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.authAction.observe(this) { action ->
             when (action) {
-                RequestAction.Loading -> pbLogin.visible()
+                RequestAction.Loading -> pbLogin.show()
                 is RequestAction.Success<*> -> {
-                    pbLogin.gone()
+                    pbLogin.hide()
                     val saveMe = cbRememberMe.isChecked
                     val user = (action.value as User).copy(photoUri = photoUri)
                     viewModel.saveUserSession(user, saveMe)
                     viewModel.navigateToNextScreen(user.id)
                 }
                 is RequestAction.GenericFailure -> {
-                    pbLogin.gone()
+                    pbLogin.hide()
                     loginButton.showSnackbar(action.errorRes)
                 }
                 is RequestAction.ValidationFailure -> {
-                    pbLogin.gone()
+                    pbLogin.hide()
                     loginButton.showSnackbar(action.errors.joinToString())
                 }
             }
@@ -202,6 +201,16 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun ProgressBar.show() {
+        visible()
+        disableUserInteraction()
+    }
+
+    private fun ProgressBar.hide() {
+        gone()
+        enableUserInteraction()
     }
 
     private fun log(message: String) {

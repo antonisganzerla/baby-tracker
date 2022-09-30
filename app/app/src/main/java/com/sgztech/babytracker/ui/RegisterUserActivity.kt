@@ -93,21 +93,32 @@ class RegisterUserActivity : BaseActivity() {
 
         viewModel.registerAction.observe(this) { action ->
             when (action) {
-                RequestAction.Loading -> pbRegister.visible()
+                RequestAction.Loading -> pbRegister.show()
                 is RequestAction.Success<*> -> {
-                    pbRegister.gone()
+                    pbRegister.hide()
                     setResult(Activity.RESULT_OK)
                     finish()
                 }
                 is RequestAction.GenericFailure -> {
                     btnRegister.showSnackbar(action.errorRes)
-                    pbRegister.gone()
+                    pbRegister.hide()
                 }
                 is RequestAction.ValidationFailure -> {
                     btnRegister.showSnackbar(action.errors.joinToString())
-                    pbRegister.gone()
+                    pbRegister.hide()
                 }
             }
         }
+    }
+
+
+    private fun ProgressBar.show() {
+        visible()
+        disableUserInteraction()
+    }
+
+    private fun ProgressBar.hide() {
+        gone()
+        enableUserInteraction()
     }
 }

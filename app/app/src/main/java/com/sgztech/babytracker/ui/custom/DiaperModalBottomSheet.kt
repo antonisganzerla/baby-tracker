@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.arch.Error
+import com.sgztech.babytracker.arch.Result
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.model.RegisterSubType
 import com.sgztech.babytracker.model.RegisterType
@@ -14,15 +16,15 @@ import java.time.LocalDate
 
 class DiaperModalBottomSheet(
     private val date: LocalDate,
-    private val actionButtonClick: (register: Register) -> Unit,
-) : BaseRegisterModalBottomSheet(R.id.timeSelector, R.id.textNote) {
+    override val actionButtonClick: (register: Register, handleResult: (result: Result<Unit, Error>) -> Unit) -> Unit,
+    override val successCallback: () -> Unit,
+) : BaseRegisterModalBottomSheet(R.id.timeSelector, R.id.textNote, R.id.btnSave) {
 
     private val autoCompleteTypeSelector: MaterialAutoCompleteTextView by lazy {
         requireView().findViewById(
             R.id.autoCompleteTypeSelector
         )
     }
-    private val btnSave: AppCompatButton by lazy { requireView().findViewById(R.id.btnSave) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,21 +38,18 @@ class DiaperModalBottomSheet(
         val items = view.resources.getStringArray(R.array.diaper_options)
         autoCompleteTypeSelector.setAdapter(buildArrayAdapter(items))
         autoCompleteTypeSelector.setText(items.first(), false)
-        btnSave.setOnClickListener {
-            actionButtonClick(
-                Register(
-                    icon = R.drawable.ic_baby_changing_station_24,
-                    name = getString(R.string.menu_item_diaper),
-                    description = autoCompleteTypeSelector.text.toString(),
-                    localDateTime = date.atTime(getHour(), getMinute()),
-                    note = getNote(),
-                    type = RegisterType.DIAPER,
-                    subType = getSubType(),
-                )
-            )
-            dismiss()
-        }
     }
+
+    override fun buildRegister(): Register =
+        Register(
+            icon = R.drawable.ic_baby_changing_station_24,
+            name = getString(R.string.menu_item_diaper),
+            description = autoCompleteTypeSelector.text.toString(),
+            localDateTime = date.atTime(getHour(), getMinute()),
+            note = getNote(),
+            type = RegisterType.DIAPER,
+            subType = getSubType(),
+        )
 
     private fun getSubType(): RegisterSubType? =
         when (autoCompleteTypeSelector.text.toString()) {

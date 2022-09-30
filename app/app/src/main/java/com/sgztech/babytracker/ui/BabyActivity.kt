@@ -187,17 +187,27 @@ class BabyActivity : AppCompatActivity() {
         viewModel.saveAction.observe(this) { action ->
             when (action) {
                 is RequestAction.GenericFailure -> {
-                    pbBaby.gone()
+                    pbBaby.hide()
                     btnSaveBaby.showSnackbar(action.errorRes)
                 }
-                RequestAction.Loading -> pbBaby.visible()
+                RequestAction.Loading -> pbBaby.show()
                 is RequestAction.Success<*> -> openMainActivity()
                 is RequestAction.ValidationFailure -> {
-                    pbBaby.gone()
+                    pbBaby.hide()
                     btnSaveBaby.showSnackbar(action.errors.joinToString())
                 }
             }
         }
+    }
+
+    private fun ProgressBar.show() {
+        visible()
+        disableUserInteraction()
+    }
+
+    private fun ProgressBar.hide() {
+        gone()
+        enableUserInteraction()
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -7,24 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Chronometer
 import android.widget.ImageView
-import androidx.appcompat.widget.AppCompatButton
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.arch.Error
+import com.sgztech.babytracker.arch.Result
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.model.RegisterType
-import com.sgztech.babytracker.ui.DateTimeFormatter
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 class SleepModalBottomSheet(
     private val date: LocalDate,
-    private val actionButtonClick: (register: Register) -> Unit,
-    private val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter(),
-) : BaseRegisterModalBottomSheet(R.id.timeSelector, R.id.textNote) {
+    override val actionButtonClick: (register: Register, handleResult: (result: Result<Unit, Error>) -> Unit) -> Unit,
+    override val successCallback: () -> Unit,
+) : BaseRegisterModalBottomSheet(R.id.timeSelector, R.id.textNote, R.id.btnSave) {
 
     private val chronometer: Chronometer by lazy { requireView().findViewById(R.id.chronometer) }
     private val ivToggle: ImageView by lazy { requireView().findViewById(R.id.ivToggle) }
-    private val btnSave: AppCompatButton by lazy { requireView().findViewById(R.id.btnSave) }
     private var timeOffset: Long = 0
     private var chronometerIsRunning: Boolean = false
     private var toogleChecked: Boolean = false
@@ -37,25 +36,19 @@ class SleepModalBottomSheet(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btnSave.setOnClickListener {
-            if (chronometerIsRunning) {
-                stopChronometer()
-            }
-            actionButtonClick(
-                Register(
-                    icon = R.drawable.ic_bedroom_baby_24,
-                    name = getString(R.string.menu_item_nap),
-                    description = getFormattedTime(),
-                    localDateTime = date.atTime(getHour(), getMinute()),
-                    duration = timeOffset,
-                    note = getNote(),
-                    type = RegisterType.SLEEP,
-                )
-            )
-            dismiss()
-        }
         setupToggleButton()
     }
+
+    override fun buildRegister(): Register =
+        Register(
+            icon = R.drawable.ic_bedroom_baby_24,
+            name = getString(R.string.menu_item_nap),
+            description = getFormattedTime(),
+            localDateTime = date.atTime(getHour(), getMinute()),
+            duration = timeOffset,
+            note = getNote(),
+            type = RegisterType.SLEEP,
+        )
 
     private fun setupToggleButton() {
         ivToggle.apply {

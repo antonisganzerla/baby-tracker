@@ -22,9 +22,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.navigation.NavigationView
 import com.natura.android.button.TextButton
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.extension.gone
-import com.sgztech.babytracker.extension.showSnackbar
-import com.sgztech.babytracker.extension.visible
+import com.sgztech.babytracker.extension.*
 import com.sgztech.babytracker.firebaseInstance
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.ui.custom.*
@@ -189,25 +187,29 @@ class MainActivity : AppCompatActivity() {
                 0 -> {
                     FeedingModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, FeedingModalBottomSheet.TAG)
                 }
                 1 -> {
                     DiaperModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, DiaperModalBottomSheet.TAG)
                 }
                 2 -> {
                     SleepModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, SleepModalBottomSheet.TAG)
                 }
                 3 -> {
                     BatheModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, BatheModalBottomSheet.TAG)
                 }
                 4 -> {
@@ -221,29 +223,38 @@ class MainActivity : AppCompatActivity() {
                 0 -> {
                     ColicModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, ColicModalBottomSheet.TAG)
                 }
                 1 -> {
                     WeightModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, WeightModalBottomSheet.TAG)
                 }
                 2 -> {
                     HeightModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, HeightModalBottomSheet.TAG)
                 }
                 3 -> {
                     MedicalAppointmentModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register -> viewModel.addRegister(register) }
+                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, MedicalAppointmentModalBottomSheet.TAG)
                 }
             }
         }
+    }
+
+    private fun saveRegisterSuccess() {
+        bottomNavigationBar.showSnackbar(R.string.msg_save_successful)
+        viewModel.loadRegisters()
     }
 
     private fun setupRetryButton() {
@@ -256,22 +267,22 @@ class MainActivity : AppCompatActivity() {
         viewModel.loadAction.observe(this) { action ->
             when (action) {
                 is RequestAction.GenericFailure -> {
-                    pbMain.gone()
+                    pbMain.hide()
                     recyclerViewRegisters.gone()
                     panelEmptyMessage.gone()
                     panelRetryMessage.visible()
                     bottomNavigationBar.showSnackbar(action.errorRes)
                 }
                 RequestAction.Loading -> {
-                    pbMain.visible()
+                    pbMain.show()
                     panelRetryMessage.gone()
                 }
                 is RequestAction.Success<*> -> {
-                    pbMain.gone()
+                    pbMain.hide()
                     setupRecyclerView(action.value as List<Register>)
                 }
                 is RequestAction.ValidationFailure -> {
-                    pbMain.gone()
+                    pbMain.hide()
                     recyclerViewRegisters.gone()
                     panelEmptyMessage.gone()
                     panelRetryMessage.visible()
@@ -296,6 +307,16 @@ class MainActivity : AppCompatActivity() {
                 Picasso.get().load(baby.photoUri).into(ivToolbar)
             }
         }
+    }
+
+    private fun ProgressBar.show() {
+        visible()
+        disableUserInteraction()
+    }
+
+    private fun ProgressBar.hide() {
+        gone()
+        enableUserInteraction()
     }
 
     override fun onBackPressed() {

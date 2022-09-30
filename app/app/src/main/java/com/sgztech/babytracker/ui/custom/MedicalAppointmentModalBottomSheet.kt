@@ -4,18 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatButton
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.arch.Error
+import com.sgztech.babytracker.arch.Result
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.model.RegisterType
 import java.time.LocalDate
 
 class MedicalAppointmentModalBottomSheet(
     private val date: LocalDate,
-    private val actionButtonClick: (register: Register) -> Unit,
-) : BaseRegisterModalBottomSheet(R.id.timeSelector, R.id.textNote) {
-
-    private val btnSave: AppCompatButton by lazy { requireView().findViewById(R.id.btnSave) }
+    override val actionButtonClick: (register: Register, handleResult: (result: Result<Unit, Error>) -> Unit) -> Unit,
+    override val successCallback: () -> Unit,
+) : BaseRegisterModalBottomSheet(R.id.timeSelector, R.id.textNote, R.id.btnSave) {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,22 +23,15 @@ class MedicalAppointmentModalBottomSheet(
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.medical_appointment_modal_bottom_sheet, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        btnSave.setOnClickListener {
-            actionButtonClick(
-                Register(
-                    icon = R.drawable.ic_local_hospital_24,
-                    name = getString(R.string.medical_appointment),
-                    description = "",
-                    localDateTime = date.atTime(getHour(), getMinute()),
-                    note = getNote(),
-                    type = RegisterType.MEDICAL,
-                )
-            )
-            dismiss()
-        }
-    }
+    override fun buildRegister(): Register =
+        Register(
+            icon = R.drawable.ic_local_hospital_24,
+            name = getString(R.string.medical_appointment),
+            description = "",
+            localDateTime = date.atTime(getHour(), getMinute()),
+            note = getNote(),
+            type = RegisterType.MEDICAL,
+        )
 
     companion object {
         const val TAG = "MedicalAppointmentModalBottomSheet"

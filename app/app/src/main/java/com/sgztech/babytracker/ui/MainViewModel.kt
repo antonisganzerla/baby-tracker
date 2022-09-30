@@ -4,8 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
+import com.sgztech.babytracker.arch.Error
+import com.sgztech.babytracker.arch.Result
+import com.sgztech.babytracker.arch.mapSuccess
 import com.sgztech.babytracker.data.BabyRepository
 import com.sgztech.babytracker.data.RegisterRepository
+import com.sgztech.babytracker.data.model.RegisterDtoResponse
 import com.sgztech.babytracker.model.Baby
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.model.User
@@ -52,10 +56,10 @@ class MainViewModel(
 
     fun currentDate(): LocalDate = date.value ?: LocalDate.now()
 
-    fun addRegister(register: Register) {
+    fun addRegister(register: Register, handleResult: (result: Result<Unit, Error>) -> Unit) {
         viewModelScope.launch {
-            repository.save(register.copy(userId = user.id))
-            loadRegisters()
+            val result = repository.save(register.copy(userId = user.id)).mapSuccess { }
+            handleResult(result)
         }
     }
 
