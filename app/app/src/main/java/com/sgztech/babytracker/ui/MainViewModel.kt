@@ -27,6 +27,9 @@ class MainViewModel(
     private val _loadAction: MutableLiveData<RequestAction> = MutableLiveData()
     val loadAction: LiveData<RequestAction> = _loadAction
 
+    private val _deleteAction: MutableLiveData<RequestAction> = MutableLiveData()
+    val deleteAction: LiveData<RequestAction> = _deleteAction
+
     private var _date: MutableLiveData<LocalDate> = MutableLiveData()
     val date: LiveData<LocalDate> = _date
 
@@ -64,9 +67,10 @@ class MainViewModel(
     }
 
     fun deleteRegister(register: Register) {
+        _deleteAction.postValue(RequestAction.Loading)
         viewModelScope.launch {
-            repository.delete(register)
-            loadRegisters()
+            val result = repository.delete(register)
+            _deleteAction.handleResponse(result)
         }
     }
 

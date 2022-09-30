@@ -58,13 +58,9 @@ class BabyRepository(
                 userId = baby.userId,
             )
         )
-        return when (response) {
-            is Result.Failure -> response
-            is Result.Success -> {
-                dao.insertAll(baby.copy(webId = response.value.id))
-                response
-            }
-        }
+        if (response is Result.Success)
+            dao.insertAll(baby.copy(webId = response.value.id))
+        return response
     }
 
     suspend fun sync(userId: Int) {
@@ -87,7 +83,7 @@ class BabyRepository(
         }
     }
 
-    suspend fun update(baby: Baby): Result<BabyDtoResponse, Error> {
+    suspend fun update(baby: Baby): Result<Int, Error> {
         val response = service.update(
             BabyDtoRequest(
                 id = baby.webId ?: 0,
@@ -98,13 +94,9 @@ class BabyRepository(
                 userId = baby.userId,
             )
         )
-        return when (response) {
-            is Result.Failure -> response
-            is Result.Success -> {
-                dao.update(baby)
-                response
-            }
-        }
+        if (response is Result.Success)
+            dao.update(baby)
+        return response
     }
 
     suspend fun delete(baby: Baby) {

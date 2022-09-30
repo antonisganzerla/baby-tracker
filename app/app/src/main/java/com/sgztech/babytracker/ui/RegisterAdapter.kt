@@ -13,7 +13,7 @@ import com.sgztech.babytracker.model.Register
 class RegisterAdapter(
     private val registers: List<Register>,
     private val dateFormatter: DateTimeFormatter = DateTimeFormatter(),
-    private val onItemClick: (register: Register) -> Unit
+    private val onItemClick: (register: Register) -> Unit,
 ) : RecyclerView.Adapter<RegisterAdapter.RegisterViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RegisterViewHolder {

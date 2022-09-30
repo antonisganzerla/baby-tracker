@@ -16,10 +16,10 @@ class RegisterRepository(
     suspend fun load(userId: Int, date: LocalDate): Result<List<Register>, Error> {
         val hasRegisters = dao.exists(userId)
         if (hasRegisters.not()) {
-            when (val response = service.find(userId)) {
-                is Result.Failure -> return response
+            when (val result = service.find(userId)) {
+                is Result.Failure -> return result
                 is Result.Success -> {
-                    val items = response.value.map {
+                    val items = result.value.map {
                         Register(
                             icon = it.icon,
                             name = it.name,
@@ -44,7 +44,7 @@ class RegisterRepository(
     }
 
     suspend fun save(register: Register): Result<RegisterDtoResponse, Error> {
-        val response = service.save(
+        val result = service.save(
             RegisterDtoRequest(
                 id = 0,
                 icon = register.icon,
@@ -58,16 +58,18 @@ class RegisterRepository(
                 subType = register.subType,
             )
         )
-        return when (response) {
-            is Result.Failure -> response
-            is Result.Success -> {
-                dao.insertAll(register.copy(webId = response.value.id))
-                response
-            }
-        }
+
+        if (result is Result.Success)
+            dao.insertAll(register.copy(webId = result.value.id))
+        return result
     }
 
-    suspend fun delete(register: Register) {
-        dao.delete(register)
+    suspend fun delete(register: Register): Result<Unit, Error> {
+        val result = service.delete(
+            register.webId ?: 0
+        )
+        if (result is Result.Success)
+            dao.delete(register)
+        return result
     }
 }

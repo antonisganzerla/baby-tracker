@@ -115,10 +115,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserTokenDTO auth(CredentialsDTO dto) {
         User user = repository.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new AuthException("{user.or.password.invalid}"));
+                .orElseThrow(() -> new AuthException("Usuário ou senha incorretos"));
 
         if (!isPasswordMatch(dto, user)) {
-            throw new AuthException("{user.or.password.invalid}");
+            throw new AuthException("Usuário ou senha incorretos");
         }
 
         UserTokenDTO userToken = new UserTokenDTO();

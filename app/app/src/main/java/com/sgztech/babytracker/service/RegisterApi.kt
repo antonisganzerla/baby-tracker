@@ -22,4 +22,11 @@ interface RegisterApi {
         @Query("userId") userId: Int,
         @Header("Authorization") token: String,
     ): ApiResult<List<RegisterDtoResponse>, ErrorResponse>
+
+    @DecodeErrorBody
+    @DELETE("register/{id}")
+    suspend fun delete(
+        @Path("id") id: Int,
+        @Header("Authorization") token: String,
+    ): ApiResult<Int, ErrorResponse>
 }

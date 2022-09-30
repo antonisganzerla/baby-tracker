@@ -196,6 +196,10 @@ class BabyActivity : AppCompatActivity() {
                     pbBaby.hide()
                     btnSaveBaby.showSnackbar(action.errors.joinToString())
                 }
+                is RequestAction.AuthFailure -> {
+                    pbBaby.hide()
+                    btnSaveBaby.showSnackbar(action.errorRes)
+                }
             }
         }
     }

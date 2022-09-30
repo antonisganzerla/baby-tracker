@@ -187,28 +187,40 @@ class MainActivity : AppCompatActivity() {
                 0 -> {
                     FeedingModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        actionButtonClick = { register, handleResult ->
+                            viewModel.addRegister(register,
+                                handleResult)
+                        },
                         successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, FeedingModalBottomSheet.TAG)
                 }
                 1 -> {
                     DiaperModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        actionButtonClick = { register, handleResult ->
+                            viewModel.addRegister(register,
+                                handleResult)
+                        },
                         successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, DiaperModalBottomSheet.TAG)
                 }
                 2 -> {
                     SleepModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        actionButtonClick = { register, handleResult ->
+                            viewModel.addRegister(register,
+                                handleResult)
+                        },
                         successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, SleepModalBottomSheet.TAG)
                 }
                 3 -> {
                     BatheModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        actionButtonClick = { register, handleResult ->
+                            viewModel.addRegister(register,
+                                handleResult)
+                        },
                         successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, BatheModalBottomSheet.TAG)
                 }
@@ -223,28 +235,40 @@ class MainActivity : AppCompatActivity() {
                 0 -> {
                     ColicModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        actionButtonClick = { register, handleResult ->
+                            viewModel.addRegister(register,
+                                handleResult)
+                        },
                         successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, ColicModalBottomSheet.TAG)
                 }
                 1 -> {
                     WeightModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        actionButtonClick = { register, handleResult ->
+                            viewModel.addRegister(register,
+                                handleResult)
+                        },
                         successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, WeightModalBottomSheet.TAG)
                 }
                 2 -> {
                     HeightModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        actionButtonClick = { register, handleResult ->
+                            viewModel.addRegister(register,
+                                handleResult)
+                        },
                         successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, HeightModalBottomSheet.TAG)
                 }
                 3 -> {
                     MedicalAppointmentModalBottomSheet(
                         date = viewModel.currentDate(),
-                        actionButtonClick = { register, handleResult -> viewModel.addRegister(register, handleResult) },
+                        actionButtonClick = { register, handleResult ->
+                            viewModel.addRegister(register,
+                                handleResult)
+                        },
                         successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, MedicalAppointmentModalBottomSheet.TAG)
                 }
@@ -265,29 +289,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun inscribeObservers() {
         viewModel.loadAction.observe(this) { action ->
-            when (action) {
-                is RequestAction.GenericFailure -> {
-                    pbMain.hide()
-                    recyclerViewRegisters.gone()
-                    panelEmptyMessage.gone()
-                    panelRetryMessage.visible()
-                    bottomNavigationBar.showSnackbar(action.errorRes)
-                }
-                RequestAction.Loading -> {
-                    pbMain.show()
-                    panelRetryMessage.gone()
-                }
-                is RequestAction.Success<*> -> {
-                    pbMain.hide()
-                    setupRecyclerView(action.value as List<Register>)
-                }
-                is RequestAction.ValidationFailure -> {
-                    pbMain.hide()
-                    recyclerViewRegisters.gone()
-                    panelEmptyMessage.gone()
-                    panelRetryMessage.visible()
-                    bottomNavigationBar.showSnackbar(action.errors.joinToString())
-                }
+            handleAction(action) { successAction ->
+                setupRecyclerView(successAction.value as List<Register>)
             }
         }
 
@@ -305,6 +308,50 @@ class MainActivity : AppCompatActivity() {
             toolbar.title = baby.name
             if (baby.photoUri.isNotEmpty()) {
                 Picasso.get().load(baby.photoUri).into(ivToolbar)
+            }
+        }
+
+        viewModel.deleteAction.observe(this) { action ->
+            handleAction(action) {
+                bottomNavigationBar.showSnackbar(R.string.msg_delete_successful)
+                viewModel.loadRegisters()
+            }
+        }
+    }
+
+    private fun handleAction(
+        action: RequestAction,
+        success: (action: RequestAction.Success<*>) -> Unit,
+    ) {
+        when (action) {
+            is RequestAction.GenericFailure -> {
+                pbMain.hide()
+                recyclerViewRegisters.gone()
+                panelEmptyMessage.gone()
+                panelRetryMessage.visible()
+                bottomNavigationBar.showSnackbar(action.errorRes)
+            }
+            RequestAction.Loading -> {
+                pbMain.show()
+                panelRetryMessage.gone()
+            }
+            is RequestAction.Success<*> -> {
+                pbMain.hide()
+                success(action)
+            }
+            is RequestAction.ValidationFailure -> {
+                pbMain.hide()
+                recyclerViewRegisters.visible()
+                panelEmptyMessage.gone()
+                panelRetryMessage.gone()
+                bottomNavigationBar.showSnackbar(action.errors.joinToString())
+            }
+            is RequestAction.AuthFailure -> {
+                pbMain.hide()
+                recyclerViewRegisters.visible()
+                panelEmptyMessage.gone()
+                panelRetryMessage.gone()
+                bottomNavigationBar.showSnackbar(action.errorRes)
             }
         }
     }

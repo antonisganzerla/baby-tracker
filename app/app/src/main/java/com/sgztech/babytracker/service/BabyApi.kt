@@ -17,11 +17,12 @@ interface BabyApi {
     ): ApiResult<BabyDtoResponse, ErrorResponse>
 
     @DecodeErrorBody
-    @PUT("baby")
+    @PUT("baby/{id}")
     suspend fun update(
+        @Path("id") id: Int,
         @Body baby: BabyDtoRequest,
         @Header("Authorization") token: String,
-    ): ApiResult<BabyDtoResponse, ErrorResponse>
+    ): ApiResult<Int, ErrorResponse>
 
     @DecodeErrorBody
     @GET("baby")

@@ -19,5 +19,5 @@ fun Error.NetWork.toGenericFailure(): RequestAction.GenericFailure =
 fun Error.Validation.toValidationFailure(): RequestAction.ValidationFailure =
     RequestAction.ValidationFailure(errors)
 
-fun Error.Auth.toGenericFailure(): RequestAction.GenericFailure =
-    RequestAction.GenericFailure(errorRes)
+fun Error.Auth.toAuthFailure(): RequestAction.AuthFailure =
+    RequestAction.AuthFailure(errorRes)

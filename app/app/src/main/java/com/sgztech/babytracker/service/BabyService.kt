@@ -20,10 +20,10 @@ class BabyService(
             babyApi.save(babyDtoRequest, token)
         }
 
-    suspend fun update(babyDtoRequest: BabyDtoRequest): Result<BabyDtoResponse, Error> =
+    suspend fun update(babyDtoRequest: BabyDtoRequest): Result<Int, Error> =
         serviceExecutor.execute {
             val token = preferenceService.getUser().buildApiToken()
-            babyApi.save(babyDtoRequest, token)
+            babyApi.update(babyDtoRequest.id, babyDtoRequest, token)
         }
 
     suspend fun find(userId: Int): Result<List<BabyDtoResponse>, Error> =

@@ -2,10 +2,7 @@ package com.sgztech.babytracker.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sgztech.babytracker.arch.Error
-import com.sgztech.babytracker.arch.Result
-import com.sgztech.babytracker.arch.toGenericFailure
-import com.sgztech.babytracker.arch.toValidationFailure
+import com.sgztech.babytracker.arch.*
 
 open class BaseViewModel : ViewModel() {
 
@@ -19,7 +16,7 @@ open class BaseViewModel : ViewModel() {
                 is Error.Validation -> handleValidation?.invoke(response.error) ?: postValue(
                     response.error.toValidationFailure())
                 is Error.NetWork -> postValue(response.error.toGenericFailure())
-                is Error.Auth -> postValue(response.error.toGenericFailure())
+                is Error.Auth -> postValue(response.error.toAuthFailure())
             }
             is Result.Success -> postValue(RequestAction.Success(response.value))
         }
@@ -30,6 +27,6 @@ open class BaseViewModel : ViewModel() {
             is Error.Unknown -> error.toGenericFailure()
             is Error.Validation -> error.toValidationFailure()
             is Error.NetWork -> error.toGenericFailure()
-            is Error.Auth -> error.toGenericFailure()
+            is Error.Auth -> error.toAuthFailure()
         }
 }

@@ -96,7 +96,7 @@ class RegisterUserActivity : BaseActivity() {
                 RequestAction.Loading -> pbRegister.show()
                 is RequestAction.Success<*> -> {
                     pbRegister.hide()
-                    setResult(Activity.RESULT_OK)
+                    setResult(RESULT_OK)
                     finish()
                 }
                 is RequestAction.GenericFailure -> {
@@ -105,6 +105,10 @@ class RegisterUserActivity : BaseActivity() {
                 }
                 is RequestAction.ValidationFailure -> {
                     btnRegister.showSnackbar(action.errors.joinToString())
+                    pbRegister.hide()
+                }
+                is RequestAction.AuthFailure -> {
+                    btnRegister.showSnackbar(action.errorRes)
                     pbRegister.hide()
                 }
             }

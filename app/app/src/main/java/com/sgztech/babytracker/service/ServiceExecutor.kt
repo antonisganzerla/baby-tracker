@@ -17,7 +17,6 @@ class ServiceExecutor {
         is ApiResult.Failure.UnknownFailure -> Result.Failure(Error.Unknown(result.error))
     }
 
-
     private fun ApiResult.Failure.HttpFailure<ErrorResponse>.handleHttpFailure() =
         when (this.code) {
             HttpURLConnection.HTTP_FORBIDDEN -> Result.Failure(Error.Auth())

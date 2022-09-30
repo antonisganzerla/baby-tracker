@@ -184,6 +184,10 @@ class LoginActivity : AppCompatActivity() {
                     pbLogin.hide()
                     loginButton.showSnackbar(action.errors.joinToString())
                 }
+                is RequestAction.AuthFailure -> {
+                    pbLogin.hide()
+                    loginButton.showSnackbar(action.errorRes)
+                }
             }
         }
 

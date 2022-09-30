@@ -28,10 +28,11 @@ public class BabyController {
     }
 
     @PutMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable Integer id,
+    //@ResponseStatus(HttpStatus.NO_CONTENT)
+    public Integer update(@PathVariable Integer id,
                        @RequestBody @Valid BabyDTO baby) {
         service.update(id, baby);
+        return id;
     }
 
     @DeleteMapping("{id}")

@@ -34,9 +34,10 @@ public class RegisterController {
     }
 
     @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) {
+    //@ResponseStatus(HttpStatus.NO_CONTENT)
+    public Integer delete(@PathVariable Integer id) {
         service.delete(id);
+        return id;
     }
 
     @GetMapping

@@ -15,10 +15,7 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.arch.Error
-import com.sgztech.babytracker.arch.Result
-import com.sgztech.babytracker.arch.toGenericFailure
-import com.sgztech.babytracker.arch.toValidationFailure
+import com.sgztech.babytracker.arch.*
 import com.sgztech.babytracker.extension.*
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.ui.DateTimeFormatter
@@ -139,7 +136,7 @@ abstract class BaseRegisterModalBottomSheet(
                 is Error.NetWork -> rootView?.showSnackbar(result.error.toGenericFailure().errorRes)
                 is Error.Unknown -> rootView?.showSnackbar(result.error.toGenericFailure().errorRes)
                 is Error.Validation -> rootView?.showSnackbar(result.error.toValidationFailure().errors.joinToString())
-                is Error.Auth -> rootView?.showSnackbar(result.error.toGenericFailure().errorRes)
+                is Error.Auth -> rootView?.showSnackbar(result.error.toAuthFailure().errorRes)
             }
             is Result.Success -> {
                 dismiss()
