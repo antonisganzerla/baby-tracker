@@ -84,11 +84,15 @@ abstract class BaseRegisterModalBottomSheet(
         btnSave.setOnClickListener {
             pbRegister.visible()
             activity?.disableUserInteraction()
+            dialog?.window?.disableUserInteraction()
+            dialog?.setCancelable(false)
             actionButtonClick(
                 buildRegister(),
             ) { result ->
                 pbRegister.gone()
                 activity?.enableUserInteraction()
+                dialog?.window?.enableUserInteraction()
+                dialog?.setCancelable(true)
                 handleResult(result, successCallback)
             }
         }
