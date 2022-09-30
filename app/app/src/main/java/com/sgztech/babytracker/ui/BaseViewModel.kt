@@ -19,6 +19,7 @@ open class BaseViewModel : ViewModel() {
                 is Error.Validation -> handleValidation?.invoke(response.error) ?: postValue(
                     response.error.toValidationFailure())
                 is Error.NetWork -> postValue(response.error.toGenericFailure())
+                is Error.Auth -> postValue(response.error.toGenericFailure())
             }
             is Result.Success -> postValue(RequestAction.Success(response.value))
         }
@@ -29,5 +30,6 @@ open class BaseViewModel : ViewModel() {
             is Error.Unknown -> error.toGenericFailure()
             is Error.Validation -> error.toValidationFailure()
             is Error.NetWork -> error.toGenericFailure()
+            is Error.Auth -> error.toGenericFailure()
         }
 }

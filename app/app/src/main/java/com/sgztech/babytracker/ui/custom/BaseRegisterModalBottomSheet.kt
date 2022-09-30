@@ -139,6 +139,7 @@ abstract class BaseRegisterModalBottomSheet(
                 is Error.NetWork -> rootView?.showSnackbar(result.error.toGenericFailure().errorRes)
                 is Error.Unknown -> rootView?.showSnackbar(result.error.toGenericFailure().errorRes)
                 is Error.Validation -> rootView?.showSnackbar(result.error.toValidationFailure().errors.joinToString())
+                is Error.Auth -> rootView?.showSnackbar(result.error.toGenericFailure().errorRes)
             }
             is Result.Success -> {
                 dismiss()
