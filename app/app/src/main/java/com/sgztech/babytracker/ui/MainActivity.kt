@@ -95,10 +95,10 @@ class MainActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_item_tools -> {
-                    // TODO
+                    viewModel.loadRegisters()
                 }
                 R.id.nav_item_chart -> {
-                    // TODO
+                    bottomNavigationBar.showSnackbar("Em breve")
                 }
                 R.id.nav_item_logout -> {
                     viewModel.logout()
@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                     openLoginActivity()
                 }
                 R.id.nav_item_about -> {
-                    // TODO
+                    bottomNavigationBar.showSnackbar("Em breve")
                 }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
