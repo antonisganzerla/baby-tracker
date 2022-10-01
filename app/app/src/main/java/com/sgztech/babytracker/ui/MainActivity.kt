@@ -181,7 +181,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun buildDeleteDialog(selectedRegister: Register) {
-        val message = getString(R.string.delete_register_message, selectedRegister.name, selectedRegister.note)
+        val message = getString(R.string.delete_register_message,
+            selectedRegister.name,
+            selectedRegister.note)
         AlertDialog.Builder(this@MainActivity)
             .setTitle(R.string.delete_register_title)
             .setMessage(message)
@@ -255,7 +257,10 @@ class MainActivity : AppCompatActivity() {
                             viewModel.addRegister(register,
                                 handleResult)
                         },
-                        successCallback = { saveRegisterSuccess() },
+                        successCallback = {
+                            saveRegisterSuccess()
+                            otherMenuItemPerformClick()
+                        },
                     ).show(supportFragmentManager, ColicModalBottomSheet.TAG)
                 }
                 1 -> {
@@ -265,7 +270,10 @@ class MainActivity : AppCompatActivity() {
                             viewModel.addRegister(register,
                                 handleResult)
                         },
-                        successCallback = { saveRegisterSuccess() },
+                        successCallback = {
+                            saveRegisterSuccess()
+                            otherMenuItemPerformClick()
+                        },
                     ).show(supportFragmentManager, WeightModalBottomSheet.TAG)
                 }
                 2 -> {
@@ -275,7 +283,10 @@ class MainActivity : AppCompatActivity() {
                             viewModel.addRegister(register,
                                 handleResult)
                         },
-                        successCallback = { saveRegisterSuccess() },
+                        successCallback = {
+                            saveRegisterSuccess()
+                            otherMenuItemPerformClick()
+                        },
                     ).show(supportFragmentManager, HeightModalBottomSheet.TAG)
                 }
                 3 -> {
@@ -285,11 +296,18 @@ class MainActivity : AppCompatActivity() {
                             viewModel.addRegister(register,
                                 handleResult)
                         },
-                        successCallback = { saveRegisterSuccess() },
+                        successCallback = {
+                            saveRegisterSuccess()
+                            otherMenuItemPerformClick()
+                        },
                     ).show(supportFragmentManager, MedicalAppointmentModalBottomSheet.TAG)
                 }
             }
         }
+    }
+
+    private fun otherMenuItemPerformClick() {
+        bottomNavigationBar.getMenuChildAt(4).performClick()
     }
 
     private fun saveRegisterSuccess() {
