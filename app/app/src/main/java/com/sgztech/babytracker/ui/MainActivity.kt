@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -171,12 +172,27 @@ class MainActivity : AppCompatActivity() {
             panelEmptyMessage.gone()
             recyclerViewRegisters.apply {
                 adapter = RegisterAdapter(registers = registers) { selectedRegister ->
-                    viewModel.deleteRegister(selectedRegister)
+                    buildDeleteDialog(selectedRegister)
                 }
                 layoutManager = LinearLayoutManager(this@MainActivity)
                 setHasFixedSize(true)
             }
         }
+    }
+
+    private fun buildDeleteDialog(selectedRegister: Register) {
+        val message = getString(R.string.delete_register_message, selectedRegister.name, selectedRegister.note)
+        AlertDialog.Builder(this@MainActivity)
+            .setTitle(R.string.delete_register_title)
+            .setMessage(message)
+            .setPositiveButton(R.string.confirm_option) { _, _ ->
+                viewModel.deleteRegister(selectedRegister)
+            }
+            .setNegativeButton(R.string.cancel_option) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
     private fun setupBottomNavigationView() {

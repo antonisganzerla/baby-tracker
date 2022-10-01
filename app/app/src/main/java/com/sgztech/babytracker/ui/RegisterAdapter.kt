@@ -40,9 +40,10 @@ class RegisterAdapter(
             ivAction.setImageResource(register.icon)
             tvTitle.text = register.name
             tvSubtitle.setTextOrGone(register.description)
-            tvTime.text = dateFormatter.formatHours(register.localDateTime)
+            val formattedHours = dateFormatter.formatHours(register.localDateTime)
+            tvTime.text = formattedHours
             tvNotes.setTextOrGone(register.note)
-            itemView.setOnClickListener { onItemClick(register) }
+            itemView.setOnClickListener { onItemClick(register.copy(note = formattedHours)) }
         }
 
         private fun TextView.setTextOrGone(value: String) {

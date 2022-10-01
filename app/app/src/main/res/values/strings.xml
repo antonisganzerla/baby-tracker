@@ -79,6 +79,11 @@
     <string name="retry_message">Não foi possível comunicar com o servidor</string>
     <string name="date_between">%1$s Meses e %2$s Dias</string>
     <string name="before_born">Antes do nascimento</string>
+    <string name="delete_register_title">Deletar registro</string>
+    <string name="delete_register_message">Deseja deletar o registro %1$s das %2$s?</string>
+    <string name="confirm_option">Sim</string>
+    <string name="cancel_option">Cancelar</string>
+
 
     <!-- Menu item drawer -->
     <string name="menu_item_registers">Registros</string>
