@@ -95,7 +95,7 @@ class LoginViewModel(
         viewModelScope.launch {
             val response = registerUserRepository.register(name, email, token)
             _authAction.handleResponse(response) { error ->
-                if (error.errors?.contains(EMAIL_ALREADY_IN_USE_ERROR) == true)
+                if (error.errors.contains(EMAIL_ALREADY_IN_USE_ERROR))
                     auth(email, token)
                 else
                     _authAction.postValue(error.toValidationFailure())

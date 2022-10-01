@@ -25,7 +25,8 @@ import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
 private val contentType = "application/json".toMediaType()
-private const val BASE_URL = "http://192.168.0.106:8080/api/"
+//private const val BASE_URL = "http://192.168.0.106:8080/api/"
+private const val BASE_URL = "https://spring-baby-tracker.herokuapp.com/api/"
 private const val READ_TIMEOUT = 30_000L
 private const val CONNECT_TIMEOUT = 30_000L
 
