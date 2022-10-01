@@ -21,16 +21,18 @@ public class MainApplication {
             @Autowired PasswordEncoder passwordEncoder
     ) {
         return args -> {
-            UserProfile adminProfile = new UserProfile(UserProfile.ADMIN);
-            userProfileRepository.save(adminProfile);
-            userProfileRepository.save(new UserProfile(UserProfile.USER));
+            if (userProfileRepository.findAll().isEmpty()) {
+                UserProfile adminProfile = new UserProfile(UserProfile.ADMIN);
+                userProfileRepository.save(adminProfile);
+                userProfileRepository.save(new UserProfile(UserProfile.USER));
 
-            User user = new User();
-            user.setName("Admin");
-            user.setEmail("admin@admin.com");
-            user.setPassword(passwordEncoder.encode("admin1234"));
-            user.setUserProfile(adminProfile);
-            userRepository.save(user);
+                User user = new User();
+                user.setName("Admin");
+                user.setEmail("admin@admin.com");
+                user.setPassword(passwordEncoder.encode("admin1234"));
+                user.setUserProfile(adminProfile);
+                userRepository.save(user);
+            }
         };
     }
 
