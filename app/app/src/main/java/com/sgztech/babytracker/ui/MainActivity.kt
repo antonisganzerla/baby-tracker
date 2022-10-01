@@ -206,8 +206,7 @@ class MainActivity : AppCompatActivity() {
                     FeedingModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
-                            viewModel.addRegister(register,
-                                handleResult)
+                            viewModel.addRegister(register, handleResult)
                         },
                         successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, FeedingModalBottomSheet.TAG)
@@ -216,8 +215,7 @@ class MainActivity : AppCompatActivity() {
                     DiaperModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
-                            viewModel.addRegister(register,
-                                handleResult)
+                            viewModel.addRegister(register, handleResult)
                         },
                         successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, DiaperModalBottomSheet.TAG)
@@ -226,8 +224,7 @@ class MainActivity : AppCompatActivity() {
                     SleepModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
-                            viewModel.addRegister(register,
-                                handleResult)
+                            viewModel.addRegister(register, handleResult)
                         },
                         successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, SleepModalBottomSheet.TAG)
@@ -236,8 +233,7 @@ class MainActivity : AppCompatActivity() {
                     BatheModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
-                            viewModel.addRegister(register,
-                                handleResult)
+                            viewModel.addRegister(register, handleResult)
                         },
                         successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, BatheModalBottomSheet.TAG)
@@ -254,8 +250,7 @@ class MainActivity : AppCompatActivity() {
                     ColicModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
-                            viewModel.addRegister(register,
-                                handleResult)
+                            viewModel.addRegister(register, handleResult)
                         },
                         successCallback = {
                             saveRegisterSuccess()
@@ -267,8 +262,7 @@ class MainActivity : AppCompatActivity() {
                     WeightModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
-                            viewModel.addRegister(register,
-                                handleResult)
+                            viewModel.addRegister(register, handleResult)
                         },
                         successCallback = {
                             saveRegisterSuccess()
@@ -280,8 +274,7 @@ class MainActivity : AppCompatActivity() {
                     HeightModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
-                            viewModel.addRegister(register,
-                                handleResult)
+                            viewModel.addRegister(register, handleResult)
                         },
                         successCallback = {
                             saveRegisterSuccess()
@@ -293,16 +286,13 @@ class MainActivity : AppCompatActivity() {
                     MedicalAppointmentModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
-                            viewModel.addRegister(register,
-                                handleResult)
+                            viewModel.addRegister(register, handleResult)
                         },
-                        successCallback = {
-                            saveRegisterSuccess()
-                            otherMenuItemPerformClick()
-                        },
+                        successCallback = { saveRegisterSuccess() },
                     ).show(supportFragmentManager, MedicalAppointmentModalBottomSheet.TAG)
                 }
             }
+            otherMenuItemPerformClick()
         }
     }
 
