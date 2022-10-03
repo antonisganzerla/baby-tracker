@@ -23,6 +23,8 @@ public class CreateUserDTO {
     @Length(min = 8, message = "{field.confirm.password.must.be.at.least.8.characters}")
     private String confirmPassword;
 
+    private Boolean isGoogleAccount;
+
     public String getName() {
         return name;
     }
@@ -53,5 +55,13 @@ public class CreateUserDTO {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public Boolean getGoogleAccount() {
+        return isGoogleAccount;
+    }
+
+    public void setGoogleAccount(Boolean googleAccount) {
+        isGoogleAccount = googleAccount;
     }
 }

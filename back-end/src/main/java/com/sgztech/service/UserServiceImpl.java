@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(dto.getEmail().toLowerCase());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRegistrationDate(LocalDateTime.now());
+        user.setGoogleAccount(dto.getGoogleAccount());
 
         UserProfile userProfile = userProfileRepository.findByName(UserProfile.USER)
                 .orElseThrow(() -> new BusinessRuleException("{user.profile.not.found}"));
@@ -140,6 +141,9 @@ public class UserServiceImpl implements UserService {
     public String forgotPassword(ForgotPasswordDTO dto) {
         User user = repository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("{user.not.found}"));
+
+        if (user.getGoogleAccount())
+            throw new BusinessRuleException("Esta conta não permite alteração de senha");
 
         PasswordRecovery passwordRecovery = new PasswordRecovery();
         passwordRecovery.setUser(user);

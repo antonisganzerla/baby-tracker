@@ -32,6 +32,9 @@ public class User {
     @Column(name = "registrationDate")
     private LocalDateTime registrationDate;
 
+    @Column(name = "isGoogleAccount")
+    private Boolean isGoogleAccount;
+
     @ManyToOne
     @JoinColumn(name = "user_profile_id")
     @JsonIgnore
@@ -75,6 +78,14 @@ public class User {
 
     public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public Boolean getGoogleAccount() {
+        return isGoogleAccount;
+    }
+
+    public void setGoogleAccount(Boolean googleAccount) {
+        isGoogleAccount = googleAccount;
     }
 
     public UserProfile getUserProfile() {
