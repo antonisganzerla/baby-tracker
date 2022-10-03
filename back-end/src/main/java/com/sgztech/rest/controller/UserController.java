@@ -1,9 +1,6 @@
 package com.sgztech.rest.controller;
 
-import com.sgztech.rest.dto.CreateUserDTO;
-import com.sgztech.rest.dto.CredentialsDTO;
-import com.sgztech.rest.dto.UserDTO;
-import com.sgztech.rest.dto.UserTokenDTO;
+import com.sgztech.rest.dto.*;
 import com.sgztech.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,5 +29,20 @@ public class UserController {
     @PostMapping("/auth")
     public UserTokenDTO auth(@RequestBody @Valid CredentialsDTO dto) {
         return service.auth(dto);
+    }
+
+    @PostMapping("/password/forgot")
+    public String forgot(@RequestBody @Valid ForgotPasswordDTO dto) {
+        return service.forgotPassword(dto);
+    }
+
+    @PostMapping("password/code")
+    public String code(@RequestBody @Valid ForgotPasswordCodeDTO dto) {
+        return service.verificationCode(dto);
+    }
+
+    @PostMapping("password/reset")
+    public String reset(@RequestBody @Valid ResetPasswordDTO dto) {
+        return service.resetPassword(dto);
     }
 }

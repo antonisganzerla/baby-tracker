@@ -1,16 +1,16 @@
 package com.sgztech.service;
 
+import com.sgztech.domain.dto.EmailDetailsDTO;
+import com.sgztech.domain.entity.PasswordRecovery;
 import com.sgztech.domain.entity.User;
 import com.sgztech.domain.entity.UserProfile;
+import com.sgztech.domain.repository.PasswordRecoveryRepository;
 import com.sgztech.domain.repository.UserProfileRepository;
 import com.sgztech.domain.repository.UserRepository;
 import com.sgztech.exception.AuthException;
 import com.sgztech.exception.BusinessRuleException;
 import com.sgztech.exception.EntityNotFoundException;
-import com.sgztech.rest.dto.CreateUserDTO;
-import com.sgztech.rest.dto.CredentialsDTO;
-import com.sgztech.rest.dto.UserDTO;
-import com.sgztech.rest.dto.UserTokenDTO;
+import com.sgztech.rest.dto.*;
 import com.sgztech.security.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -31,6 +32,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserProfileRepository userProfileRepository;
+
+    @Autowired
+    private PasswordRecoveryRepository passwordRecoveryRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -127,6 +134,67 @@ public class UserServiceImpl implements UserService {
         userToken.setEmail(user.getEmail());
         userToken.setToken(jwtService.generateToken(user));
         return userToken;
+    }
+
+    @Override
+    public String forgotPassword(ForgotPasswordDTO dto) {
+        User user = repository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("{user.not.found}"));
+
+        PasswordRecovery passwordRecovery = new PasswordRecovery();
+        passwordRecovery.setUser(user);
+        passwordRecovery.setExpiration(LocalDateTime.now().plusHours(1));
+        passwordRecovery.setCode(getRandomNumberUsingInts(1000, 9999).toString());
+        passwordRecovery.setEmail(dto.getEmail());
+        passwordRecovery.setUsed(false);
+
+        EmailDetailsDTO emailDetailsDTO = new EmailDetailsDTO();
+        emailDetailsDTO.setSubject("Recuperação de senha");
+        emailDetailsDTO.setMsgBody("Seu código de recuperação de senha: " + passwordRecovery.getCode());
+        emailDetailsDTO.setRecipient(dto.getEmail());
+        emailService.sendSimpleMail(emailDetailsDTO);
+
+        passwordRecoveryRepository.save(passwordRecovery);
+
+        return dto.getEmail();
+    }
+
+    private Integer getRandomNumberUsingInts(int min, int max) {
+        Random random = new Random();
+        return random.ints(min, max)
+                .findFirst()
+                .getAsInt();
+    }
+
+    @Override
+    public String verificationCode(ForgotPasswordCodeDTO dto) {
+        PasswordRecovery passwordRecovery = passwordRecoveryRepository.findByEmailAndCodeAndIsUsed(dto.getEmail(), dto.getCode(), false)
+                .orElseThrow(() -> new BusinessRuleException("Código inválido"));
+
+        if (passwordRecovery.getExpiration().isBefore(LocalDateTime.now()))
+            throw new BusinessRuleException("Tempo expirado");
+
+        return dto.getEmail();
+    }
+
+    @Override
+    public String resetPassword(ResetPasswordDTO dto) {
+        PasswordRecovery passwordRecovery = passwordRecoveryRepository.findByEmailAndCodeAndIsUsed(dto.getEmail(), dto.getCode(), false)
+                .orElseThrow(() -> new BusinessRuleException("Código inválido"));
+
+        User user = repository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("{user.not.found}"));
+
+        if (!dto.getPassword().equals(dto.getConfirmPassword()))
+            throw new BusinessRuleException("{field.password.and.confirm.password.do.not.match}");
+
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        repository.save(user);
+
+        passwordRecovery.setUsed(true);
+        passwordRecoveryRepository.save(passwordRecovery);
+
+        return dto.getEmail();
     }
 
     private boolean isPasswordMatch(CredentialsDTO dto, User user) {
