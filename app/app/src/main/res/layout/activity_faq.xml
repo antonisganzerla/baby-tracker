@@ -11,19 +11,79 @@
         layout="@layout/toolbar" />
 
     <com.natura.android.expansionPanel.ExpansionPanel
+        android:id="@+id/expansionPanelFirstQuestion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include_toolbar"
-        app:title="O que é o Baby Tracker?">
+        app:title="@string/baby_tracker_question">
 
         <TextView
             android:id="@+id/text_example"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Details\n\nThis expanded area is a Constraint Layout.\nAny group of components can be used here."
-            android:layout_marginTop="0dp"
+            android:text="@string/baby_tracker_response"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </com.natura.android.expansionPanel.ExpansionPanel>
+
+    <com.natura.android.expansionPanel.ExpansionPanel
+        android:id="@+id/expansionPanelSecondQuestion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/expansionPanelFirstQuestion"
+        app:title="@string/register_question">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/register_response"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </com.natura.android.expansionPanel.ExpansionPanel>
+
+    <com.natura.android.expansionPanel.ExpansionPanel
+        android:id="@+id/expansionPanelThirdQuestion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/expansionPanelSecondQuestion"
+        app:title="@string/date_question">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/date_response"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </com.natura.android.expansionPanel.ExpansionPanel>
+
+    <com.natura.android.expansionPanel.ExpansionPanel
+        android:id="@+id/expansionPanelQuestion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/expansionPanelThirdQuestion"
+        app:title="@string/password_question">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/password_response"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
