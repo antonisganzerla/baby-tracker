@@ -68,6 +68,8 @@
     <string name="baby_tracker_response">Aplicativo que registra as principais atividades que envolvem os cuidados com um bebê em forma de diário.</string>
     <string name="register_question">Como registrar uma ativade?</string>
     <string name="register_response">Toque em uma atividade na barra de navegação inferior.</string>
+    <string name="delete_register_question">Como deletar uma ativade?</string>
+    <string name="delete_register_response">Toque no registro da atividade que aparece na lista e depois confirme a ação na janela de diálogo.</string>
     <string name="date_question">Como alternar entre os dias?</string>
     <string name="date_response">No topo da tela, toque nas setas para esquerda e direita ou sobre a data que aparece ao centro.</string>
     <string name="password_question">Esqueci a senha, como recuperar?</string>
