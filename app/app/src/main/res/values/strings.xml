@@ -62,6 +62,9 @@
     <string name="msg_delete_successful">Deletado com sucesso</string>
     <string name="btn_retry">Tentar novamente</string>
 
+    <!-- FAQ-->
+    <string name="toolbar_title_faq">FAQ</string>
+
     <!-- Baby -->
     <string name="tv_name">Nome</string>
     <string name="tv_birthday">Data de nascimento</string>

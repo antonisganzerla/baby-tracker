@@ -106,7 +106,8 @@ class MainActivity : AppCompatActivity() {
                     openLoginActivity()
                 }
                 R.id.nav_item_about -> {
-                    bottomNavigationBar.showSnackbar("Em breve")
+                    val intent = Intent(this, FaqActivity::class.java)
+                    startActivity(intent)
                 }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
