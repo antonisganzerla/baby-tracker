@@ -32,17 +32,17 @@ public class UserController {
     }
 
     @PostMapping("/password/forgot")
-    public String forgot(@RequestBody @Valid ForgotPasswordDTO dto) {
+    public ForgotPasswordDTO forgot(@RequestBody @Valid ForgotPasswordDTO dto) {
         return service.forgotPassword(dto);
     }
 
     @PostMapping("password/code")
-    public String code(@RequestBody @Valid ForgotPasswordCodeDTO dto) {
+    public ForgotPasswordDTO code(@RequestBody @Valid ForgotPasswordCodeDTO dto) {
         return service.verificationCode(dto);
     }
 
     @PostMapping("password/reset")
-    public String reset(@RequestBody @Valid ResetPasswordDTO dto) {
+    public ForgotPasswordDTO reset(@RequestBody @Valid ResetPasswordDTO dto) {
         return service.resetPassword(dto);
     }
 }

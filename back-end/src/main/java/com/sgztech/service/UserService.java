@@ -8,9 +8,9 @@ public interface UserService extends EntityService<User, UserDTO>, UserDetailsSe
     UserDTO save(CreateUserDTO dto);
     UserTokenDTO auth(CredentialsDTO dto);
 
-    String forgotPassword(ForgotPasswordDTO dto);
+    ForgotPasswordDTO forgotPassword(ForgotPasswordDTO dto);
 
-    String verificationCode(ForgotPasswordCodeDTO dto);
+    ForgotPasswordDTO verificationCode(ForgotPasswordCodeDTO dto);
 
-    String resetPassword(ResetPasswordDTO dto);
+    ForgotPasswordDTO resetPassword(ResetPasswordDTO dto);
 }

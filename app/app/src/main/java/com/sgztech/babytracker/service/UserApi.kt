@@ -19,4 +19,22 @@ interface UserApi {
     suspend fun auth(
         @Body credentials: CredentialsDTORequest,
     ): ApiResult<UserTokenDTOResponse, ErrorResponse>
+
+    @DecodeErrorBody
+    @POST("user/password/forgot")
+    suspend fun forgotPassword(
+        @Body forgotPassword: ForgotPasswordDtoRequest,
+    ): ApiResult<ForgotPasswordDtoRequest, ErrorResponse>
+
+    @DecodeErrorBody
+    @POST("user/password/code")
+    suspend fun verifyCode(
+        @Body forgotPasswordCode: ForgotPasswordCodeDtoRequest,
+    ): ApiResult<ForgotPasswordDtoRequest, ErrorResponse>
+
+    @DecodeErrorBody
+    @POST("user/password/reset")
+    suspend fun passwordReset(
+        @Body resetPassword: ResetPasswordDtoRequest,
+    ): ApiResult<ForgotPasswordDtoRequest, ErrorResponse>
 }

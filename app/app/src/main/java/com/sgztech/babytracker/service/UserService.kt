@@ -2,10 +2,8 @@ package com.sgztech.babytracker.service
 
 import com.sgztech.babytracker.arch.Error
 import com.sgztech.babytracker.arch.Result
-import com.sgztech.babytracker.data.model.CreateUserDtoRequest
-import com.sgztech.babytracker.data.model.CredentialsDTORequest
-import com.sgztech.babytracker.data.model.UserDtoResponse
-import com.sgztech.babytracker.data.model.UserTokenDTOResponse
+import com.sgztech.babytracker.arch.mapSuccess
+import com.sgztech.babytracker.data.model.*
 
 class UserService(
     private val serviceExecutor: ServiceExecutor,
@@ -21,4 +19,19 @@ class UserService(
         serviceExecutor.execute {
             userApi.auth(credentials)
         }
+
+    suspend fun forgotPassword(forgotPassword: ForgotPasswordDtoRequest): Result<Unit, Error> =
+        serviceExecutor.execute {
+            userApi.forgotPassword(forgotPassword)
+        }.mapSuccess {  }
+
+    suspend fun verifyCode(forgotPasswordCode: ForgotPasswordCodeDtoRequest): Result<Unit, Error> =
+        serviceExecutor.execute {
+            userApi.verifyCode(forgotPasswordCode)
+        }.mapSuccess {  }
+
+    suspend fun passwordReset(resetPassword: ResetPasswordDtoRequest): Result<Unit, Error> =
+        serviceExecutor.execute {
+            userApi.passwordReset(resetPassword)
+        }.mapSuccess {  }
 }

@@ -138,9 +138,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String forgotPassword(ForgotPasswordDTO dto) {
+    public ForgotPasswordDTO forgotPassword(ForgotPasswordDTO dto) {
         User user = repository.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("{user.not.found}"));
+                .orElseThrow(() -> new EntityNotFoundException("Nenhuma conta encontrada para o email informado"));
 
         if (user.getGoogleAccount())
             throw new BusinessRuleException("Esta conta não permite alteração de senha");
@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
 
         passwordRecoveryRepository.save(passwordRecovery);
 
-        return dto.getEmail();
+        return dto;
     }
 
     private Integer getRandomNumberUsingInts(int min, int max) {
@@ -171,18 +171,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String verificationCode(ForgotPasswordCodeDTO dto) {
+    public ForgotPasswordDTO verificationCode(ForgotPasswordCodeDTO dto) {
         PasswordRecovery passwordRecovery = passwordRecoveryRepository.findByEmailAndCodeAndIsUsed(dto.getEmail(), dto.getCode(), false)
                 .orElseThrow(() -> new BusinessRuleException("Código inválido"));
 
         if (passwordRecovery.getExpiration().isBefore(LocalDateTime.now()))
             throw new BusinessRuleException("Tempo expirado");
 
-        return dto.getEmail();
+        ForgotPasswordDTO forgotPasswordDTO = new ForgotPasswordDTO();
+        forgotPasswordDTO.setEmail(dto.getEmail());
+        return forgotPasswordDTO;
     }
 
     @Override
-    public String resetPassword(ResetPasswordDTO dto) {
+    public ForgotPasswordDTO resetPassword(ResetPasswordDTO dto) {
         PasswordRecovery passwordRecovery = passwordRecoveryRepository.findByEmailAndCodeAndIsUsed(dto.getEmail(), dto.getCode(), false)
                 .orElseThrow(() -> new BusinessRuleException("Código inválido"));
 
@@ -198,7 +200,9 @@ public class UserServiceImpl implements UserService {
         passwordRecovery.setUsed(true);
         passwordRecoveryRepository.save(passwordRecovery);
 
-        return dto.getEmail();
+        ForgotPasswordDTO forgotPasswordDTO = new ForgotPasswordDTO();
+        forgotPasswordDTO.setEmail(dto.getEmail());
+        return forgotPasswordDTO;
     }
 
     private boolean isPasswordMatch(CredentialsDTO dto, User user) {

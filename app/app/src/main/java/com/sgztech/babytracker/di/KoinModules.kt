@@ -4,10 +4,7 @@ import androidx.preference.PreferenceManager
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.sgztech.babytracker.BuildConfig
 import com.sgztech.babytracker.PreferenceService
-import com.sgztech.babytracker.data.AuthRepository
-import com.sgztech.babytracker.data.BabyRepository
-import com.sgztech.babytracker.data.RegisterRepository
-import com.sgztech.babytracker.data.RegisterUserRepository
+import com.sgztech.babytracker.data.*
 import com.sgztech.babytracker.database.AppDatabase
 import com.sgztech.babytracker.service.*
 import com.sgztech.babytracker.ui.*
@@ -105,6 +102,7 @@ val repositoryModule = module {
     factory { BabyRepository(get(), get()) }
     factory { RegisterUserRepository(get()) }
     factory { AuthRepository(get()) }
+    factory { PasswordRepository(get()) }
 }
 
 val uiModule = module {
@@ -117,6 +115,8 @@ val uiModule = module {
     viewModel { BabyViewModel(get(), get(), get()) }
     viewModel { MainViewModel(get(), get(), get(), get()) }
     viewModel { RegisterUserViewModel(get()) }
+    viewModel { ForgotPasswordViewModel(get()) }
+    viewModel { ResetPasswordViewModel(get()) }
 }
 
 private fun loggingInterceptor(): Interceptor =
