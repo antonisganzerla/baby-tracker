@@ -93,12 +93,16 @@ class LoginViewModel(
     fun authWithGoogle(name: String, email: String, token: String) {
         _authAction.postValue(RequestAction.Loading)
         viewModelScope.launch {
-            val response = registerUserRepository.register(name, email, token)
-            _authAction.handleResponse(response) { error ->
-                if (error.errors.contains(EMAIL_ALREADY_IN_USE_ERROR))
-                    auth(email, token)
-                else
-                    _authAction.postValue(error.toValidationFailure())
+            val response = registerUserRepository.register(name, email, token, true)
+            if (response is Result.Success)
+                auth(email, token)
+            else {
+                _authAction.handleResponse(response) { error ->
+                    if (error.errors.contains(EMAIL_ALREADY_IN_USE_ERROR))
+                        auth(email, token)
+                    else
+                        _authAction.postValue(error.toValidationFailure())
+                }
             }
         }
     }

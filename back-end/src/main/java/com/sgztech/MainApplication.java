@@ -31,6 +31,7 @@ public class MainApplication {
                 user.setEmail("admin@admin.com");
                 user.setPassword(passwordEncoder.encode("admin1234"));
                 user.setUserProfile(adminProfile);
+                user.setGoogleAccount(false);
                 userRepository.save(user);
             }
         };

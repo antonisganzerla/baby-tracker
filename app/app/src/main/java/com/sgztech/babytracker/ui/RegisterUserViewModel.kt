@@ -56,7 +56,7 @@ class RegisterUserViewModel(
     fun register(name: String, email: String, password: String) {
         _registerAction.postValue(RequestAction.Loading)
         viewModelScope.launch {
-            val response = repository.register(name, email, password)
+            val response = repository.register(name, email, password, false)
             _registerAction.handleResponse(response)
         }
     }

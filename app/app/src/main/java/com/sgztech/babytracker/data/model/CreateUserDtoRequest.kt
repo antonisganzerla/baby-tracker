@@ -13,4 +13,6 @@ data class CreateUserDtoRequest(
     val password: String,
     @SerialName("confirmPassword")
     val confirmPassword: String,
+    @SerialName("googleAccount")
+    val isGoogleAccount: Boolean,
 )
