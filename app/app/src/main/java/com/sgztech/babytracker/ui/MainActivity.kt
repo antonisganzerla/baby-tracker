@@ -248,6 +248,15 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationBar.setSubMenuOnClickListener { _, position ->
             when (position) {
                 0 -> {
+                    NailCutModalBottomSheet(
+                        date = viewModel.currentDate(),
+                        actionButtonClick = { register, handleResult ->
+                            viewModel.addRegister(register, handleResult)
+                        },
+                        successCallback = { saveRegisterSuccess() },
+                    ).show(supportFragmentManager, NailCutModalBottomSheet.TAG)
+                }
+                1 -> {
                     ColicModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
@@ -259,7 +268,7 @@ class MainActivity : AppCompatActivity() {
                         },
                     ).show(supportFragmentManager, ColicModalBottomSheet.TAG)
                 }
-                1 -> {
+                2 -> {
                     WeightModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
@@ -271,7 +280,7 @@ class MainActivity : AppCompatActivity() {
                         },
                     ).show(supportFragmentManager, WeightModalBottomSheet.TAG)
                 }
-                2 -> {
+                3 -> {
                     HeightModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
@@ -283,7 +292,7 @@ class MainActivity : AppCompatActivity() {
                         },
                     ).show(supportFragmentManager, HeightModalBottomSheet.TAG)
                 }
-                3 -> {
+                4 -> {
                     MedicalAppointmentModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->

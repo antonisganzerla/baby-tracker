@@ -48,10 +48,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO save(CreateUserDTO dto) {
         if (isPasswordsMatch(dto))
-            throw new BusinessRuleException("{field.password.and.confirm.password.do.not.match}");
+            throw new BusinessRuleException("Campo senha e confirmação de senha não conferem");
 
         if (repository.findByEmail(dto.getEmail().toLowerCase()).isPresent())
-            throw new BusinessRuleException("{email.is.already.in.use}");
+            throw new BusinessRuleException("Email já está em uso");
 
         User user = new User();
         user.setName(dto.getName());
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getById(Integer id) {
         User user = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("{user.not.found}"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
         return mapToUserDTO(user);
     }
 
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
                     user.setId(u.getId());
                     repository.save(user);
                     return Void.TYPE;
-                }).orElseThrow(() -> new EntityNotFoundException("{user.not.found}"));
+                }).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
     }
 
     @Override
@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
                 .map(u -> {
                     repository.delete(u);
                     return Void.TYPE;
-                }).orElseThrow(() -> new EntityNotFoundException("{user.not.found}"));
+                }).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
     }
 
     @Override
@@ -189,10 +189,10 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new BusinessRuleException("Código inválido"));
 
         User user = repository.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("{user.not.found}"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
         if (!dto.getPassword().equals(dto.getConfirmPassword()))
-            throw new BusinessRuleException("{field.password.and.confirm.password.do.not.match}");
+            throw new BusinessRuleException("Campo senha e confirmação de senha não conferem");
 
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         repository.save(user);
@@ -212,7 +212,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = repository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("{user.not.found}"));
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
         String[] roles = user.getUserProfile().getName().equals(UserProfile.ADMIN) ?
                 new String[]{"ADMIN", "USER"} : new String[]{"USER"};

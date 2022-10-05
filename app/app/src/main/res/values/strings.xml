@@ -117,6 +117,8 @@
     <string name="menu_item_height">Altura</string>
     <string name="medical_appointment">Consulta</string>
     <string name="menu_item_nap">Soneca</string>
+    <string name="menu_item_nail_cut">Corte unha</string>
+    <string name="menu_item_reflux">Refluxo</string>
 
     <string name="weight_with_measure">Peso (kg)</string>
     <string name="height_with_measure">Altura (cm)</string>

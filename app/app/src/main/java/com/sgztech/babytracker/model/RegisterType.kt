@@ -10,4 +10,6 @@ enum class RegisterType {
     MEDICAL,
     SLEEP,
     WEIGHT,
+    NAIL_CUT,
+    REFLUX,
 }
