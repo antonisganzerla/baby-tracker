@@ -98,7 +98,7 @@ class LoginViewModel(
                 auth(email, token)
             else {
                 _authAction.handleResponse(response) { error ->
-                    if (error.errors.contains(EMAIL_ALREADY_IN_USE_ERROR))
+                    if (error.errors.contains(EMAIL_ALREADY_IN_USE_ERROR) || error.errors.contains(EMAIL_ALREADY_IN_USE_ERROR_PT))
                         auth(email, token)
                     else
                         _authAction.postValue(error.toValidationFailure())
@@ -109,6 +109,7 @@ class LoginViewModel(
 }
 
 private const val EMAIL_ALREADY_IN_USE_ERROR = "{email.is.already.in.use}"
+private const val EMAIL_ALREADY_IN_USE_ERROR_PT = "Email já está em uso"
 
 sealed class LoginFormState {
     class InvalidEmail(val errorRes: Int) : LoginFormState()
