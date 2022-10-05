@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
             throw new BusinessRuleException("Campo senha e confirmação de senha não conferem");
 
         if (repository.findByEmail(dto.getEmail().toLowerCase()).isPresent())
-            throw new BusinessRuleException("Email já está em uso");
+            throw new BusinessRuleException("{email.is.already.in.use}");
 
         User user = new User();
         user.setName(dto.getName());
