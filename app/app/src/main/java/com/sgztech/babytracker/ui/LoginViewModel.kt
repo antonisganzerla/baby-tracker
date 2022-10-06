@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.arch.Result
-import com.sgztech.babytracker.arch.Error
 import com.sgztech.babytracker.arch.toValidationFailure
 import com.sgztech.babytracker.data.AuthRepository
 import com.sgztech.babytracker.data.BabyRepository
@@ -98,7 +97,7 @@ class LoginViewModel(
                 auth(email, token)
             else {
                 _authAction.handleResponse(response) { error ->
-                    if (error.errors.contains(EMAIL_ALREADY_IN_USE_ERROR) || error.errors.contains(EMAIL_ALREADY_IN_USE_ERROR_PT))
+                    if (error.errors.contains(EMAIL_ALREADY_IN_USE_ERROR_PT))
                         auth(email, token)
                     else
                         _authAction.postValue(error.toValidationFailure())
@@ -108,7 +107,6 @@ class LoginViewModel(
     }
 }
 
-private const val EMAIL_ALREADY_IN_USE_ERROR = "{email.is.already.in.use}"
 private const val EMAIL_ALREADY_IN_USE_ERROR_PT = "Email já está em uso"
 
 sealed class LoginFormState {

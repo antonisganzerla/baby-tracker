@@ -18,6 +18,9 @@ interface BabyDao {
     @Insert
     suspend fun insertAll(vararg babies: Baby)
 
+    @Insert
+    suspend fun insert(baby: Baby): Long
+
     @Update
     suspend fun update(baby: Baby)
 
