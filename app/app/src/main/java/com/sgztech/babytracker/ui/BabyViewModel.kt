@@ -106,17 +106,11 @@ class BabyViewModel(
         }
 
     fun validate(name: String, sex: String) {
-        if (name.isEmpty()) {
-            _formState.postValue(BabyFormState.InvalidName(R.string.msg_enter_name))
-            return
+        when {
+            name.isEmpty() -> _formState.postValue(BabyFormState.InvalidName(R.string.msg_enter_name))
+            sex.isEmpty() -> _formState.postValue(BabyFormState.InvalidSex(R.string.msg_enter_sex))
+            else -> _formState.postValue(BabyFormState.Valid)
         }
-
-        if (sex.isEmpty()) {
-            _formState.postValue(BabyFormState.InvalidSex(R.string.msg_enter_sex))
-            return
-        }
-
-        _formState.postValue(BabyFormState.Valid)
     }
 }
 

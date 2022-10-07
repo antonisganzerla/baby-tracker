@@ -17,6 +17,8 @@ class ServiceFirebaseStorage(
         uriFile: Uri,
         fileName: String,
     ): Result<Uri, Throwable> {
+        if (uriFile.toString().isEmpty())
+            return Result.Failure(Throwable("Empty Uri"))
         val ref = firebaseStorage.getReference(fileName)
         val task = ref.putFile(uriFile)
         return generateUrlDownload(ref, task)
@@ -37,7 +39,7 @@ class ServiceFirebaseStorage(
                 }
             }.addOnCompleteListener { taskSuccess ->
                 if (taskSuccess.isSuccessful) {
-                    taskSuccess.result?.let{ uri ->
+                    taskSuccess.result?.let { uri ->
                         continuation.resume(Result.Success(uri))
                     } ?: run {
                         continuation.resume(Result.Failure(Throwable("Unknown Error")))

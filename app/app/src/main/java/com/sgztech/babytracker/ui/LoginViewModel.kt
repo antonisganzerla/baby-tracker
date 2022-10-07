@@ -46,28 +46,17 @@ class LoginViewModel(
         preferenceService.getRememberMe()
 
     fun validate(email: String, password: String) {
-        if (email.isEmpty()) {
-            _formState.postValue(LoginFormState.InvalidEmail(R.string.msg_enter_email))
-            return
+        when {
+            email.isEmpty() -> _formState.postValue(LoginFormState.InvalidEmail(R.string.msg_enter_email))
+            emailIsValid(email) -> _formState.postValue(LoginFormState.InvalidEmail(R.string.msg_enter_valid_email))
+            password.isEmpty() -> _formState.postValue(LoginFormState.InvalidPassword(R.string.msg_enter_password))
+            password.length < 8 -> _formState.postValue(LoginFormState.InvalidPassword(R.string.msg_enter_valid_password))
+            else -> _formState.postValue(LoginFormState.Valid)
         }
-
-        if (Patterns.EMAIL_ADDRESS.matcher(email).matches().not()) {
-            _formState.postValue(LoginFormState.InvalidEmail(R.string.msg_enter_valid_email))
-            return
-        }
-
-        if (password.isEmpty()) {
-            _formState.postValue(LoginFormState.InvalidPassword(R.string.msg_enter_password))
-            return
-        }
-
-        if (password.length < 8) {
-            _formState.postValue(LoginFormState.InvalidPassword(R.string.msg_enter_valid_password))
-            return
-        }
-
-        _formState.postValue(LoginFormState.Valid)
     }
+
+    private fun emailIsValid(email: String): Boolean =
+        Patterns.EMAIL_ADDRESS.matcher(email).matches().not()
 
     fun navigateToNextScreen(userId: Int) {
         viewModelScope.launch {
