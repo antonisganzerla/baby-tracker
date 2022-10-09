@@ -9,7 +9,6 @@ import com.sgztech.babytracker.arch.Result
 import com.sgztech.babytracker.arch.mapSuccess
 import com.sgztech.babytracker.data.BabyRepository
 import com.sgztech.babytracker.data.RegisterRepository
-import com.sgztech.babytracker.data.model.RegisterDtoResponse
 import com.sgztech.babytracker.model.Baby
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.model.User

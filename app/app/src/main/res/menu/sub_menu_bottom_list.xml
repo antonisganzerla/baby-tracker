@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/nav_cut"
+        android:icon="@drawable/ic_content_cut_24"
+        android:title="@string/menu_item_nail_cut" />
+    <item
         android:id="@+id/nav_colic"
         android:icon="@drawable/ic_crisis_alert_24"
         android:title="@string/menu_item_colic" />

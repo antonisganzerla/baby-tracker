@@ -1,6 +1,7 @@
 package com.sgztech.babytracker.core
 
 import android.app.Application
+import com.google.firebase.FirebaseApp
 import com.sgztech.babytracker.di.dbModule
 import com.sgztech.babytracker.di.repositoryModule
 import com.sgztech.babytracker.di.serviceModule
@@ -12,6 +13,7 @@ class CoreApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        FirebaseApp.initializeApp(this)
         startKoin {
             androidContext(this@CoreApplication)
             modules(listOf(dbModule, repositoryModule, uiModule, serviceModule))

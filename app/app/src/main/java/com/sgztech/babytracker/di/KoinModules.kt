@@ -1,6 +1,7 @@
 package com.sgztech.babytracker.di
 
 import androidx.preference.PreferenceManager
+import com.google.firebase.storage.FirebaseStorage
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.sgztech.babytracker.BuildConfig
 import com.sgztech.babytracker.PreferenceService
@@ -22,8 +23,8 @@ import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
 private val contentType = "application/json".toMediaType()
-//private const val BASE_URL = "http://192.168.0.106:8080/api/"
-private const val BASE_URL = "https://spring-baby-tracker.herokuapp.com/api/"
+private const val BASE_URL_DEV = "http://192.168.0.106:8080/api/"
+private const val BASE_URL_PRD = "https://spring-baby-tracker.herokuapp.com/api/"
 private const val READ_TIMEOUT = 30_000L
 private const val CONNECT_TIMEOUT = 30_000L
 
@@ -49,7 +50,7 @@ val serviceModule = module {
         val client: OkHttpClient = get()
         val json: Json = get()
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl())
             .client(client)
             .addCallAdapterFactory(ApiResultCallAdapterFactory)
             .addConverterFactory(ApiResultConverterFactory)
@@ -87,6 +88,9 @@ val serviceModule = module {
     factory {
         RegisterService(get(), get(), get())
     }
+
+    factory { FirebaseStorage.getInstance() }
+    factory { ServiceFirebaseStorage(get()) }
 }
 
 val dbModule = module {
@@ -112,7 +116,7 @@ val uiModule = module {
     factory { DateTimeFormatter() }
     viewModel { SplashViewModel(get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get()) }
-    viewModel { BabyViewModel(get(), get(), get()) }
+    viewModel { BabyViewModel(get(), get(), get(), get()) }
     viewModel { MainViewModel(get(), get(), get(), get()) }
     viewModel { RegisterUserViewModel(get()) }
     viewModel { ForgotPasswordViewModel(get()) }
@@ -125,3 +129,9 @@ private fun loggingInterceptor(): Interceptor =
             level = HttpLoggingInterceptor.Level.BODY
         }
     }
+
+private fun baseUrl(): String =
+    if (BuildConfig.DEBUG)
+        BASE_URL_DEV
+    else
+        BASE_URL_PRD

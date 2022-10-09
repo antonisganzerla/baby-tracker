@@ -106,7 +106,8 @@ class MainActivity : AppCompatActivity() {
                     openLoginActivity()
                 }
                 R.id.nav_item_about -> {
-                    bottomNavigationBar.showSnackbar("Em breve")
+                    val intent = Intent(this, FaqActivity::class.java)
+                    startActivity(intent)
                 }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -247,6 +248,15 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationBar.setSubMenuOnClickListener { _, position ->
             when (position) {
                 0 -> {
+                    NailCutModalBottomSheet(
+                        date = viewModel.currentDate(),
+                        actionButtonClick = { register, handleResult ->
+                            viewModel.addRegister(register, handleResult)
+                        },
+                        successCallback = { saveRegisterSuccess() },
+                    ).show(supportFragmentManager, NailCutModalBottomSheet.TAG)
+                }
+                1 -> {
                     ColicModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
@@ -258,7 +268,7 @@ class MainActivity : AppCompatActivity() {
                         },
                     ).show(supportFragmentManager, ColicModalBottomSheet.TAG)
                 }
-                1 -> {
+                2 -> {
                     WeightModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
@@ -270,7 +280,7 @@ class MainActivity : AppCompatActivity() {
                         },
                     ).show(supportFragmentManager, WeightModalBottomSheet.TAG)
                 }
-                2 -> {
+                3 -> {
                     HeightModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->
@@ -282,7 +292,7 @@ class MainActivity : AppCompatActivity() {
                         },
                     ).show(supportFragmentManager, HeightModalBottomSheet.TAG)
                 }
-                3 -> {
+                4 -> {
                     MedicalAppointmentModalBottomSheet(
                         date = viewModel.currentDate(),
                         actionButtonClick = { register, handleResult ->

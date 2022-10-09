@@ -2,9 +2,9 @@ package com.sgztech.babytracker.data
 
 import com.sgztech.babytracker.arch.Error
 import com.sgztech.babytracker.arch.Result
+import com.sgztech.babytracker.arch.mapSuccess
 import com.sgztech.babytracker.dao.BabyDao
 import com.sgztech.babytracker.data.model.BabyDtoRequest
-import com.sgztech.babytracker.data.model.BabyDtoResponse
 import com.sgztech.babytracker.model.Baby
 import com.sgztech.babytracker.model.getSexEnum
 import com.sgztech.babytracker.model.toSex
@@ -47,7 +47,7 @@ class BabyRepository(
         return Result.Success(true)
     }
 
-    suspend fun save(baby: Baby): Result<BabyDtoResponse, Error> {
+    suspend fun save(baby: Baby): Result<Baby, Error> {
         val response = service.save(
             BabyDtoRequest(
                 id = baby.webId ?: 0,
@@ -58,9 +58,20 @@ class BabyRepository(
                 userId = baby.userId,
             )
         )
+        var roomId = 0L
         if (response is Result.Success)
-            dao.insertAll(baby.copy(webId = response.value.id))
-        return response
+            roomId = dao.insert(baby.copy(webId = response.value.id))
+        return response.mapSuccess {
+            Baby(
+                id = roomId.toInt(),
+                name = it.name,
+                birthday = it.birthday,
+                sex = it.sex.toSex(),
+                photoUri = it.photoUri,
+                userId = it.userId,
+                webId = it.id,
+            )
+        }
     }
 
     suspend fun sync(userId: Int) {

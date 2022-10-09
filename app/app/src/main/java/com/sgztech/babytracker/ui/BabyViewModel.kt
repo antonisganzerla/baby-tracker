@@ -1,13 +1,17 @@
 package com.sgztech.babytracker.ui
 
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.sgztech.babytracker.BuildConfig
 import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.R
+import com.sgztech.babytracker.arch.Result
 import com.sgztech.babytracker.data.BabyRepository
 import com.sgztech.babytracker.model.Baby
 import com.sgztech.babytracker.model.User
+import com.sgztech.babytracker.service.ServiceFirebaseStorage
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -15,6 +19,7 @@ class BabyViewModel(
     preferenceService: PreferenceService,
     private val babyRepository: BabyRepository,
     private val formatter: DateTimeFormatter,
+    private val firebaseStorage: ServiceFirebaseStorage,
 ) : BaseViewModel() {
 
     private val _formState: MutableLiveData<BabyFormState> = MutableLiveData()
@@ -49,19 +54,49 @@ class BabyViewModel(
             _saveAction.postValue(RequestAction.Loading)
             val copyBaby = baby.copy(userId = user.id, webId = _baby.value?.webId)
             val response = babyRepository.save(copyBaby)
-            _saveAction.handleResponse(response)
+            if (response is Result.Success) {
+                _baby.value = response.value
+                update(response.value)
+            } else
+                _saveAction.handleResponse(response)
         }
     }
 
     fun update(baby: Baby) {
         viewModelScope.launch {
             _saveAction.postValue(RequestAction.Loading)
-            val copyBaby =
-                baby.copy(id = _baby.value!!.id, userId = user.id, webId = _baby.value?.webId)
-            val response = babyRepository.update(copyBaby)
-            _saveAction.handleResponse(response)
+            val uploadResult = firebaseStorage.uploadPhoto(
+                uriFile = baby.photoUri.toUri(),
+                fileName = photoFileName(),
+            )
+            val result = when (uploadResult) {
+                is Result.Failure -> {
+                    val copyBaby = baby.copy(
+                        id = _baby.value!!.id,
+                        userId = user.id,
+                        webId = _baby.value?.webId,
+                    )
+                    babyRepository.update(copyBaby)
+                }
+                is Result.Success -> {
+                    val copyBaby = baby.copy(
+                        id = _baby.value!!.id,
+                        userId = user.id,
+                        webId = _baby.value?.webId,
+                        photoUri = uploadResult.value.toString(),
+                    )
+                    babyRepository.update(copyBaby)
+                }
+            }
+            _saveAction.handleResponse(result)
         }
     }
+
+    private fun photoFileName(): String =
+        if (BuildConfig.DEBUG)
+            _baby.value?.webId.toString().plus("dev")
+        else
+            _baby.value?.webId.toString()
 
     private fun getBaby() =
         viewModelScope.launch {
@@ -71,17 +106,11 @@ class BabyViewModel(
         }
 
     fun validate(name: String, sex: String) {
-        if (name.isEmpty()) {
-            _formState.postValue(BabyFormState.InvalidName(R.string.msg_enter_name))
-            return
+        when {
+            name.isEmpty() -> _formState.postValue(BabyFormState.InvalidName(R.string.msg_enter_name))
+            sex.isEmpty() -> _formState.postValue(BabyFormState.InvalidSex(R.string.msg_enter_sex))
+            else -> _formState.postValue(BabyFormState.Valid)
         }
-
-        if (sex.isEmpty()) {
-            _formState.postValue(BabyFormState.InvalidSex(R.string.msg_enter_sex))
-            return
-        }
-
-        _formState.postValue(BabyFormState.Valid)
     }
 }
 

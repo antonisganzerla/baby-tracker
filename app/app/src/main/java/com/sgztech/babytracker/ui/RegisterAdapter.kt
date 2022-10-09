@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.extension.gone
@@ -43,7 +45,16 @@ class RegisterAdapter(
             val formattedHours = dateFormatter.formatHours(register.localDateTime)
             tvTime.text = formattedHours
             tvNotes.setTextOrGone(register.note)
+            updateNoteViewPosition(register)
             itemView.setOnClickListener { onItemClick(register.copy(note = formattedHours)) }
+        }
+
+        private fun updateNoteViewPosition(register: Register) {
+            if (register.description.isEmpty() && register.note.isNotEmpty()) {
+                tvNotes.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    topToBottom = tvTitle.id
+                }
+            }
         }
 
         private fun TextView.setTextOrGone(value: String) {

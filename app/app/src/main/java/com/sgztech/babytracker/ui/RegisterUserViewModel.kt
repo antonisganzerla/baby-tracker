@@ -19,39 +19,19 @@ class RegisterUserViewModel(
     val registerAction: LiveData<RequestAction> = _registerAction
 
     fun validate(name: String, email: String, password: String, repeatPassword: String) {
-
-        if (name.isEmpty()) {
-            _formState.postValue(RegisterFormState.InvalidName(R.string.msg_enter_name))
-            return
+        when {
+            name.isEmpty() -> _formState.postValue(RegisterFormState.InvalidName(R.string.msg_enter_name))
+            email.isEmpty() -> _formState.postValue(RegisterFormState.InvalidEmail(R.string.msg_enter_email))
+            emailIsValid(email) -> _formState.postValue(RegisterFormState.InvalidEmail(R.string.msg_enter_valid_email))
+            password.isEmpty() -> _formState.postValue(RegisterFormState.InvalidPassword(R.string.msg_enter_password))
+            password.length < 8 -> _formState.postValue(RegisterFormState.InvalidPassword(R.string.msg_enter_valid_password))
+            password != repeatPassword -> _formState.postValue(RegisterFormState.InvalidRepeatPassword(R.string.msg_password_not_match))
+            else -> _formState.postValue(RegisterFormState.Valid)
         }
-
-        if (email.isEmpty()) {
-            _formState.postValue(RegisterFormState.InvalidEmail(R.string.msg_enter_email))
-            return
-        }
-
-        if (Patterns.EMAIL_ADDRESS.matcher(email).matches().not()) {
-            _formState.postValue(RegisterFormState.InvalidEmail(R.string.msg_enter_valid_email))
-            return
-        }
-
-        if (password.isEmpty()) {
-            _formState.postValue(RegisterFormState.InvalidPassword(R.string.msg_enter_password))
-            return
-        }
-
-        if (password.length < 8) {
-            _formState.postValue(RegisterFormState.InvalidPassword(R.string.msg_enter_valid_password))
-            return
-        }
-
-        if (password != repeatPassword) {
-            _formState.postValue(RegisterFormState.InvalidRepeatPassword(R.string.msg_password_not_match))
-            return
-        }
-
-        _formState.postValue(RegisterFormState.Valid)
     }
+
+    private fun emailIsValid(email: String) =
+        Patterns.EMAIL_ADDRESS.matcher(email).matches().not()
 
     fun register(name: String, email: String, password: String) {
         _registerAction.postValue(RequestAction.Loading)

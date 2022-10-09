@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.arch.Result
-import com.sgztech.babytracker.arch.Error
 import com.sgztech.babytracker.arch.toValidationFailure
 import com.sgztech.babytracker.data.AuthRepository
 import com.sgztech.babytracker.data.BabyRepository
@@ -47,28 +46,17 @@ class LoginViewModel(
         preferenceService.getRememberMe()
 
     fun validate(email: String, password: String) {
-        if (email.isEmpty()) {
-            _formState.postValue(LoginFormState.InvalidEmail(R.string.msg_enter_email))
-            return
+        when {
+            email.isEmpty() -> _formState.postValue(LoginFormState.InvalidEmail(R.string.msg_enter_email))
+            emailIsValid(email) -> _formState.postValue(LoginFormState.InvalidEmail(R.string.msg_enter_valid_email))
+            password.isEmpty() -> _formState.postValue(LoginFormState.InvalidPassword(R.string.msg_enter_password))
+            password.length < 8 -> _formState.postValue(LoginFormState.InvalidPassword(R.string.msg_enter_valid_password))
+            else -> _formState.postValue(LoginFormState.Valid)
         }
-
-        if (Patterns.EMAIL_ADDRESS.matcher(email).matches().not()) {
-            _formState.postValue(LoginFormState.InvalidEmail(R.string.msg_enter_valid_email))
-            return
-        }
-
-        if (password.isEmpty()) {
-            _formState.postValue(LoginFormState.InvalidPassword(R.string.msg_enter_password))
-            return
-        }
-
-        if (password.length < 8) {
-            _formState.postValue(LoginFormState.InvalidPassword(R.string.msg_enter_valid_password))
-            return
-        }
-
-        _formState.postValue(LoginFormState.Valid)
     }
+
+    private fun emailIsValid(email: String): Boolean =
+        Patterns.EMAIL_ADDRESS.matcher(email).matches().not()
 
     fun navigateToNextScreen(userId: Int) {
         viewModelScope.launch {
@@ -98,7 +86,7 @@ class LoginViewModel(
                 auth(email, token)
             else {
                 _authAction.handleResponse(response) { error ->
-                    if (error.errors.contains(EMAIL_ALREADY_IN_USE_ERROR))
+                    if (error.errors.contains(EMAIL_ALREADY_IN_USE_ERROR_PT))
                         auth(email, token)
                     else
                         _authAction.postValue(error.toValidationFailure())
@@ -108,7 +96,7 @@ class LoginViewModel(
     }
 }
 
-private const val EMAIL_ALREADY_IN_USE_ERROR = "{email.is.already.in.use}"
+private const val EMAIL_ALREADY_IN_USE_ERROR_PT = "Email já está em uso"
 
 sealed class LoginFormState {
     class InvalidEmail(val errorRes: Int) : LoginFormState()
