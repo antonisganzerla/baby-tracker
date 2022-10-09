@@ -1,6 +1,5 @@
 package com.sgztech.babytracker.ui
 
-import android.app.Activity
 import android.os.Bundle
 import android.widget.ProgressBar
 import androidx.appcompat.widget.Toolbar
@@ -9,6 +8,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.extension.*
+import com.sgztech.babytracker.firebaseInstance
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterUserActivity : BaseActivity() {
@@ -95,9 +95,16 @@ class RegisterUserActivity : BaseActivity() {
             when (action) {
                 RequestAction.Loading -> pbRegister.show()
                 is RequestAction.Success<*> -> {
-                    pbRegister.hide()
-                    setResult(RESULT_OK)
-                    finish()
+                    firebaseInstance().createUserWithEmailAndPassword(
+                        etEmail.text.toString(),
+                        etPassword.text.toString(),
+                    ).addOnCompleteListener {
+                        logInfo(it.isSuccessful.toString())
+                        logInfo(it.result.toString())
+                        pbRegister.hide()
+                        setResult(RESULT_OK)
+                        finish()
+                    }
                 }
                 is RequestAction.GenericFailure -> {
                     btnRegister.showSnackbar(action.errorRes)

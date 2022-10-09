@@ -47,8 +47,6 @@ class ServiceFirebaseStorage(
                 } else {
                     continuation.resume(Result.Failure(Throwable("Unknown Error")))
                 }
-            }.addOnFailureListener { exception ->
-                continuation.resume(Result.Failure(exception))
             }
         }
     }

@@ -2,7 +2,6 @@ package com.sgztech.babytracker.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -92,7 +91,7 @@ class LoginActivity : AppCompatActivity() {
             val account = completedTask.getResult(ApiException::class.java)
             firebaseAuthWithGoogle(account)
         } catch (e: ApiException) {
-            log(getString(R.string.msg_signin_fail, e.statusCode.toString()))
+            logError(getString(R.string.msg_signin_fail, e.statusCode.toString()))
             signInButton.showSnackbar(R.string.msg_signin_fail_snack_bar)
         }
     }
@@ -102,7 +101,7 @@ class LoginActivity : AppCompatActivity() {
         firebaseInstance().signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    log(getString(R.string.msg_signin_firebase_success))
+                    logInfo(getString(R.string.msg_signin_firebase_success))
                     photoUri = acct.photoUrl.toString()
                     viewModel.authWithGoogle(
                         name = acct.displayName.toString(),
@@ -110,8 +109,8 @@ class LoginActivity : AppCompatActivity() {
                         token = acct.idToken.toString(),
                     )
                 } else {
-                    log(getString(R.string.msg_signin_firebase_fail))
-                    log(task.exception.toString())
+                    logError(getString(R.string.msg_signin_firebase_fail))
+                    logError(task.exception)
                 }
             }
     }
@@ -170,11 +169,22 @@ class LoginActivity : AppCompatActivity() {
             when (action) {
                 RequestAction.Loading -> pbLogin.show()
                 is RequestAction.Success<*> -> {
-                    pbLogin.hide()
                     val saveMe = cbRememberMe.isChecked
                     val user = (action.value as User).copy(photoUri = photoUri)
                     viewModel.saveUserSession(user, saveMe)
-                    viewModel.navigateToNextScreen(user.id)
+
+                    if (user.photoUri.isNullOrEmpty())
+                        firebaseInstance().signInWithEmailAndPassword(
+                            user.email,
+                            etPassword.text.toString(),
+                        ).addOnCompleteListener {
+                            logInfo(it.result.user.toString())
+                            viewModel.navigateToNextScreen(user.id)
+                        }
+                    else
+                        viewModel.navigateToNextScreen(user.id)
+
+                    pbLogin.hide()
                 }
                 is RequestAction.GenericFailure -> {
                     pbLogin.hide()
@@ -215,9 +225,5 @@ class LoginActivity : AppCompatActivity() {
     private fun ProgressBar.hide() {
         gone()
         enableUserInteraction()
-    }
-
-    private fun log(message: String) {
-        Log.i("TAG", message)
     }
 }
