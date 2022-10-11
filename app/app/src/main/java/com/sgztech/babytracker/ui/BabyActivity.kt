@@ -197,11 +197,17 @@ class BabyActivity : AppCompatActivity() {
                     btnSaveBaby.showSnackbar(action.errors.joinToString())
                 }
                 is RequestAction.AuthFailure -> {
-                    pbBaby.hide()
-                    btnSaveBaby.showSnackbar(action.errorRes)
+                    viewModel.cleanSession()
+                    openLoginActivity()
                 }
             }
         }
+    }
+
+    private fun openLoginActivity() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun ProgressBar.show() {

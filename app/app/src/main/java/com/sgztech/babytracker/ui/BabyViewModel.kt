@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class BabyViewModel(
-    preferenceService: PreferenceService,
+    private val preferenceService: PreferenceService,
     private val babyRepository: BabyRepository,
     private val formatter: DateTimeFormatter,
     private val firebaseStorage: ServiceFirebaseStorage,
@@ -111,6 +111,10 @@ class BabyViewModel(
             sex.isEmpty() -> _formState.postValue(BabyFormState.InvalidSex(R.string.msg_enter_sex))
             else -> _formState.postValue(BabyFormState.Valid)
         }
+    }
+
+    fun cleanSession() {
+        preferenceService.setUserLogged(false)
     }
 }
 

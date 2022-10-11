@@ -172,18 +172,7 @@ class LoginActivity : AppCompatActivity() {
                     val saveMe = cbRememberMe.isChecked
                     val user = (action.value as User).copy(photoUri = photoUri)
                     viewModel.saveUserSession(user, saveMe)
-
-                    if (user.photoUri.isNullOrEmpty())
-                        firebaseInstance().signInWithEmailAndPassword(
-                            user.email,
-                            etPassword.text.toString(),
-                        ).addOnCompleteListener {
-                            logInfo(it.result.user.toString())
-                            viewModel.navigateToNextScreen(user.id)
-                        }
-                    else
-                        viewModel.navigateToNextScreen(user.id)
-
+                    viewModel.navigateToNextScreen(user.id)
                     pbLogin.hide()
                 }
                 is RequestAction.GenericFailure -> {

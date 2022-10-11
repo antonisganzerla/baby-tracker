@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgztech.babytracker.PreferenceService
+import com.sgztech.babytracker.arch.Error
 import com.sgztech.babytracker.arch.Result
 import com.sgztech.babytracker.data.BabyRepository
 import kotlinx.coroutines.launch
@@ -21,7 +22,13 @@ class SplashViewModel(
         viewModelScope.launch {
             if (preferenceService.getUserLogged()) {
                 when (val response = babyRepository.exists(preferenceService.getUser().id)) {
-                    is Result.Failure ->  _navigateState.postValue(SplashNavigateState.Error)
+                    is Result.Failure -> when (response.error) {
+                        is Error.Auth -> {
+                            preferenceService.setUserLogged(false)
+                            _navigateState.postValue(SplashNavigateState.LoginScreen)
+                        }
+                        else -> _navigateState.postValue(SplashNavigateState.Error)
+                    }
                     is Result.Success -> if (response.value)
                         _navigateState.postValue(SplashNavigateState.MainScreen)
                     else
