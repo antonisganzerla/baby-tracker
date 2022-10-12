@@ -22,6 +22,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.navigation.NavigationView
 import com.natura.android.button.TextButton
+import com.sgztech.babytracker.BuildConfig
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.extension.*
 import com.sgztech.babytracker.firebaseInstance
@@ -98,7 +99,11 @@ class MainActivity : AppCompatActivity() {
                     viewModel.loadRegisters()
                 }
                 R.id.nav_item_chart -> {
-                    bottomNavigationBar.showSnackbar("Em breve")
+                    if (BuildConfig.DEBUG) {
+                        val intent = Intent(this, ChartsActivity::class.java)
+                        startActivity(intent)
+                    } else
+                        bottomNavigationBar.showSnackbar("Em breve")
                 }
                 R.id.nav_item_logout -> {
                     viewModel.logout()

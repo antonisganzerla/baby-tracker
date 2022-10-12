@@ -72,4 +72,7 @@ class RegisterRepository(
             dao.delete(register)
         return result
     }
+
+    suspend fun loadLocal(userId: Int): List<Register> =
+        dao.loadAllByUserId(userId)
 }

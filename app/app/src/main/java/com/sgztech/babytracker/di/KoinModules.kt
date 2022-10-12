@@ -121,6 +121,7 @@ val uiModule = module {
     viewModel { RegisterUserViewModel(get()) }
     viewModel { ForgotPasswordViewModel(get()) }
     viewModel { ResetPasswordViewModel(get()) }
+    viewModel { ChartsViewModel(get(), get()) }
 }
 
 private fun loggingInterceptor(): Interceptor =
