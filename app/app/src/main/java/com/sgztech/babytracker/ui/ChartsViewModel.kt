@@ -19,7 +19,7 @@ class ChartsViewModel(
 
     fun load() {
         viewModelScope.launch {
-            val registers = repository.loadLocal(preferenceService.getUser().id)
+            val registers = repository.loadLocal(preferenceService.getUser().id).sortedBy { it.localDateTime }
             _registers.postValue(registers)
         }
     }
