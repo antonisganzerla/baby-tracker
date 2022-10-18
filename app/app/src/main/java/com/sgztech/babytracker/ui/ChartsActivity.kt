@@ -2,18 +2,15 @@ package com.sgztech.babytracker.ui
 
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.model.RegisterType
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.sgztech.babytracker.ui.charts.DiaperFragment
+import com.sgztech.babytracker.ui.charts.GrowingFragment
 
 class ChartsActivity : BaseActivity() {
 
-    private val lineChart: LineChart by lazy { findViewById(R.id.lineChart) }
-    private val viewModel: ChartsViewModel by viewModel()
+    private val bottomNavigationView: BottomNavigationView by lazy { findViewById(R.id.bottomNavigationView) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,18 +19,21 @@ class ChartsActivity : BaseActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setupToolbar(toolbar, R.string.toolbar_title_charts)
 
-        viewModel.registers.observe(this) { registers ->
-            val entries = registers.filter { it.type == RegisterType.WEIGHT }.mapIndexed { index, register ->
-                Entry(
-                    index.toFloat(), register.description.filter { it.isDigit() }.toFloat(), getDrawable(R.drawable.ic_balance_24)
-                )
+        replaceFragment(GrowingFragment())
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_growing -> replaceFragment(GrowingFragment())
+                R.id.nav_diaper -> replaceFragment(DiaperFragment())
+                R.id.nav_sleep -> false
             }
-            val lineDataSet = LineDataSet(entries, getString(R.string.menu_item_weight))
-            lineDataSet.setDrawIcons(false)
-            val lineData = LineData(listOf(lineDataSet))
-            lineChart.data = lineData
-            lineChart.refreshDrawableState()
+            true
         }
-        viewModel.load()
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.contentContainer, fragment)
+        transaction.commit()
     }
 }
