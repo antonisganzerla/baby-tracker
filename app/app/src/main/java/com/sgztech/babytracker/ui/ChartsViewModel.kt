@@ -21,23 +21,28 @@ class ChartsViewModel(
     private val _heightRegisters: MutableLiveData<List<Register>> = MutableLiveData()
     val heightRegisters: LiveData<List<Register>> = _heightRegisters
 
+    private val _diaperRegisters: MutableLiveData<List<Register>> = MutableLiveData()
+    val diaperRegisters: LiveData<List<Register>> = _diaperRegisters
+
     fun loadWeightRegisters() {
-        viewModelScope.launch {
-            val registers = repository.loadAllByUserIdAndType(
-                userId = preferenceService.getUser().id,
-                type = RegisterType.WEIGHT,
-            ).sortedBy { it.localDateTime }
-            _weightRegisters.postValue(registers)
-        }
+        _weightRegisters.loadRegistersByType(RegisterType.WEIGHT)
     }
 
     fun loadHeightRegisters() {
+        _heightRegisters.loadRegistersByType(RegisterType.HEIGHT)
+    }
+
+    fun loadDiaperRegisters() {
+        _diaperRegisters.loadRegistersByType(RegisterType.DIAPER)
+    }
+
+    private fun MutableLiveData<List<Register>>.loadRegistersByType(type: RegisterType) {
         viewModelScope.launch {
             val registers = repository.loadAllByUserIdAndType(
                 userId = preferenceService.getUser().id,
-                type = RegisterType.HEIGHT,
+                type = type,
             ).sortedBy { it.localDateTime }
-            _heightRegisters.postValue(registers)
+            this@loadRegistersByType.postValue(registers)
         }
     }
 }

@@ -26,9 +26,9 @@ class GrowingFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(R.layout.fragment_growing, container, false)
-    }
+    ): View? =
+        inflater.inflate(R.layout.fragment_growing, container, false)
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,7 +47,7 @@ class GrowingFragment : Fragment() {
             lineChartWeight.apply {
                 data = lineData
                 invalidate()
-                addCustomMarker(registers)
+                addCustomMarker(registers, dateTimeFormatter, requireContext())
             }
         }
 
@@ -65,23 +65,12 @@ class GrowingFragment : Fragment() {
             lineChartHeight.apply {
                 data = lineData
                 invalidate()
-                addCustomMarker(registers)
+                addCustomMarker(registers, dateTimeFormatter, requireContext())
             }
         }
 
         viewModel.loadWeightRegisters()
         viewModel.loadHeightRegisters()
-    }
-
-    private fun LineChart.addCustomMarker(registers: List<Register>) {
-        val customMarker = MyMarkerView(
-            registers = registers,
-            dateTimeFormatter = dateTimeFormatter,
-            context = requireContext(),
-            layoutResource = R.layout.custom_marker_view,
-        )
-        customMarker.chartView = this
-        marker = customMarker
     }
 
     private fun Register.extractWeight(): Float =
