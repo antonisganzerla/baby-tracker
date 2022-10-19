@@ -9,12 +9,11 @@ import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.sgztech.babytracker.R
-import com.sgztech.babytracker.extension.showSnackbar
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.ui.ChartsViewModel
+import com.sgztech.babytracker.ui.DateTimeFormatter
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GrowingFragment : Fragment() {
@@ -22,6 +21,7 @@ class GrowingFragment : Fragment() {
     private val lineChartWeight: LineChart by lazy { requireView().findViewById(R.id.lineChartWeight) }
     private val lineChartHeight: LineChart by lazy { requireView().findViewById(R.id.lineChartHeight) }
     private val viewModel: ChartsViewModel by viewModel()
+    private val dateTimeFormatter: DateTimeFormatter by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,9 +44,11 @@ class GrowingFragment : Fragment() {
             val lineDataSet = LineDataSet(entries, getString(R.string.menu_item_weight))
             lineDataSet.setDrawIcons(false)
             val lineData = LineData(listOf(lineDataSet))
-            lineChartWeight.data = lineData
-            lineData.notifyDataChanged()
-            lineChartWeight.notifyDataSetChanged()
+            lineChartWeight.apply {
+                data = lineData
+                invalidate()
+                addCustomMarker(registers)
+            }
         }
 
         viewModel.heightRegisters.observe(viewLifecycleOwner) { registers ->
@@ -60,26 +62,26 @@ class GrowingFragment : Fragment() {
             val lineDataSet = LineDataSet(entries, getString(R.string.menu_item_height))
             lineDataSet.setDrawIcons(false)
             val lineData = LineData(listOf(lineDataSet))
-            lineChartHeight.data = lineData
-            lineData.notifyDataChanged()
-            lineChartHeight.notifyDataSetChanged()
+            lineChartHeight.apply {
+                data = lineData
+                invalidate()
+                addCustomMarker(registers)
+            }
         }
 
-        lineChartWeight.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-            override fun onValueSelected(entry: Entry?, highlight: Highlight?) {
-                entry?.let {
-                    val register = viewModel.getWeightRegisterByIndex(entry.x.toInt())
-                    register?.let {
-                        val formatDate = viewModel.formatDate(register.localDateTime)
-                        lineChartWeight.showSnackbar(formatDate)
-                    }
-                }
-            }
-
-            override fun onNothingSelected() {}
-        })
         viewModel.loadWeightRegisters()
         viewModel.loadHeightRegisters()
+    }
+
+    private fun LineChart.addCustomMarker(registers: List<Register>) {
+        val customMarker = MyMarkerView(
+            registers = registers,
+            dateTimeFormatter = dateTimeFormatter,
+            context = requireContext(),
+            layoutResource = R.layout.custom_marker_view,
+        )
+        customMarker.chartView = this
+        marker = customMarker
     }
 
     private fun Register.extractWeight(): Float =
