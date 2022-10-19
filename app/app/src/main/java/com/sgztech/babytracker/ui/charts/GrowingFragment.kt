@@ -19,7 +19,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GrowingFragment : Fragment() {
 
-    private val lineChart: LineChart by lazy { requireView().findViewById(R.id.lineChart) }
+    private val lineChartWeight: LineChart by lazy { requireView().findViewById(R.id.lineChartWeight) }
+    private val lineChartHeight: LineChart by lazy { requireView().findViewById(R.id.lineChartHeight) }
     private val viewModel: ChartsViewModel by viewModel()
 
     override fun onCreateView(
@@ -32,7 +33,7 @@ class GrowingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.registers.observe(viewLifecycleOwner) { registers ->
+        viewModel.weightRegisters.observe(viewLifecycleOwner) { registers ->
             val entries = registers.mapIndexed { index, register ->
                 Entry(
                     index.toFloat(),
@@ -43,27 +44,47 @@ class GrowingFragment : Fragment() {
             val lineDataSet = LineDataSet(entries, getString(R.string.menu_item_weight))
             lineDataSet.setDrawIcons(false)
             val lineData = LineData(listOf(lineDataSet))
-            lineChart.data = lineData
+            lineChartWeight.data = lineData
             lineData.notifyDataChanged()
-            lineChart.notifyDataSetChanged()
+            lineChartWeight.notifyDataSetChanged()
         }
 
-        lineChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+        viewModel.heightRegisters.observe(viewLifecycleOwner) { registers ->
+            val entries = registers.mapIndexed { index, register ->
+                Entry(
+                    index.toFloat(),
+                    register.extractHeight(),
+                    requireActivity().getDrawable(R.drawable.ic_height_24),
+                )
+            }
+            val lineDataSet = LineDataSet(entries, getString(R.string.menu_item_height))
+            lineDataSet.setDrawIcons(false)
+            val lineData = LineData(listOf(lineDataSet))
+            lineChartHeight.data = lineData
+            lineData.notifyDataChanged()
+            lineChartHeight.notifyDataSetChanged()
+        }
+
+        lineChartWeight.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onValueSelected(entry: Entry?, highlight: Highlight?) {
                 entry?.let {
-                    val register = viewModel.getRegisterByIndex(entry.x.toInt())
+                    val register = viewModel.getWeightRegisterByIndex(entry.x.toInt())
                     register?.let {
                         val formatDate = viewModel.formatDate(register.localDateTime)
-                        lineChart.showSnackbar(formatDate)
+                        lineChartWeight.showSnackbar(formatDate)
                     }
                 }
             }
 
             override fun onNothingSelected() {}
         })
-        viewModel.load()
+        viewModel.loadWeightRegisters()
+        viewModel.loadHeightRegisters()
     }
 
     private fun Register.extractWeight(): Float =
         description.replace("KG", "", true).trim().toFloat()
+
+    private fun Register.extractHeight(): Float =
+        description.replace("cm", "", true).trim().toFloat()
 }

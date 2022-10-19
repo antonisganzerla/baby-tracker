@@ -6,6 +6,7 @@ import com.sgztech.babytracker.dao.RegisterDao
 import com.sgztech.babytracker.data.model.RegisterDtoRequest
 import com.sgztech.babytracker.data.model.RegisterDtoResponse
 import com.sgztech.babytracker.model.Register
+import com.sgztech.babytracker.model.RegisterType
 import com.sgztech.babytracker.service.RegisterService
 import java.time.LocalDate
 
@@ -73,6 +74,6 @@ class RegisterRepository(
         return result
     }
 
-    suspend fun loadLocal(userId: Int): List<Register> =
-        dao.loadAllByUserId(userId)
+    suspend fun loadAllByUserIdAndType(userId: Int, type: RegisterType): List<Register> =
+        dao.loadAllByUserIdAndType(userId, type)
 }

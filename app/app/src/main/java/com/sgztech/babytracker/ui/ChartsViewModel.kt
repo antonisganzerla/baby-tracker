@@ -9,7 +9,6 @@ import com.sgztech.babytracker.data.RegisterRepository
 import com.sgztech.babytracker.model.Register
 import com.sgztech.babytracker.model.RegisterType
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 class ChartsViewModel(
@@ -18,18 +17,37 @@ class ChartsViewModel(
     private val repository: RegisterRepository,
 ) : ViewModel() {
 
-    private val _registers: MutableLiveData<List<Register>> = MutableLiveData()
-    val registers: LiveData<List<Register>> = _registers
+    private val _weightRegisters: MutableLiveData<List<Register>> = MutableLiveData()
+    val weightRegisters: LiveData<List<Register>> = _weightRegisters
 
-    fun load() {
+    private val _heightRegisters: MutableLiveData<List<Register>> = MutableLiveData()
+    val heightRegisters: LiveData<List<Register>> = _heightRegisters
+
+    fun loadWeightRegisters() {
         viewModelScope.launch {
-            val registers = repository.loadLocal(preferenceService.getUser().id).sortedBy { it.localDateTime }
-            _registers.postValue(registers.filter { it.type == RegisterType.WEIGHT })
+            val registers = repository.loadAllByUserIdAndType(
+                userId = preferenceService.getUser().id,
+                type = RegisterType.WEIGHT,
+            ).sortedBy { it.localDateTime }
+            _weightRegisters.postValue(registers)
         }
     }
 
-    fun getRegisterByIndex(index: Int): Register? =
-        registers.value?.get(index)
+    fun getWeightRegisterByIndex(index: Int): Register? =
+        weightRegisters.value?.get(index)
+
+    fun loadHeightRegisters() {
+        viewModelScope.launch {
+            val registers = repository.loadAllByUserIdAndType(
+                userId = preferenceService.getUser().id,
+                type = RegisterType.HEIGHT,
+            ).sortedBy { it.localDateTime }
+            _heightRegisters.postValue(registers)
+        }
+    }
+
+    fun getHeightRegisterByIndex(index: Int): Register? =
+        weightRegisters.value?.get(index)
 
 
     fun formatDate(date: LocalDateTime): String =
