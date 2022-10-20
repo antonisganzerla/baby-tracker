@@ -145,6 +145,9 @@ public class UserServiceImpl implements UserService {
         if (user.getGoogleAccount())
             throw new BusinessRuleException("Esta conta não permite alteração de senha");
 
+        if (user.getUserProfile().getName().equals(UserProfile.ADMIN))
+            throw new BusinessRuleException("Esta conta não permite alteração de senha");
+
         PasswordRecovery passwordRecovery = new PasswordRecovery();
         passwordRecovery.setUser(user);
         passwordRecovery.setExpiration(LocalDateTime.now().plusHours(1));
