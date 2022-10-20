@@ -45,6 +45,7 @@ class GrowingFragment : Fragment() {
             lineDataSet.setDrawIcons(false)
             val lineData = LineData(listOf(lineDataSet))
             lineChartWeight.apply {
+                description.isEnabled = false
                 data = lineData
                 invalidate()
                 addCustomMarker(registers, dateTimeFormatter, requireContext())
@@ -63,6 +64,7 @@ class GrowingFragment : Fragment() {
             lineDataSet.setDrawIcons(false)
             val lineData = LineData(listOf(lineDataSet))
             lineChartHeight.apply {
+                description.isEnabled = false
                 data = lineData
                 invalidate()
                 addCustomMarker(registers, dateTimeFormatter, requireContext())
