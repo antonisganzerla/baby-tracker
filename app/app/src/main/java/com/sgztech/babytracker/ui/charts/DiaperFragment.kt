@@ -69,8 +69,7 @@ class DiaperFragment : Fragment() {
                     floatArrayOf(
                         register.value.count { it.subType == RegisterSubType.PEE }.toFloat(),
                         register.value.count { it.subType == RegisterSubType.POO }.toFloat(),
-                        register.value.count { it.subType == RegisterSubType.POO_AND_PEE }
-                            .toFloat(),
+                        register.value.count { it.subType == RegisterSubType.POO_AND_PEE }.toFloat(),
                     ),
                     requireActivity().getDrawable(R.drawable.ic_baby_changing_station_24),
                 )
