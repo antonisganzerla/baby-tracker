@@ -6,7 +6,11 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalField
+import java.time.temporal.WeekFields
 import java.util.*
+
+const val DAY_MONTH_PATTERN = "d MMM"
 
 class DateTimeFormatter(
     private val locale: Locale = brazilianLocale(),
@@ -32,4 +36,7 @@ class DateTimeFormatter(
         val instant = Instant.ofEpochMilli(millis)
         return LocalDateTime.ofInstant(instant, ZoneOffset.UTC)
     }
+
+    fun temporalField(locale: Locale = brazilianLocale()): TemporalField =
+        WeekFields.of(locale).dayOfWeek()
 }

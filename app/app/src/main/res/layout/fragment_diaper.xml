@@ -33,9 +33,37 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tvWeek"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvWeight" />
+
+    <com.natura.android.button.TextButton
+        android:id="@+id/buttonLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/filled_navigation_arrowleft"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/barChartDiaper" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvWeek"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonLeft"
+        app:layout_constraintEnd_toStartOf="@+id/buttonRight"
+        app:layout_constraintStart_toEndOf="@+id/buttonLeft"
+        app:layout_constraintTop_toTopOf="@+id/buttonLeft"
+        tools:text="23 de out - 29 de out" />
+
+    <com.natura.android.button.TextButton
+        android:id="@+id/buttonRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/filled_navigation_arrowright"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/barChartDiaper" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
