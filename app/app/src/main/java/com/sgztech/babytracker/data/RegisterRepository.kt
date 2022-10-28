@@ -74,6 +74,6 @@ class RegisterRepository(
         return result
     }
 
-    suspend fun loadAllByUserIdAndType(userId: Int, type: RegisterType): List<Register> =
-        dao.loadAllByUserIdAndType(userId, type)
+    suspend fun loadAllByUserIdAndType(userId: Int, vararg type: RegisterType): List<Register> =
+        dao.loadAllByUserIdAndType(userId, *type)
 }

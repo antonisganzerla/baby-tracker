@@ -28,6 +28,12 @@ class ChartsViewModel(
     private val _diaperRegisters: MutableLiveData<List<Register>> = MutableLiveData()
     val diaperRegisters: LiveData<List<Register>> = _diaperRegisters
 
+    private val _feedingRegisters: MutableLiveData<List<Register>> = MutableLiveData()
+    val feedingRegisters: LiveData<List<Register>> = _feedingRegisters
+
+    private val _babyBottleRegisters: MutableLiveData<List<Register>> = MutableLiveData()
+    val babyBottleRegisters: LiveData<List<Register>> = _babyBottleRegisters
+
     private var _date: MutableLiveData<LocalDate> = MutableLiveData()
     val date: LiveData<LocalDate> = _date
 
@@ -52,37 +58,72 @@ class ChartsViewModel(
             val startWeekDay = date.value
             val lastDayOfWeek = startWeekDay?.getLastDayOfWeek()
             val registers = loadRegisterByType(RegisterType.DIAPER).filter { register ->
-                startWeekDay?.let { startWeek ->
-                    val registerDate = register.localDateTime.toLocalDate()
-                    registerDate >= startWeek && registerDate <= lastDayOfWeek
-                } ?: true
+                register.filterBetween(startWeekDay, lastDayOfWeek)
             }
 
-            val newRegisters = startWeekDay?.let {
-                val daysBetween = ChronoUnit.DAYS.between(startWeekDay, lastDayOfWeek)
-                val newList = registers.toMutableList()
-                for (index in 0..daysBetween) {
-                    val date = startWeekDay.plusDays(index)
-                    if (registers.any { it.localDateTime.dayOfWeek == date?.dayOfWeek }.not())
-                        newList.add(
-                            index = index.toInt(),
-                            element = Register(
-                                icon = R.drawable.ic_baby_changing_station_24,
-                                name = "",
-                                description = "",
-                                localDateTime = date.atStartOfDay(),
-                                type = RegisterType.DIAPER,
-                            ),
-                        )
-                }
-                newList
-            } ?: registers
-
-            _diaperRegisters.postValue(newRegisters)
+            val weekRegisters = includeAllDaysOfWeek(startWeekDay, lastDayOfWeek, registers, RegisterType.DIAPER)
+            _diaperRegisters.postValue(weekRegisters)
         }
     }
 
-    private suspend fun loadRegisterByType(type: RegisterType): List<Register> {
+    fun loadFeedingRegisters() {
+        viewModelScope.launch {
+            val startWeekDay = date.value
+            val lastDayOfWeek = startWeekDay?.getLastDayOfWeek()
+            val registers = loadRegisterByType(RegisterType.BREAST_FEEDING, RegisterType.BABY_BOTTLE).filter { register ->
+                register.filterBetween(startWeekDay, lastDayOfWeek)
+            }
+
+            registers.filter { it.type == RegisterType.BREAST_FEEDING }.apply {
+                val weekRegisters = includeAllDaysOfWeek(startWeekDay, lastDayOfWeek, this, RegisterType.BREAST_FEEDING)
+                _feedingRegisters.postValue(weekRegisters)
+            }
+
+            registers.filter { it.type == RegisterType.BABY_BOTTLE }.apply {
+                val weekRegisters = includeAllDaysOfWeek(startWeekDay, lastDayOfWeek, this, RegisterType.BABY_BOTTLE)
+                _babyBottleRegisters.postValue(weekRegisters)
+            }
+        }
+    }
+
+    private fun Register.filterBetween(
+        startWeekDay: LocalDate?,
+        lastDayOfWeek: LocalDate?,
+    ): Boolean =
+        startWeekDay?.let { startWeek ->
+            val registerDate = localDateTime.toLocalDate()
+            registerDate >= startWeek && registerDate <= lastDayOfWeek
+        } ?: true
+
+    private fun includeAllDaysOfWeek(
+        startWeekDay: LocalDate?,
+        lastDayOfWeek: LocalDate?,
+        registers: List<Register>,
+        type: RegisterType,
+    ): List<Register> {
+        val registersWithAllDaysOfWeek = startWeekDay?.let {
+            val daysBetween = ChronoUnit.DAYS.between(startWeekDay, lastDayOfWeek)
+            val copyRegisters = registers.toMutableList()
+            for (index in 0..daysBetween) {
+                val date = startWeekDay.plusDays(index)
+                if (registers.any { it.localDateTime.dayOfWeek == date?.dayOfWeek }.not())
+                    copyRegisters.add(
+                        index = index.toInt(),
+                        element = Register(
+                            icon = R.drawable.ic_bar_chart_24,
+                            name = "",
+                            description = "00:00:00",
+                            localDateTime = date.atStartOfDay(),
+                            type = type,
+                        ),
+                    )
+            }
+            copyRegisters
+        } ?: registers
+        return registersWithAllDaysOfWeek
+    }
+
+    private suspend fun loadRegisterByType(vararg type: RegisterType): List<Register> {
         return repository.loadAllByUserIdAndType(
             userId = preferenceService.getUser().id,
             type = type,
@@ -103,11 +144,9 @@ class ChartsViewModel(
 
     fun plusWeeks() {
         _date.value = date.value?.plusWeeks(1)
-        loadDiaperRegisters()
     }
 
     fun minusWeeks() {
         _date.value = date.value?.minusWeeks(1)
-        loadDiaperRegisters()
     }
 }

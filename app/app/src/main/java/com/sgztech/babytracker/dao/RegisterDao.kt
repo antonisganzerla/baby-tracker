@@ -13,8 +13,8 @@ interface RegisterDao {
     @Query("SELECT * FROM register WHERE userId IN (:userId)")
     suspend fun loadAllByUserId(userId: Int): List<Register>
 
-    @Query("SELECT * FROM register WHERE userId=:userId and type=:type")
-    suspend fun loadAllByUserIdAndType(userId: Int, type: RegisterType): List<Register>
+    @Query("SELECT * FROM register WHERE userId=:userId and type IN (:type)")
+    suspend fun loadAllByUserIdAndType(userId: Int, vararg type: RegisterType): List<Register>
 
     @Query("SELECT EXISTS (SELECT 1 FROM register WHERE userId=:userId)")
     suspend fun exists(userId: Int): Boolean

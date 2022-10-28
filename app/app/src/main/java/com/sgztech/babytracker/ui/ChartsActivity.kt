@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sgztech.babytracker.R
 import com.sgztech.babytracker.ui.charts.DiaperFragment
+import com.sgztech.babytracker.ui.charts.FeedingFragment
 import com.sgztech.babytracker.ui.charts.GrowingFragment
 
 class ChartsActivity : BaseActivity() {
@@ -19,10 +20,11 @@ class ChartsActivity : BaseActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setupToolbar(toolbar, R.string.toolbar_title_charts)
 
-        replaceFragment(GrowingFragment())
+        replaceFragment(FeedingFragment())
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
+                R.id.nav_feeding -> replaceFragment(FeedingFragment())
                 R.id.nav_growing -> replaceFragment(GrowingFragment())
                 R.id.nav_diaper -> replaceFragment(DiaperFragment())
                 R.id.nav_sleep -> false
