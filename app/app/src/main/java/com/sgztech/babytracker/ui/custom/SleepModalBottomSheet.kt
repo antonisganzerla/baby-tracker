@@ -69,6 +69,11 @@ class SleepModalBottomSheet(
         }
     }
 
+    override fun onTimeSetListener() {
+        super.onTimeSetListener()
+        chronometer.base = SystemClock.elapsedRealtime() - calculateTimeDifference()
+    }
+
     private fun startChronometer() {
         chronometer.base = SystemClock.elapsedRealtime() - timeOffset
         chronometer.start()

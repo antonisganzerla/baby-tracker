@@ -112,6 +112,11 @@ class FeedingModalBottomSheet(
             }
         }
     }
+    
+    override fun onTimeSetListener() {
+        super.onTimeSetListener()
+        chronometer.base = SystemClock.elapsedRealtime() - calculateTimeDifference()
+    }
 
     private fun disableTypeSelector() {
         textInputTypeSelector.isEnabled = false

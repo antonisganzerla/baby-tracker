@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.charts.SleepFragment">
+
+    <ImageView
+        android:id="@+id/ivSleep"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_bedroom_baby_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvSleep"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/menu_item_nap"
+        app:layout_constraintBottom_toBottomOf="@+id/ivSleep"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ivSleep"
+        app:layout_constraintTop_toTopOf="@+id/ivSleep" />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barChartSleep"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvWeek"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSleep" />
+
+    <com.natura.android.button.TextButton
+        android:id="@+id/buttonLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/filled_navigation_arrowleft"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/barChartSleep" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvWeek"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonLeft"
+        app:layout_constraintEnd_toStartOf="@+id/buttonRight"
+        app:layout_constraintStart_toEndOf="@+id/buttonLeft"
+        app:layout_constraintTop_toTopOf="@+id/buttonLeft"
+        tools:text="23 de out - 29 de out" />
+
+    <com.natura.android.button.TextButton
+        android:id="@+id/buttonRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/filled_navigation_arrowright"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/barChartSleep" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

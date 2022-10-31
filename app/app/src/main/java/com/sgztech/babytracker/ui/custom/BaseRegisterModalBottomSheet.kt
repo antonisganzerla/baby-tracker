@@ -97,12 +97,16 @@ abstract class BaseRegisterModalBottomSheet(
 
     abstract fun buildRegister(): Register
 
+    open protected fun onTimeSetListener(){
+        autoCompleteTimeSelector.setText(formatTime())
+    }
+
     private fun popTimePicker() {
         val onTimeSetListener =
             TimePickerDialog.OnTimeSetListener { _: TimePicker?, selectedHour: Int, selectedMinute: Int ->
                 hour = selectedHour
                 minute = selectedMinute
-                autoCompleteTimeSelector.setText(formatTime())
+                onTimeSetListener()
             }
 
         TimePickerDialog(requireContext(), onTimeSetListener, hour, minute, true).show()

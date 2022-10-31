@@ -8,6 +8,7 @@ import com.sgztech.babytracker.R
 import com.sgztech.babytracker.ui.charts.DiaperFragment
 import com.sgztech.babytracker.ui.charts.FeedingFragment
 import com.sgztech.babytracker.ui.charts.GrowingFragment
+import com.sgztech.babytracker.ui.charts.SleepFragment
 
 class ChartsActivity : BaseActivity() {
 
@@ -27,7 +28,7 @@ class ChartsActivity : BaseActivity() {
                 R.id.nav_feeding -> replaceFragment(FeedingFragment())
                 R.id.nav_growing -> replaceFragment(GrowingFragment())
                 R.id.nav_diaper -> replaceFragment(DiaperFragment())
-                R.id.nav_sleep -> false
+                R.id.nav_sleep -> replaceFragment(SleepFragment())
             }
             true
         }

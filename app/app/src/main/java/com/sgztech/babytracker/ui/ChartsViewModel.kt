@@ -34,6 +34,9 @@ class ChartsViewModel(
     private val _babyBottleRegisters: MutableLiveData<List<Register>> = MutableLiveData()
     val babyBottleRegisters: LiveData<List<Register>> = _babyBottleRegisters
 
+    private val _sleepRegisters: MutableLiveData<List<Register>> = MutableLiveData()
+    val sleepRegisters: LiveData<List<Register>> = _sleepRegisters
+
     private var _date: MutableLiveData<LocalDate> = MutableLiveData()
     val date: LiveData<LocalDate> = _date
 
@@ -83,6 +86,19 @@ class ChartsViewModel(
                 val weekRegisters = includeAllDaysOfWeek(startWeekDay, lastDayOfWeek, this, RegisterType.BABY_BOTTLE)
                 _babyBottleRegisters.postValue(weekRegisters)
             }
+        }
+    }
+
+    fun loadSleepRegisters() {
+        viewModelScope.launch {
+            val startWeekDay = date.value
+            val lastDayOfWeek = startWeekDay?.getLastDayOfWeek()
+            val registers = loadRegisterByType(RegisterType.SLEEP).filter { register ->
+                register.filterBetween(startWeekDay, lastDayOfWeek)
+            }
+
+            val weekRegisters = includeAllDaysOfWeek(startWeekDay, lastDayOfWeek, registers, RegisterType.DIAPER)
+            _sleepRegisters.postValue(weekRegisters)
         }
     }
 
