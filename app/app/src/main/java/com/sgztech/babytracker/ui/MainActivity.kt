@@ -1,7 +1,9 @@
 package com.sgztech.babytracker.ui
 
 import android.app.DatePickerDialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -99,17 +101,15 @@ class MainActivity : AppCompatActivity() {
                     viewModel.loadRegisters()
                 }
                 R.id.nav_item_chart -> {
-                    if (BuildConfig.DEBUG) {
-                        val intent = Intent(this, ChartsActivity::class.java)
-                        startActivity(intent)
-                    } else
-                        bottomNavigationBar.showSnackbar("Em breve")
+                    val intent = Intent(this, ChartsActivity::class.java)
+                    startActivity(intent)
                 }
                 R.id.nav_item_logout -> {
                     viewModel.logout()
                     signOutFirebase()
                     openLoginActivity()
                 }
+                R.id.nav_item_rate -> rateApp()
                 R.id.nav_item_about -> {
                     val intent = Intent(this, FaqActivity::class.java)
                     startActivity(intent)
@@ -128,6 +128,16 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun rateApp() {
+        try {
+            val uri = Uri.parse(getString(R.string.app_store_url))
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            startActivity(intent)
+        } catch (exception: ActivityNotFoundException) {
+            toolbar.showSnackbar(R.string.msg_store_app_not_found)
+        }
     }
 
     private fun setupHeaderDrawer() {

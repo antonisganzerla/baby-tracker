@@ -99,13 +99,15 @@
     <string name="delete_register_message">Deseja deletar o registro %1$s das %2$s?</string>
     <string name="confirm_option">Sim</string>
     <string name="cancel_option">Cancelar</string>
-
+    <string name="app_store_url">https://play.google.com/store/apps/details?id=com.sgztech.babytracker</string>
+    <string name="msg_store_app_not_found">Não foi possível abrir a play store.</string>
 
     <!-- Menu item drawer -->
     <string name="menu_item_registers">Registros</string>
     <string name="menu_item_chart">Análises</string>
     <string name="menu_item_logout">Sair</string>
     <string name="menu_item_title">Ajuda</string>
+    <string name="menu_item_rate">Avaliar</string>
     <string name="menu_item_about">Sobre o app</string>
 
     <!-- Menu item bottom -->
