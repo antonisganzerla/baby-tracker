@@ -41,7 +41,7 @@ class GrowingFragment : Fragment() {
                     requireActivity().getDrawable(R.drawable.ic_balance_24),
                 )
             }
-            val lineDataSet = LineDataSet(entries, getString(R.string.menu_item_weight))
+            val lineDataSet = LineDataSet(entries, getString(R.string.menu_item_weight).plus(" (Kg)"))
             lineDataSet.setDrawIcons(false)
             val lineData = LineData(listOf(lineDataSet))
             lineChartWeight.apply {
@@ -60,7 +60,7 @@ class GrowingFragment : Fragment() {
                     requireActivity().getDrawable(R.drawable.ic_height_24),
                 )
             }
-            val lineDataSet = LineDataSet(entries, getString(R.string.menu_item_height))
+            val lineDataSet = LineDataSet(entries, getString(R.string.menu_item_height).plus(" (cm)"))
             lineDataSet.setDrawIcons(false)
             val lineData = LineData(listOf(lineDataSet))
             lineChartHeight.apply {

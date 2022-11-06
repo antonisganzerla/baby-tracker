@@ -56,7 +56,7 @@ class SleepFragment : Fragment() {
 
         viewModel.date.observe(viewLifecycleOwner) { date ->
             tvWeek.text = viewModel.formatWeekDate(date)
-            viewModel.loadFeedingRegisters()
+            viewModel.loadSleepRegisters()
         }
     }
 
